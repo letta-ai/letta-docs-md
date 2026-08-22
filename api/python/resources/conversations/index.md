@@ -1,0 +1,15423 @@
+# Conversations
+
+## Create Conversation
+
+`conversations.create(ConversationCreateParams**kwargs)  -> Conversation`
+
+**post** `/v1/conversations/`
+
+Create a new conversation for an agent.
+
+### Parameters
+
+- `agent_id: str`
+
+  The agent ID to create a conversation for
+
+- `context_window_limit: Optional[int]`
+
+  The context window limit for this conversation (overrides agent's context window).
+
+- `description: Optional[str]`
+
+  A generated description of the conversation used for search and bootstrap context.
+
+- `hidden: Optional[bool]`
+
+  Whether the new conversation should be hidden from listings.
+
+- `model: Optional[str]`
+
+  The model handle for this conversation (overrides agent's model). Format: provider/model-name.
+
+- `model_settings: Optional[ModelSettings]`
+
+  The model settings for this conversation (overrides agent's model settings).
+
+  - `class OpenAIModelSettings: …`
+
+    - `max_output_tokens: Optional[int]`
+
+      The maximum number of tokens the model can generate.
+
+    - `parallel_tool_calls: Optional[bool]`
+
+      Whether to enable parallel tool calling.
+
+    - `provider_type: Optional[Literal["openai"]]`
+
+      The type of the provider.
+
+      - `"openai"`
+
+    - `reasoning: Optional[Reasoning]`
+
+      The reasoning configuration for the model.
+
+      - `reasoning_effort: Optional[Literal["none", "minimal", "low", 3 more]]`
+
+        The reasoning effort to use when generating text reasoning models
+
+        - `"none"`
+
+        - `"minimal"`
+
+        - `"low"`
+
+        - `"medium"`
+
+        - `"high"`
+
+        - `"xhigh"`
+
+    - `response_format: Optional[ResponseFormat]`
+
+      The response format for the model.
+
+      - `class TextResponseFormat: …`
+
+        Response format for plain text responses.
+
+        - `type: Optional[Literal["text"]]`
+
+          The type of the response format.
+
+          - `"text"`
+
+      - `class JsonSchemaResponseFormat: …`
+
+        Response format for JSON schema-based responses.
+
+        - `json_schema: Dict[str, object]`
+
+          The JSON schema of the response.
+
+        - `type: Optional[Literal["json_schema"]]`
+
+          The type of the response format.
+
+          - `"json_schema"`
+
+      - `class JsonObjectResponseFormat: …`
+
+        Response format for JSON object responses.
+
+        - `type: Optional[Literal["json_object"]]`
+
+          The type of the response format.
+
+          - `"json_object"`
+
+    - `strict: Optional[bool]`
+
+      Enable strict mode for tool calling. When true, tool outputs are guaranteed to match JSON schemas.
+
+    - `temperature: Optional[float]`
+
+      The temperature of the model.
+
+  - `class ModelSettingsSgLangModelSettings: …`
+
+    SGLang model configuration (OpenAI-compatible runtime with SGLang-specific parsing).
+
+    - `max_output_tokens: Optional[int]`
+
+      The maximum number of tokens the model can generate.
+
+    - `parallel_tool_calls: Optional[bool]`
+
+      Whether to enable parallel tool calling.
+
+    - `provider_type: Optional[Literal["sglang"]]`
+
+      The type of the provider.
+
+      - `"sglang"`
+
+    - `reasoning: Optional[ModelSettingsSgLangModelSettingsReasoning]`
+
+      The reasoning configuration for the model.
+
+      - `reasoning_effort: Optional[Literal["none", "minimal", "low", 3 more]]`
+
+        The reasoning effort to use when generating text reasoning models
+
+        - `"none"`
+
+        - `"minimal"`
+
+        - `"low"`
+
+        - `"medium"`
+
+        - `"high"`
+
+        - `"xhigh"`
+
+    - `response_format: Optional[ModelSettingsSgLangModelSettingsResponseFormat]`
+
+      The response format for the model.
+
+      - `class TextResponseFormat: …`
+
+        Response format for plain text responses.
+
+      - `class JsonSchemaResponseFormat: …`
+
+        Response format for JSON schema-based responses.
+
+      - `class JsonObjectResponseFormat: …`
+
+        Response format for JSON object responses.
+
+    - `strict: Optional[bool]`
+
+      Enable strict mode for tool calling. When true, tool outputs are guaranteed to match JSON schemas.
+
+    - `temperature: Optional[float]`
+
+      The temperature of the model.
+
+    - `tool_call_parser: Optional[str]`
+
+      SGLang tool call parser name (for example 'glm47', 'qwen25', or 'hermes').
+
+  - `class AnthropicModelSettings: …`
+
+    - `effort: Optional[Literal["low", "medium", "high", 2 more]]`
+
+      Effort level for supported Anthropic models (controls token spending). 'xhigh' and 'max' are available on Opus 4.6+. Not setting this gives similar performance to 'high'.
+
+      - `"low"`
+
+      - `"medium"`
+
+      - `"high"`
+
+      - `"xhigh"`
+
+      - `"max"`
+
+    - `max_output_tokens: Optional[int]`
+
+      The maximum number of tokens the model can generate.
+
+    - `parallel_tool_calls: Optional[bool]`
+
+      Whether to enable parallel tool calling.
+
+    - `provider_type: Optional[Literal["anthropic"]]`
+
+      The type of the provider.
+
+      - `"anthropic"`
+
+    - `response_format: Optional[ResponseFormat]`
+
+      The response format for the model.
+
+      - `class TextResponseFormat: …`
+
+        Response format for plain text responses.
+
+      - `class JsonSchemaResponseFormat: …`
+
+        Response format for JSON schema-based responses.
+
+      - `class JsonObjectResponseFormat: …`
+
+        Response format for JSON object responses.
+
+    - `strict: Optional[bool]`
+
+      Enable strict mode for tool calling. When true, tool outputs are guaranteed to match JSON schemas.
+
+    - `temperature: Optional[float]`
+
+      The temperature of the model.
+
+    - `thinking: Optional[Thinking]`
+
+      The thinking configuration for the model.
+
+      - `budget_tokens: Optional[int]`
+
+        The maximum number of tokens the model can use for extended thinking.
+
+      - `type: Optional[Literal["enabled", "disabled"]]`
+
+        The type of thinking to use.
+
+        - `"enabled"`
+
+        - `"disabled"`
+
+    - `verbosity: Optional[Literal["low", "medium", "high"]]`
+
+      Soft control for how verbose model output should be, used for GPT-5 models.
+
+      - `"low"`
+
+      - `"medium"`
+
+      - `"high"`
+
+  - `class GoogleAIModelSettings: …`
+
+    - `max_output_tokens: Optional[int]`
+
+      The maximum number of tokens the model can generate.
+
+    - `parallel_tool_calls: Optional[bool]`
+
+      Whether to enable parallel tool calling.
+
+    - `provider_type: Optional[Literal["google_ai"]]`
+
+      The type of the provider.
+
+      - `"google_ai"`
+
+    - `response_schema: Optional[ResponseSchema]`
+
+      The response schema for the model.
+
+      - `class TextResponseFormat: …`
+
+        Response format for plain text responses.
+
+      - `class JsonSchemaResponseFormat: …`
+
+        Response format for JSON schema-based responses.
+
+      - `class JsonObjectResponseFormat: …`
+
+        Response format for JSON object responses.
+
+    - `temperature: Optional[float]`
+
+      The temperature of the model.
+
+    - `thinking_config: Optional[ThinkingConfig]`
+
+      The thinking configuration for the model.
+
+      - `include_thoughts: Optional[bool]`
+
+        Whether to include thoughts in the model's response.
+
+      - `thinking_budget: Optional[int]`
+
+        The thinking budget for the model.
+
+  - `class GoogleVertexModelSettings: …`
+
+    - `max_output_tokens: Optional[int]`
+
+      The maximum number of tokens the model can generate.
+
+    - `parallel_tool_calls: Optional[bool]`
+
+      Whether to enable parallel tool calling.
+
+    - `provider_type: Optional[Literal["google_vertex"]]`
+
+      The type of the provider.
+
+      - `"google_vertex"`
+
+    - `response_schema: Optional[ResponseSchema]`
+
+      The response schema for the model.
+
+      - `class TextResponseFormat: …`
+
+        Response format for plain text responses.
+
+      - `class JsonSchemaResponseFormat: …`
+
+        Response format for JSON schema-based responses.
+
+      - `class JsonObjectResponseFormat: …`
+
+        Response format for JSON object responses.
+
+    - `temperature: Optional[float]`
+
+      The temperature of the model.
+
+    - `thinking_config: Optional[ThinkingConfig]`
+
+      The thinking configuration for the model.
+
+      - `include_thoughts: Optional[bool]`
+
+        Whether to include thoughts in the model's response.
+
+      - `thinking_budget: Optional[int]`
+
+        The thinking budget for the model.
+
+  - `class AzureModelSettings: …`
+
+    Azure OpenAI model configuration (OpenAI-compatible).
+
+    - `max_output_tokens: Optional[int]`
+
+      The maximum number of tokens the model can generate.
+
+    - `parallel_tool_calls: Optional[bool]`
+
+      Whether to enable parallel tool calling.
+
+    - `provider_type: Optional[Literal["azure"]]`
+
+      The type of the provider.
+
+      - `"azure"`
+
+    - `response_format: Optional[ResponseFormat]`
+
+      The response format for the model.
+
+      - `class TextResponseFormat: …`
+
+        Response format for plain text responses.
+
+      - `class JsonSchemaResponseFormat: …`
+
+        Response format for JSON schema-based responses.
+
+      - `class JsonObjectResponseFormat: …`
+
+        Response format for JSON object responses.
+
+    - `temperature: Optional[float]`
+
+      The temperature of the model.
+
+  - `class XaiModelSettings: …`
+
+    xAI model configuration (OpenAI-compatible).
+
+    - `max_output_tokens: Optional[int]`
+
+      The maximum number of tokens the model can generate.
+
+    - `parallel_tool_calls: Optional[bool]`
+
+      Whether to enable parallel tool calling.
+
+    - `provider_type: Optional[Literal["xai"]]`
+
+      The type of the provider.
+
+      - `"xai"`
+
+    - `response_format: Optional[ResponseFormat]`
+
+      The response format for the model.
+
+      - `class TextResponseFormat: …`
+
+        Response format for plain text responses.
+
+      - `class JsonSchemaResponseFormat: …`
+
+        Response format for JSON schema-based responses.
+
+      - `class JsonObjectResponseFormat: …`
+
+        Response format for JSON object responses.
+
+    - `temperature: Optional[float]`
+
+      The temperature of the model.
+
+  - `class ModelSettingsMoonshotModelSettings: …`
+
+    Moonshot/Kimi model configuration (OpenAI-compatible).
+
+    - `max_output_tokens: Optional[int]`
+
+      The maximum number of tokens the model can generate.
+
+    - `parallel_tool_calls: Optional[bool]`
+
+      Whether to enable parallel tool calling.
+
+    - `provider_type: Optional[Literal["moonshot"]]`
+
+      The type of the provider.
+
+      - `"moonshot"`
+
+    - `response_format: Optional[ModelSettingsMoonshotModelSettingsResponseFormat]`
+
+      The response format for the model.
+
+      - `class TextResponseFormat: …`
+
+        Response format for plain text responses.
+
+      - `class JsonSchemaResponseFormat: …`
+
+        Response format for JSON schema-based responses.
+
+      - `class JsonObjectResponseFormat: …`
+
+        Response format for JSON object responses.
+
+    - `strict: Optional[bool]`
+
+      Enable strict mode for tool calling. When true, tool outputs are guaranteed to match JSON schemas.
+
+    - `temperature: Optional[float]`
+
+      The temperature of the model.
+
+  - `class ModelSettingsZaiModelSettings: …`
+
+    Z.ai (ZhipuAI) model configuration (OpenAI-compatible).
+
+    - `max_output_tokens: Optional[int]`
+
+      The maximum number of tokens the model can generate.
+
+    - `parallel_tool_calls: Optional[bool]`
+
+      Whether to enable parallel tool calling.
+
+    - `provider_type: Optional[Literal["zai"]]`
+
+      The type of the provider.
+
+      - `"zai"`
+
+    - `response_format: Optional[ModelSettingsZaiModelSettingsResponseFormat]`
+
+      The response format for the model.
+
+      - `class TextResponseFormat: …`
+
+        Response format for plain text responses.
+
+      - `class JsonSchemaResponseFormat: …`
+
+        Response format for JSON schema-based responses.
+
+      - `class JsonObjectResponseFormat: …`
+
+        Response format for JSON object responses.
+
+    - `temperature: Optional[float]`
+
+      The temperature of the model.
+
+    - `thinking: Optional[ModelSettingsZaiModelSettingsThinking]`
+
+      The thinking configuration for GLM-4.5+ models.
+
+      - `clear_thinking: Optional[bool]`
+
+        If False, preserved thinking is used (recommended for agents).
+
+      - `type: Optional[Literal["enabled", "disabled"]]`
+
+        Whether thinking is enabled or disabled.
+
+        - `"enabled"`
+
+        - `"disabled"`
+
+  - `class ModelSettingsMoonshotCodingModelSettings: …`
+
+    Kimi Code model configuration (Anthropic-compatible).
+
+    - `effort: Optional[Literal["low", "medium", "high", 2 more]]`
+
+      Effort level for supported Anthropic models (controls token spending). 'xhigh' and 'max' are available on Opus 4.6+. Not setting this gives similar performance to 'high'.
+
+      - `"low"`
+
+      - `"medium"`
+
+      - `"high"`
+
+      - `"xhigh"`
+
+      - `"max"`
+
+    - `max_output_tokens: Optional[int]`
+
+      The maximum number of tokens the model can generate.
+
+    - `parallel_tool_calls: Optional[bool]`
+
+      Whether to enable parallel tool calling.
+
+    - `provider_type: Optional[Literal["moonshot_coding"]]`
+
+      The type of the provider.
+
+      - `"moonshot_coding"`
+
+    - `response_format: Optional[ModelSettingsMoonshotCodingModelSettingsResponseFormat]`
+
+      The response format for the model.
+
+      - `class TextResponseFormat: …`
+
+        Response format for plain text responses.
+
+      - `class JsonSchemaResponseFormat: …`
+
+        Response format for JSON schema-based responses.
+
+      - `class JsonObjectResponseFormat: …`
+
+        Response format for JSON object responses.
+
+    - `strict: Optional[bool]`
+
+      Enable strict mode for tool calling. When true, tool outputs are guaranteed to match JSON schemas.
+
+    - `temperature: Optional[float]`
+
+      The temperature of the model.
+
+    - `thinking: Optional[ModelSettingsMoonshotCodingModelSettingsThinking]`
+
+      The thinking configuration for the model.
+
+      - `budget_tokens: Optional[int]`
+
+        The maximum number of tokens the model can use for extended thinking.
+
+      - `type: Optional[Literal["enabled", "disabled"]]`
+
+        The type of thinking to use.
+
+        - `"enabled"`
+
+        - `"disabled"`
+
+    - `verbosity: Optional[Literal["low", "medium", "high"]]`
+
+      Soft control for how verbose model output should be, used for GPT-5 models.
+
+      - `"low"`
+
+      - `"medium"`
+
+      - `"high"`
+
+  - `class GroqModelSettings: …`
+
+    Groq model configuration (OpenAI-compatible).
+
+    - `max_output_tokens: Optional[int]`
+
+      The maximum number of tokens the model can generate.
+
+    - `parallel_tool_calls: Optional[bool]`
+
+      Whether to enable parallel tool calling.
+
+    - `provider_type: Optional[Literal["groq"]]`
+
+      The type of the provider.
+
+      - `"groq"`
+
+    - `response_format: Optional[ResponseFormat]`
+
+      The response format for the model.
+
+      - `class TextResponseFormat: …`
+
+        Response format for plain text responses.
+
+      - `class JsonSchemaResponseFormat: …`
+
+        Response format for JSON schema-based responses.
+
+      - `class JsonObjectResponseFormat: …`
+
+        Response format for JSON object responses.
+
+    - `temperature: Optional[float]`
+
+      The temperature of the model.
+
+  - `class DeepseekModelSettings: …`
+
+    Deepseek model configuration (OpenAI-compatible).
+
+    - `max_output_tokens: Optional[int]`
+
+      The maximum number of tokens the model can generate.
+
+    - `parallel_tool_calls: Optional[bool]`
+
+      Whether to enable parallel tool calling.
+
+    - `provider_type: Optional[Literal["deepseek"]]`
+
+      The type of the provider.
+
+      - `"deepseek"`
+
+    - `response_format: Optional[ResponseFormat]`
+
+      The response format for the model.
+
+      - `class TextResponseFormat: …`
+
+        Response format for plain text responses.
+
+      - `class JsonSchemaResponseFormat: …`
+
+        Response format for JSON schema-based responses.
+
+      - `class JsonObjectResponseFormat: …`
+
+        Response format for JSON object responses.
+
+    - `temperature: Optional[float]`
+
+      The temperature of the model.
+
+  - `class TogetherModelSettings: …`
+
+    Together AI model configuration (OpenAI-compatible).
+
+    - `max_output_tokens: Optional[int]`
+
+      The maximum number of tokens the model can generate.
+
+    - `parallel_tool_calls: Optional[bool]`
+
+      Whether to enable parallel tool calling.
+
+    - `provider_type: Optional[Literal["together"]]`
+
+      The type of the provider.
+
+      - `"together"`
+
+    - `response_format: Optional[ResponseFormat]`
+
+      The response format for the model.
+
+      - `class TextResponseFormat: …`
+
+        Response format for plain text responses.
+
+      - `class JsonSchemaResponseFormat: …`
+
+        Response format for JSON schema-based responses.
+
+      - `class JsonObjectResponseFormat: …`
+
+        Response format for JSON object responses.
+
+    - `temperature: Optional[float]`
+
+      The temperature of the model.
+
+  - `class BedrockModelSettings: …`
+
+    AWS Bedrock model configuration.
+
+    - `max_output_tokens: Optional[int]`
+
+      The maximum number of tokens the model can generate.
+
+    - `parallel_tool_calls: Optional[bool]`
+
+      Whether to enable parallel tool calling.
+
+    - `provider_type: Optional[Literal["bedrock"]]`
+
+      The type of the provider.
+
+      - `"bedrock"`
+
+    - `response_format: Optional[ResponseFormat]`
+
+      The response format for the model.
+
+      - `class TextResponseFormat: …`
+
+        Response format for plain text responses.
+
+      - `class JsonSchemaResponseFormat: …`
+
+        Response format for JSON schema-based responses.
+
+      - `class JsonObjectResponseFormat: …`
+
+        Response format for JSON object responses.
+
+    - `temperature: Optional[float]`
+
+      The temperature of the model.
+
+  - `class ModelSettingsBasetenModelSettings: …`
+
+    Baseten model configuration (OpenAI-compatible).
+
+    - `max_output_tokens: Optional[int]`
+
+      The maximum number of tokens the model can generate.
+
+    - `parallel_tool_calls: Optional[bool]`
+
+      Whether to enable parallel tool calling.
+
+    - `provider_type: Optional[Literal["baseten"]]`
+
+      The type of the provider.
+
+      - `"baseten"`
+
+    - `temperature: Optional[float]`
+
+      The temperature of the model.
+
+  - `class ModelSettingsOpenRouterModelSettings: …`
+
+    OpenRouter model configuration (OpenAI-compatible).
+
+    - `max_output_tokens: Optional[int]`
+
+      The maximum number of tokens the model can generate.
+
+    - `parallel_tool_calls: Optional[bool]`
+
+      Whether to enable parallel tool calling.
+
+    - `provider_type: Optional[Literal["openrouter"]]`
+
+      The type of the provider.
+
+      - `"openrouter"`
+
+    - `response_format: Optional[ModelSettingsOpenRouterModelSettingsResponseFormat]`
+
+      The response format for the model.
+
+      - `class TextResponseFormat: …`
+
+        Response format for plain text responses.
+
+      - `class JsonSchemaResponseFormat: …`
+
+        Response format for JSON schema-based responses.
+
+      - `class JsonObjectResponseFormat: …`
+
+        Response format for JSON object responses.
+
+    - `temperature: Optional[float]`
+
+      The temperature of the model.
+
+  - `class ModelSettingsChatGptoAuthModelSettings: …`
+
+    ChatGPT OAuth model configuration (uses ChatGPT backend API).
+
+    - `max_output_tokens: Optional[int]`
+
+      The maximum number of tokens the model can generate.
+
+    - `parallel_tool_calls: Optional[bool]`
+
+      Whether to enable parallel tool calling.
+
+    - `provider_type: Optional[Literal["chatgpt_oauth"]]`
+
+      The type of the provider.
+
+      - `"chatgpt_oauth"`
+
+    - `reasoning: Optional[ModelSettingsChatGptoAuthModelSettingsReasoning]`
+
+      The reasoning configuration for the model.
+
+      - `reasoning_effort: Optional[Literal["none", "low", "medium", 2 more]]`
+
+        The reasoning effort level for GPT-5.x and o-series models.
+
+        - `"none"`
+
+        - `"low"`
+
+        - `"medium"`
+
+        - `"high"`
+
+        - `"xhigh"`
+
+    - `temperature: Optional[float]`
+
+      The temperature of the model.
+
+- `summary: Optional[str]`
+
+  A summary of the conversation.
+
+### Returns
+
+- `class Conversation: …`
+
+  Represents a conversation on an agent for concurrent messaging.
+
+  - `id: str`
+
+    The unique identifier of the conversation.
+
+  - `agent_id: str`
+
+    The ID of the agent this conversation belongs to.
+
+  - `archived: Optional[bool]`
+
+    Whether the conversation is archived.
+
+  - `archived_at: Optional[datetime]`
+
+    Timestamp of when the conversation was archived.
+
+  - `context_window_limit: Optional[int]`
+
+    The context window limit for this conversation (overrides agent's context window).
+
+  - `created_at: Optional[datetime]`
+
+    The timestamp when the object was created.
+
+  - `created_by_id: Optional[str]`
+
+    The id of the user that made this object.
+
+  - `description: Optional[str]`
+
+    A generated description of the conversation used for search and bootstrap context.
+
+  - `in_context_message_ids: Optional[List[str]]`
+
+    The IDs of in-context messages for the conversation. Null means this field was not retrieved/hydrated for this response.
+
+  - `last_message_at: Optional[datetime]`
+
+    Timestamp of the most recent message request sent to this conversation.
+
+  - `last_updated_by_id: Optional[str]`
+
+    The id of the user that made this object.
+
+  - `model: Optional[str]`
+
+    The model handle for this conversation (overrides agent's model). Format: provider/model-name.
+
+  - `model_settings: Optional[ModelSettings]`
+
+    The model settings for this conversation (overrides agent's model settings).
+
+    - `class OpenAIModelSettings: …`
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["openai"]]`
+
+        The type of the provider.
+
+        - `"openai"`
+
+      - `reasoning: Optional[Reasoning]`
+
+        The reasoning configuration for the model.
+
+        - `reasoning_effort: Optional[Literal["none", "minimal", "low", 3 more]]`
+
+          The reasoning effort to use when generating text reasoning models
+
+          - `"none"`
+
+          - `"minimal"`
+
+          - `"low"`
+
+          - `"medium"`
+
+          - `"high"`
+
+          - `"xhigh"`
+
+      - `response_format: Optional[ResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+          - `type: Optional[Literal["text"]]`
+
+            The type of the response format.
+
+            - `"text"`
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+          - `json_schema: Dict[str, object]`
+
+            The JSON schema of the response.
+
+          - `type: Optional[Literal["json_schema"]]`
+
+            The type of the response format.
+
+            - `"json_schema"`
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+          - `type: Optional[Literal["json_object"]]`
+
+            The type of the response format.
+
+            - `"json_object"`
+
+      - `strict: Optional[bool]`
+
+        Enable strict mode for tool calling. When true, tool outputs are guaranteed to match JSON schemas.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class ModelSettingsSgLangModelSettings: …`
+
+      SGLang model configuration (OpenAI-compatible runtime with SGLang-specific parsing).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["sglang"]]`
+
+        The type of the provider.
+
+        - `"sglang"`
+
+      - `reasoning: Optional[ModelSettingsSgLangModelSettingsReasoning]`
+
+        The reasoning configuration for the model.
+
+        - `reasoning_effort: Optional[Literal["none", "minimal", "low", 3 more]]`
+
+          The reasoning effort to use when generating text reasoning models
+
+          - `"none"`
+
+          - `"minimal"`
+
+          - `"low"`
+
+          - `"medium"`
+
+          - `"high"`
+
+          - `"xhigh"`
+
+      - `response_format: Optional[ModelSettingsSgLangModelSettingsResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `strict: Optional[bool]`
+
+        Enable strict mode for tool calling. When true, tool outputs are guaranteed to match JSON schemas.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+      - `tool_call_parser: Optional[str]`
+
+        SGLang tool call parser name (for example 'glm47', 'qwen25', or 'hermes').
+
+    - `class AnthropicModelSettings: …`
+
+      - `effort: Optional[Literal["low", "medium", "high", 2 more]]`
+
+        Effort level for supported Anthropic models (controls token spending). 'xhigh' and 'max' are available on Opus 4.6+. Not setting this gives similar performance to 'high'.
+
+        - `"low"`
+
+        - `"medium"`
+
+        - `"high"`
+
+        - `"xhigh"`
+
+        - `"max"`
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["anthropic"]]`
+
+        The type of the provider.
+
+        - `"anthropic"`
+
+      - `response_format: Optional[ResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `strict: Optional[bool]`
+
+        Enable strict mode for tool calling. When true, tool outputs are guaranteed to match JSON schemas.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+      - `thinking: Optional[Thinking]`
+
+        The thinking configuration for the model.
+
+        - `budget_tokens: Optional[int]`
+
+          The maximum number of tokens the model can use for extended thinking.
+
+        - `type: Optional[Literal["enabled", "disabled"]]`
+
+          The type of thinking to use.
+
+          - `"enabled"`
+
+          - `"disabled"`
+
+      - `verbosity: Optional[Literal["low", "medium", "high"]]`
+
+        Soft control for how verbose model output should be, used for GPT-5 models.
+
+        - `"low"`
+
+        - `"medium"`
+
+        - `"high"`
+
+    - `class GoogleAIModelSettings: …`
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["google_ai"]]`
+
+        The type of the provider.
+
+        - `"google_ai"`
+
+      - `response_schema: Optional[ResponseSchema]`
+
+        The response schema for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+      - `thinking_config: Optional[ThinkingConfig]`
+
+        The thinking configuration for the model.
+
+        - `include_thoughts: Optional[bool]`
+
+          Whether to include thoughts in the model's response.
+
+        - `thinking_budget: Optional[int]`
+
+          The thinking budget for the model.
+
+    - `class GoogleVertexModelSettings: …`
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["google_vertex"]]`
+
+        The type of the provider.
+
+        - `"google_vertex"`
+
+      - `response_schema: Optional[ResponseSchema]`
+
+        The response schema for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+      - `thinking_config: Optional[ThinkingConfig]`
+
+        The thinking configuration for the model.
+
+        - `include_thoughts: Optional[bool]`
+
+          Whether to include thoughts in the model's response.
+
+        - `thinking_budget: Optional[int]`
+
+          The thinking budget for the model.
+
+    - `class AzureModelSettings: …`
+
+      Azure OpenAI model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["azure"]]`
+
+        The type of the provider.
+
+        - `"azure"`
+
+      - `response_format: Optional[ResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class XaiModelSettings: …`
+
+      xAI model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["xai"]]`
+
+        The type of the provider.
+
+        - `"xai"`
+
+      - `response_format: Optional[ResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class ModelSettingsMoonshotModelSettings: …`
+
+      Moonshot/Kimi model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["moonshot"]]`
+
+        The type of the provider.
+
+        - `"moonshot"`
+
+      - `response_format: Optional[ModelSettingsMoonshotModelSettingsResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `strict: Optional[bool]`
+
+        Enable strict mode for tool calling. When true, tool outputs are guaranteed to match JSON schemas.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class ModelSettingsZaiModelSettings: …`
+
+      Z.ai (ZhipuAI) model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["zai"]]`
+
+        The type of the provider.
+
+        - `"zai"`
+
+      - `response_format: Optional[ModelSettingsZaiModelSettingsResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+      - `thinking: Optional[ModelSettingsZaiModelSettingsThinking]`
+
+        The thinking configuration for GLM-4.5+ models.
+
+        - `clear_thinking: Optional[bool]`
+
+          If False, preserved thinking is used (recommended for agents).
+
+        - `type: Optional[Literal["enabled", "disabled"]]`
+
+          Whether thinking is enabled or disabled.
+
+          - `"enabled"`
+
+          - `"disabled"`
+
+    - `class ModelSettingsMoonshotCodingModelSettings: …`
+
+      Kimi Code model configuration (Anthropic-compatible).
+
+      - `effort: Optional[Literal["low", "medium", "high", 2 more]]`
+
+        Effort level for supported Anthropic models (controls token spending). 'xhigh' and 'max' are available on Opus 4.6+. Not setting this gives similar performance to 'high'.
+
+        - `"low"`
+
+        - `"medium"`
+
+        - `"high"`
+
+        - `"xhigh"`
+
+        - `"max"`
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["moonshot_coding"]]`
+
+        The type of the provider.
+
+        - `"moonshot_coding"`
+
+      - `response_format: Optional[ModelSettingsMoonshotCodingModelSettingsResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `strict: Optional[bool]`
+
+        Enable strict mode for tool calling. When true, tool outputs are guaranteed to match JSON schemas.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+      - `thinking: Optional[ModelSettingsMoonshotCodingModelSettingsThinking]`
+
+        The thinking configuration for the model.
+
+        - `budget_tokens: Optional[int]`
+
+          The maximum number of tokens the model can use for extended thinking.
+
+        - `type: Optional[Literal["enabled", "disabled"]]`
+
+          The type of thinking to use.
+
+          - `"enabled"`
+
+          - `"disabled"`
+
+      - `verbosity: Optional[Literal["low", "medium", "high"]]`
+
+        Soft control for how verbose model output should be, used for GPT-5 models.
+
+        - `"low"`
+
+        - `"medium"`
+
+        - `"high"`
+
+    - `class GroqModelSettings: …`
+
+      Groq model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["groq"]]`
+
+        The type of the provider.
+
+        - `"groq"`
+
+      - `response_format: Optional[ResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class DeepseekModelSettings: …`
+
+      Deepseek model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["deepseek"]]`
+
+        The type of the provider.
+
+        - `"deepseek"`
+
+      - `response_format: Optional[ResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class TogetherModelSettings: …`
+
+      Together AI model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["together"]]`
+
+        The type of the provider.
+
+        - `"together"`
+
+      - `response_format: Optional[ResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class BedrockModelSettings: …`
+
+      AWS Bedrock model configuration.
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["bedrock"]]`
+
+        The type of the provider.
+
+        - `"bedrock"`
+
+      - `response_format: Optional[ResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class ModelSettingsBasetenModelSettings: …`
+
+      Baseten model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["baseten"]]`
+
+        The type of the provider.
+
+        - `"baseten"`
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class ModelSettingsOpenRouterModelSettings: …`
+
+      OpenRouter model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["openrouter"]]`
+
+        The type of the provider.
+
+        - `"openrouter"`
+
+      - `response_format: Optional[ModelSettingsOpenRouterModelSettingsResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class ModelSettingsChatGptoAuthModelSettings: …`
+
+      ChatGPT OAuth model configuration (uses ChatGPT backend API).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["chatgpt_oauth"]]`
+
+        The type of the provider.
+
+        - `"chatgpt_oauth"`
+
+      - `reasoning: Optional[ModelSettingsChatGptoAuthModelSettingsReasoning]`
+
+        The reasoning configuration for the model.
+
+        - `reasoning_effort: Optional[Literal["none", "low", "medium", 2 more]]`
+
+          The reasoning effort level for GPT-5.x and o-series models.
+
+          - `"none"`
+
+          - `"low"`
+
+          - `"medium"`
+
+          - `"high"`
+
+          - `"xhigh"`
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+  - `summary: Optional[str]`
+
+    A summary of the conversation.
+
+  - `updated_at: Optional[datetime]`
+
+    The timestamp when the object was last updated.
+
+### Example
+
+```python
+import os
+from letta_client import Letta
+
+client = Letta(
+    api_key=os.environ.get("LETTA_API_KEY"),  # This is the default and can be omitted
+)
+conversation = client.conversations.create(
+    agent_id="agent_id",
+)
+print(conversation.id)
+```
+
+#### Response
+
+```json
+{
+  "id": "id",
+  "agent_id": "agent_id",
+  "archived": true,
+  "archived_at": "2019-12-27T18:11:19.117Z",
+  "context_window_limit": 0,
+  "created_at": "2019-12-27T18:11:19.117Z",
+  "created_by_id": "created_by_id",
+  "description": "description",
+  "in_context_message_ids": [
+    "string"
+  ],
+  "last_message_at": "2019-12-27T18:11:19.117Z",
+  "last_updated_by_id": "last_updated_by_id",
+  "model": "model",
+  "model_settings": {
+    "max_output_tokens": 0,
+    "parallel_tool_calls": true,
+    "provider_type": "openai",
+    "reasoning": {
+      "reasoning_effort": "none"
+    },
+    "response_format": {
+      "type": "text"
+    },
+    "strict": true,
+    "temperature": 0
+  },
+  "summary": "summary",
+  "updated_at": "2019-12-27T18:11:19.117Z"
+}
+```
+
+## List Conversations
+
+`conversations.list(ConversationListParams**kwargs)  -> ConversationListResponse`
+
+**get** `/v1/conversations/`
+
+List all conversations for an agent (or all conversations if agent_id not provided).
+
+### Parameters
+
+- `after: Optional[str]`
+
+  Cursor for pagination (conv ID). Returns results relative to this ID in the specified sort order. Expected format: 'conv-<uuid4>'
+
+- `agent_id: Optional[str]`
+
+  The agent ID to list conversations for (optional - returns all conversations if not provided)
+
+- `archive_status: Optional[Literal["unarchived", "archived", "all"]]`
+
+  Whether to return unarchived conversations only, archived conversations only, or all conversations
+
+  - `"unarchived"`
+
+  - `"archived"`
+
+  - `"all"`
+
+- `limit: Optional[int]`
+
+  Maximum number of conversations to return
+
+- `order: Optional[Literal["asc", "desc"]]`
+
+  Sort order for conversations. 'asc' for oldest first, 'desc' for newest first
+
+  - `"asc"`
+
+  - `"desc"`
+
+- `order_by: Optional[Literal["created_at", "last_run_completion", "last_message_at"]]`
+
+  Field to sort by
+
+  - `"created_at"`
+
+  - `"last_run_completion"`
+
+  - `"last_message_at"`
+
+- `summary_search: Optional[str]`
+
+  Search for text within conversation summaries
+
+### Returns
+
+- `List[Conversation]`
+
+  - `id: str`
+
+    The unique identifier of the conversation.
+
+  - `agent_id: str`
+
+    The ID of the agent this conversation belongs to.
+
+  - `archived: Optional[bool]`
+
+    Whether the conversation is archived.
+
+  - `archived_at: Optional[datetime]`
+
+    Timestamp of when the conversation was archived.
+
+  - `context_window_limit: Optional[int]`
+
+    The context window limit for this conversation (overrides agent's context window).
+
+  - `created_at: Optional[datetime]`
+
+    The timestamp when the object was created.
+
+  - `created_by_id: Optional[str]`
+
+    The id of the user that made this object.
+
+  - `description: Optional[str]`
+
+    A generated description of the conversation used for search and bootstrap context.
+
+  - `in_context_message_ids: Optional[List[str]]`
+
+    The IDs of in-context messages for the conversation. Null means this field was not retrieved/hydrated for this response.
+
+  - `last_message_at: Optional[datetime]`
+
+    Timestamp of the most recent message request sent to this conversation.
+
+  - `last_updated_by_id: Optional[str]`
+
+    The id of the user that made this object.
+
+  - `model: Optional[str]`
+
+    The model handle for this conversation (overrides agent's model). Format: provider/model-name.
+
+  - `model_settings: Optional[ModelSettings]`
+
+    The model settings for this conversation (overrides agent's model settings).
+
+    - `class OpenAIModelSettings: …`
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["openai"]]`
+
+        The type of the provider.
+
+        - `"openai"`
+
+      - `reasoning: Optional[Reasoning]`
+
+        The reasoning configuration for the model.
+
+        - `reasoning_effort: Optional[Literal["none", "minimal", "low", 3 more]]`
+
+          The reasoning effort to use when generating text reasoning models
+
+          - `"none"`
+
+          - `"minimal"`
+
+          - `"low"`
+
+          - `"medium"`
+
+          - `"high"`
+
+          - `"xhigh"`
+
+      - `response_format: Optional[ResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+          - `type: Optional[Literal["text"]]`
+
+            The type of the response format.
+
+            - `"text"`
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+          - `json_schema: Dict[str, object]`
+
+            The JSON schema of the response.
+
+          - `type: Optional[Literal["json_schema"]]`
+
+            The type of the response format.
+
+            - `"json_schema"`
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+          - `type: Optional[Literal["json_object"]]`
+
+            The type of the response format.
+
+            - `"json_object"`
+
+      - `strict: Optional[bool]`
+
+        Enable strict mode for tool calling. When true, tool outputs are guaranteed to match JSON schemas.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class ModelSettingsSgLangModelSettings: …`
+
+      SGLang model configuration (OpenAI-compatible runtime with SGLang-specific parsing).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["sglang"]]`
+
+        The type of the provider.
+
+        - `"sglang"`
+
+      - `reasoning: Optional[ModelSettingsSgLangModelSettingsReasoning]`
+
+        The reasoning configuration for the model.
+
+        - `reasoning_effort: Optional[Literal["none", "minimal", "low", 3 more]]`
+
+          The reasoning effort to use when generating text reasoning models
+
+          - `"none"`
+
+          - `"minimal"`
+
+          - `"low"`
+
+          - `"medium"`
+
+          - `"high"`
+
+          - `"xhigh"`
+
+      - `response_format: Optional[ModelSettingsSgLangModelSettingsResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `strict: Optional[bool]`
+
+        Enable strict mode for tool calling. When true, tool outputs are guaranteed to match JSON schemas.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+      - `tool_call_parser: Optional[str]`
+
+        SGLang tool call parser name (for example 'glm47', 'qwen25', or 'hermes').
+
+    - `class AnthropicModelSettings: …`
+
+      - `effort: Optional[Literal["low", "medium", "high", 2 more]]`
+
+        Effort level for supported Anthropic models (controls token spending). 'xhigh' and 'max' are available on Opus 4.6+. Not setting this gives similar performance to 'high'.
+
+        - `"low"`
+
+        - `"medium"`
+
+        - `"high"`
+
+        - `"xhigh"`
+
+        - `"max"`
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["anthropic"]]`
+
+        The type of the provider.
+
+        - `"anthropic"`
+
+      - `response_format: Optional[ResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `strict: Optional[bool]`
+
+        Enable strict mode for tool calling. When true, tool outputs are guaranteed to match JSON schemas.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+      - `thinking: Optional[Thinking]`
+
+        The thinking configuration for the model.
+
+        - `budget_tokens: Optional[int]`
+
+          The maximum number of tokens the model can use for extended thinking.
+
+        - `type: Optional[Literal["enabled", "disabled"]]`
+
+          The type of thinking to use.
+
+          - `"enabled"`
+
+          - `"disabled"`
+
+      - `verbosity: Optional[Literal["low", "medium", "high"]]`
+
+        Soft control for how verbose model output should be, used for GPT-5 models.
+
+        - `"low"`
+
+        - `"medium"`
+
+        - `"high"`
+
+    - `class GoogleAIModelSettings: …`
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["google_ai"]]`
+
+        The type of the provider.
+
+        - `"google_ai"`
+
+      - `response_schema: Optional[ResponseSchema]`
+
+        The response schema for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+      - `thinking_config: Optional[ThinkingConfig]`
+
+        The thinking configuration for the model.
+
+        - `include_thoughts: Optional[bool]`
+
+          Whether to include thoughts in the model's response.
+
+        - `thinking_budget: Optional[int]`
+
+          The thinking budget for the model.
+
+    - `class GoogleVertexModelSettings: …`
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["google_vertex"]]`
+
+        The type of the provider.
+
+        - `"google_vertex"`
+
+      - `response_schema: Optional[ResponseSchema]`
+
+        The response schema for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+      - `thinking_config: Optional[ThinkingConfig]`
+
+        The thinking configuration for the model.
+
+        - `include_thoughts: Optional[bool]`
+
+          Whether to include thoughts in the model's response.
+
+        - `thinking_budget: Optional[int]`
+
+          The thinking budget for the model.
+
+    - `class AzureModelSettings: …`
+
+      Azure OpenAI model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["azure"]]`
+
+        The type of the provider.
+
+        - `"azure"`
+
+      - `response_format: Optional[ResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class XaiModelSettings: …`
+
+      xAI model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["xai"]]`
+
+        The type of the provider.
+
+        - `"xai"`
+
+      - `response_format: Optional[ResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class ModelSettingsMoonshotModelSettings: …`
+
+      Moonshot/Kimi model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["moonshot"]]`
+
+        The type of the provider.
+
+        - `"moonshot"`
+
+      - `response_format: Optional[ModelSettingsMoonshotModelSettingsResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `strict: Optional[bool]`
+
+        Enable strict mode for tool calling. When true, tool outputs are guaranteed to match JSON schemas.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class ModelSettingsZaiModelSettings: …`
+
+      Z.ai (ZhipuAI) model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["zai"]]`
+
+        The type of the provider.
+
+        - `"zai"`
+
+      - `response_format: Optional[ModelSettingsZaiModelSettingsResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+      - `thinking: Optional[ModelSettingsZaiModelSettingsThinking]`
+
+        The thinking configuration for GLM-4.5+ models.
+
+        - `clear_thinking: Optional[bool]`
+
+          If False, preserved thinking is used (recommended for agents).
+
+        - `type: Optional[Literal["enabled", "disabled"]]`
+
+          Whether thinking is enabled or disabled.
+
+          - `"enabled"`
+
+          - `"disabled"`
+
+    - `class ModelSettingsMoonshotCodingModelSettings: …`
+
+      Kimi Code model configuration (Anthropic-compatible).
+
+      - `effort: Optional[Literal["low", "medium", "high", 2 more]]`
+
+        Effort level for supported Anthropic models (controls token spending). 'xhigh' and 'max' are available on Opus 4.6+. Not setting this gives similar performance to 'high'.
+
+        - `"low"`
+
+        - `"medium"`
+
+        - `"high"`
+
+        - `"xhigh"`
+
+        - `"max"`
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["moonshot_coding"]]`
+
+        The type of the provider.
+
+        - `"moonshot_coding"`
+
+      - `response_format: Optional[ModelSettingsMoonshotCodingModelSettingsResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `strict: Optional[bool]`
+
+        Enable strict mode for tool calling. When true, tool outputs are guaranteed to match JSON schemas.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+      - `thinking: Optional[ModelSettingsMoonshotCodingModelSettingsThinking]`
+
+        The thinking configuration for the model.
+
+        - `budget_tokens: Optional[int]`
+
+          The maximum number of tokens the model can use for extended thinking.
+
+        - `type: Optional[Literal["enabled", "disabled"]]`
+
+          The type of thinking to use.
+
+          - `"enabled"`
+
+          - `"disabled"`
+
+      - `verbosity: Optional[Literal["low", "medium", "high"]]`
+
+        Soft control for how verbose model output should be, used for GPT-5 models.
+
+        - `"low"`
+
+        - `"medium"`
+
+        - `"high"`
+
+    - `class GroqModelSettings: …`
+
+      Groq model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["groq"]]`
+
+        The type of the provider.
+
+        - `"groq"`
+
+      - `response_format: Optional[ResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class DeepseekModelSettings: …`
+
+      Deepseek model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["deepseek"]]`
+
+        The type of the provider.
+
+        - `"deepseek"`
+
+      - `response_format: Optional[ResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class TogetherModelSettings: …`
+
+      Together AI model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["together"]]`
+
+        The type of the provider.
+
+        - `"together"`
+
+      - `response_format: Optional[ResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class BedrockModelSettings: …`
+
+      AWS Bedrock model configuration.
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["bedrock"]]`
+
+        The type of the provider.
+
+        - `"bedrock"`
+
+      - `response_format: Optional[ResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class ModelSettingsBasetenModelSettings: …`
+
+      Baseten model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["baseten"]]`
+
+        The type of the provider.
+
+        - `"baseten"`
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class ModelSettingsOpenRouterModelSettings: …`
+
+      OpenRouter model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["openrouter"]]`
+
+        The type of the provider.
+
+        - `"openrouter"`
+
+      - `response_format: Optional[ModelSettingsOpenRouterModelSettingsResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class ModelSettingsChatGptoAuthModelSettings: …`
+
+      ChatGPT OAuth model configuration (uses ChatGPT backend API).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["chatgpt_oauth"]]`
+
+        The type of the provider.
+
+        - `"chatgpt_oauth"`
+
+      - `reasoning: Optional[ModelSettingsChatGptoAuthModelSettingsReasoning]`
+
+        The reasoning configuration for the model.
+
+        - `reasoning_effort: Optional[Literal["none", "low", "medium", 2 more]]`
+
+          The reasoning effort level for GPT-5.x and o-series models.
+
+          - `"none"`
+
+          - `"low"`
+
+          - `"medium"`
+
+          - `"high"`
+
+          - `"xhigh"`
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+  - `summary: Optional[str]`
+
+    A summary of the conversation.
+
+  - `updated_at: Optional[datetime]`
+
+    The timestamp when the object was last updated.
+
+### Example
+
+```python
+import os
+from letta_client import Letta
+
+client = Letta(
+    api_key=os.environ.get("LETTA_API_KEY"),  # This is the default and can be omitted
+)
+conversations = client.conversations.list()
+print(conversations)
+```
+
+#### Response
+
+```json
+[
+  {
+    "id": "id",
+    "agent_id": "agent_id",
+    "archived": true,
+    "archived_at": "2019-12-27T18:11:19.117Z",
+    "context_window_limit": 0,
+    "created_at": "2019-12-27T18:11:19.117Z",
+    "created_by_id": "created_by_id",
+    "description": "description",
+    "in_context_message_ids": [
+      "string"
+    ],
+    "last_message_at": "2019-12-27T18:11:19.117Z",
+    "last_updated_by_id": "last_updated_by_id",
+    "model": "model",
+    "model_settings": {
+      "max_output_tokens": 0,
+      "parallel_tool_calls": true,
+      "provider_type": "openai",
+      "reasoning": {
+        "reasoning_effort": "none"
+      },
+      "response_format": {
+        "type": "text"
+      },
+      "strict": true,
+      "temperature": 0
+    },
+    "summary": "summary",
+    "updated_at": "2019-12-27T18:11:19.117Z"
+  }
+]
+```
+
+## Retrieve Conversation
+
+`conversations.retrieve(strconversation_id)  -> Conversation`
+
+**get** `/v1/conversations/{conversation_id}`
+
+Retrieve a specific conversation.
+
+### Parameters
+
+- `conversation_id: str`
+
+  The ID of the conv in the format 'conv-<uuid4>'
+
+### Returns
+
+- `class Conversation: …`
+
+  Represents a conversation on an agent for concurrent messaging.
+
+  - `id: str`
+
+    The unique identifier of the conversation.
+
+  - `agent_id: str`
+
+    The ID of the agent this conversation belongs to.
+
+  - `archived: Optional[bool]`
+
+    Whether the conversation is archived.
+
+  - `archived_at: Optional[datetime]`
+
+    Timestamp of when the conversation was archived.
+
+  - `context_window_limit: Optional[int]`
+
+    The context window limit for this conversation (overrides agent's context window).
+
+  - `created_at: Optional[datetime]`
+
+    The timestamp when the object was created.
+
+  - `created_by_id: Optional[str]`
+
+    The id of the user that made this object.
+
+  - `description: Optional[str]`
+
+    A generated description of the conversation used for search and bootstrap context.
+
+  - `in_context_message_ids: Optional[List[str]]`
+
+    The IDs of in-context messages for the conversation. Null means this field was not retrieved/hydrated for this response.
+
+  - `last_message_at: Optional[datetime]`
+
+    Timestamp of the most recent message request sent to this conversation.
+
+  - `last_updated_by_id: Optional[str]`
+
+    The id of the user that made this object.
+
+  - `model: Optional[str]`
+
+    The model handle for this conversation (overrides agent's model). Format: provider/model-name.
+
+  - `model_settings: Optional[ModelSettings]`
+
+    The model settings for this conversation (overrides agent's model settings).
+
+    - `class OpenAIModelSettings: …`
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["openai"]]`
+
+        The type of the provider.
+
+        - `"openai"`
+
+      - `reasoning: Optional[Reasoning]`
+
+        The reasoning configuration for the model.
+
+        - `reasoning_effort: Optional[Literal["none", "minimal", "low", 3 more]]`
+
+          The reasoning effort to use when generating text reasoning models
+
+          - `"none"`
+
+          - `"minimal"`
+
+          - `"low"`
+
+          - `"medium"`
+
+          - `"high"`
+
+          - `"xhigh"`
+
+      - `response_format: Optional[ResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+          - `type: Optional[Literal["text"]]`
+
+            The type of the response format.
+
+            - `"text"`
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+          - `json_schema: Dict[str, object]`
+
+            The JSON schema of the response.
+
+          - `type: Optional[Literal["json_schema"]]`
+
+            The type of the response format.
+
+            - `"json_schema"`
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+          - `type: Optional[Literal["json_object"]]`
+
+            The type of the response format.
+
+            - `"json_object"`
+
+      - `strict: Optional[bool]`
+
+        Enable strict mode for tool calling. When true, tool outputs are guaranteed to match JSON schemas.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class ModelSettingsSgLangModelSettings: …`
+
+      SGLang model configuration (OpenAI-compatible runtime with SGLang-specific parsing).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["sglang"]]`
+
+        The type of the provider.
+
+        - `"sglang"`
+
+      - `reasoning: Optional[ModelSettingsSgLangModelSettingsReasoning]`
+
+        The reasoning configuration for the model.
+
+        - `reasoning_effort: Optional[Literal["none", "minimal", "low", 3 more]]`
+
+          The reasoning effort to use when generating text reasoning models
+
+          - `"none"`
+
+          - `"minimal"`
+
+          - `"low"`
+
+          - `"medium"`
+
+          - `"high"`
+
+          - `"xhigh"`
+
+      - `response_format: Optional[ModelSettingsSgLangModelSettingsResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `strict: Optional[bool]`
+
+        Enable strict mode for tool calling. When true, tool outputs are guaranteed to match JSON schemas.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+      - `tool_call_parser: Optional[str]`
+
+        SGLang tool call parser name (for example 'glm47', 'qwen25', or 'hermes').
+
+    - `class AnthropicModelSettings: …`
+
+      - `effort: Optional[Literal["low", "medium", "high", 2 more]]`
+
+        Effort level for supported Anthropic models (controls token spending). 'xhigh' and 'max' are available on Opus 4.6+. Not setting this gives similar performance to 'high'.
+
+        - `"low"`
+
+        - `"medium"`
+
+        - `"high"`
+
+        - `"xhigh"`
+
+        - `"max"`
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["anthropic"]]`
+
+        The type of the provider.
+
+        - `"anthropic"`
+
+      - `response_format: Optional[ResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `strict: Optional[bool]`
+
+        Enable strict mode for tool calling. When true, tool outputs are guaranteed to match JSON schemas.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+      - `thinking: Optional[Thinking]`
+
+        The thinking configuration for the model.
+
+        - `budget_tokens: Optional[int]`
+
+          The maximum number of tokens the model can use for extended thinking.
+
+        - `type: Optional[Literal["enabled", "disabled"]]`
+
+          The type of thinking to use.
+
+          - `"enabled"`
+
+          - `"disabled"`
+
+      - `verbosity: Optional[Literal["low", "medium", "high"]]`
+
+        Soft control for how verbose model output should be, used for GPT-5 models.
+
+        - `"low"`
+
+        - `"medium"`
+
+        - `"high"`
+
+    - `class GoogleAIModelSettings: …`
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["google_ai"]]`
+
+        The type of the provider.
+
+        - `"google_ai"`
+
+      - `response_schema: Optional[ResponseSchema]`
+
+        The response schema for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+      - `thinking_config: Optional[ThinkingConfig]`
+
+        The thinking configuration for the model.
+
+        - `include_thoughts: Optional[bool]`
+
+          Whether to include thoughts in the model's response.
+
+        - `thinking_budget: Optional[int]`
+
+          The thinking budget for the model.
+
+    - `class GoogleVertexModelSettings: …`
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["google_vertex"]]`
+
+        The type of the provider.
+
+        - `"google_vertex"`
+
+      - `response_schema: Optional[ResponseSchema]`
+
+        The response schema for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+      - `thinking_config: Optional[ThinkingConfig]`
+
+        The thinking configuration for the model.
+
+        - `include_thoughts: Optional[bool]`
+
+          Whether to include thoughts in the model's response.
+
+        - `thinking_budget: Optional[int]`
+
+          The thinking budget for the model.
+
+    - `class AzureModelSettings: …`
+
+      Azure OpenAI model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["azure"]]`
+
+        The type of the provider.
+
+        - `"azure"`
+
+      - `response_format: Optional[ResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class XaiModelSettings: …`
+
+      xAI model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["xai"]]`
+
+        The type of the provider.
+
+        - `"xai"`
+
+      - `response_format: Optional[ResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class ModelSettingsMoonshotModelSettings: …`
+
+      Moonshot/Kimi model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["moonshot"]]`
+
+        The type of the provider.
+
+        - `"moonshot"`
+
+      - `response_format: Optional[ModelSettingsMoonshotModelSettingsResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `strict: Optional[bool]`
+
+        Enable strict mode for tool calling. When true, tool outputs are guaranteed to match JSON schemas.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class ModelSettingsZaiModelSettings: …`
+
+      Z.ai (ZhipuAI) model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["zai"]]`
+
+        The type of the provider.
+
+        - `"zai"`
+
+      - `response_format: Optional[ModelSettingsZaiModelSettingsResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+      - `thinking: Optional[ModelSettingsZaiModelSettingsThinking]`
+
+        The thinking configuration for GLM-4.5+ models.
+
+        - `clear_thinking: Optional[bool]`
+
+          If False, preserved thinking is used (recommended for agents).
+
+        - `type: Optional[Literal["enabled", "disabled"]]`
+
+          Whether thinking is enabled or disabled.
+
+          - `"enabled"`
+
+          - `"disabled"`
+
+    - `class ModelSettingsMoonshotCodingModelSettings: …`
+
+      Kimi Code model configuration (Anthropic-compatible).
+
+      - `effort: Optional[Literal["low", "medium", "high", 2 more]]`
+
+        Effort level for supported Anthropic models (controls token spending). 'xhigh' and 'max' are available on Opus 4.6+. Not setting this gives similar performance to 'high'.
+
+        - `"low"`
+
+        - `"medium"`
+
+        - `"high"`
+
+        - `"xhigh"`
+
+        - `"max"`
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["moonshot_coding"]]`
+
+        The type of the provider.
+
+        - `"moonshot_coding"`
+
+      - `response_format: Optional[ModelSettingsMoonshotCodingModelSettingsResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `strict: Optional[bool]`
+
+        Enable strict mode for tool calling. When true, tool outputs are guaranteed to match JSON schemas.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+      - `thinking: Optional[ModelSettingsMoonshotCodingModelSettingsThinking]`
+
+        The thinking configuration for the model.
+
+        - `budget_tokens: Optional[int]`
+
+          The maximum number of tokens the model can use for extended thinking.
+
+        - `type: Optional[Literal["enabled", "disabled"]]`
+
+          The type of thinking to use.
+
+          - `"enabled"`
+
+          - `"disabled"`
+
+      - `verbosity: Optional[Literal["low", "medium", "high"]]`
+
+        Soft control for how verbose model output should be, used for GPT-5 models.
+
+        - `"low"`
+
+        - `"medium"`
+
+        - `"high"`
+
+    - `class GroqModelSettings: …`
+
+      Groq model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["groq"]]`
+
+        The type of the provider.
+
+        - `"groq"`
+
+      - `response_format: Optional[ResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class DeepseekModelSettings: …`
+
+      Deepseek model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["deepseek"]]`
+
+        The type of the provider.
+
+        - `"deepseek"`
+
+      - `response_format: Optional[ResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class TogetherModelSettings: …`
+
+      Together AI model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["together"]]`
+
+        The type of the provider.
+
+        - `"together"`
+
+      - `response_format: Optional[ResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class BedrockModelSettings: …`
+
+      AWS Bedrock model configuration.
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["bedrock"]]`
+
+        The type of the provider.
+
+        - `"bedrock"`
+
+      - `response_format: Optional[ResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class ModelSettingsBasetenModelSettings: …`
+
+      Baseten model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["baseten"]]`
+
+        The type of the provider.
+
+        - `"baseten"`
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class ModelSettingsOpenRouterModelSettings: …`
+
+      OpenRouter model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["openrouter"]]`
+
+        The type of the provider.
+
+        - `"openrouter"`
+
+      - `response_format: Optional[ModelSettingsOpenRouterModelSettingsResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class ModelSettingsChatGptoAuthModelSettings: …`
+
+      ChatGPT OAuth model configuration (uses ChatGPT backend API).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["chatgpt_oauth"]]`
+
+        The type of the provider.
+
+        - `"chatgpt_oauth"`
+
+      - `reasoning: Optional[ModelSettingsChatGptoAuthModelSettingsReasoning]`
+
+        The reasoning configuration for the model.
+
+        - `reasoning_effort: Optional[Literal["none", "low", "medium", 2 more]]`
+
+          The reasoning effort level for GPT-5.x and o-series models.
+
+          - `"none"`
+
+          - `"low"`
+
+          - `"medium"`
+
+          - `"high"`
+
+          - `"xhigh"`
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+  - `summary: Optional[str]`
+
+    A summary of the conversation.
+
+  - `updated_at: Optional[datetime]`
+
+    The timestamp when the object was last updated.
+
+### Example
+
+```python
+import os
+from letta_client import Letta
+
+client = Letta(
+    api_key=os.environ.get("LETTA_API_KEY"),  # This is the default and can be omitted
+)
+conversation = client.conversations.retrieve(
+    "conv-123e4567-e89b-42d3-8456-426614174000",
+)
+print(conversation.id)
+```
+
+#### Response
+
+```json
+{
+  "id": "id",
+  "agent_id": "agent_id",
+  "archived": true,
+  "archived_at": "2019-12-27T18:11:19.117Z",
+  "context_window_limit": 0,
+  "created_at": "2019-12-27T18:11:19.117Z",
+  "created_by_id": "created_by_id",
+  "description": "description",
+  "in_context_message_ids": [
+    "string"
+  ],
+  "last_message_at": "2019-12-27T18:11:19.117Z",
+  "last_updated_by_id": "last_updated_by_id",
+  "model": "model",
+  "model_settings": {
+    "max_output_tokens": 0,
+    "parallel_tool_calls": true,
+    "provider_type": "openai",
+    "reasoning": {
+      "reasoning_effort": "none"
+    },
+    "response_format": {
+      "type": "text"
+    },
+    "strict": true,
+    "temperature": 0
+  },
+  "summary": "summary",
+  "updated_at": "2019-12-27T18:11:19.117Z"
+}
+```
+
+## Update Conversation
+
+`conversations.update(strconversation_id, ConversationUpdateParams**kwargs)  -> Conversation`
+
+**patch** `/v1/conversations/{conversation_id}`
+
+Update a conversation.
+
+### Parameters
+
+- `conversation_id: str`
+
+  The ID of the conv in the format 'conv-<uuid4>'
+
+- `archived: Optional[bool]`
+
+  Whether the conversation is archived.
+
+- `context_window_limit: Optional[int]`
+
+  The context window limit for this conversation (overrides agent's context window).
+
+- `description: Optional[str]`
+
+  A generated description of the conversation used for search and bootstrap context.
+
+- `last_message_at: Optional[Union[str, datetime, null]]`
+
+  Timestamp of the most recent message request sent to this conversation.
+
+- `model: Optional[str]`
+
+  The model handle for this conversation (overrides agent's model). Format: provider/model-name.
+
+- `model_settings: Optional[ModelSettings]`
+
+  The model settings for this conversation (overrides agent's model settings).
+
+  - `class OpenAIModelSettings: …`
+
+    - `max_output_tokens: Optional[int]`
+
+      The maximum number of tokens the model can generate.
+
+    - `parallel_tool_calls: Optional[bool]`
+
+      Whether to enable parallel tool calling.
+
+    - `provider_type: Optional[Literal["openai"]]`
+
+      The type of the provider.
+
+      - `"openai"`
+
+    - `reasoning: Optional[Reasoning]`
+
+      The reasoning configuration for the model.
+
+      - `reasoning_effort: Optional[Literal["none", "minimal", "low", 3 more]]`
+
+        The reasoning effort to use when generating text reasoning models
+
+        - `"none"`
+
+        - `"minimal"`
+
+        - `"low"`
+
+        - `"medium"`
+
+        - `"high"`
+
+        - `"xhigh"`
+
+    - `response_format: Optional[ResponseFormat]`
+
+      The response format for the model.
+
+      - `class TextResponseFormat: …`
+
+        Response format for plain text responses.
+
+        - `type: Optional[Literal["text"]]`
+
+          The type of the response format.
+
+          - `"text"`
+
+      - `class JsonSchemaResponseFormat: …`
+
+        Response format for JSON schema-based responses.
+
+        - `json_schema: Dict[str, object]`
+
+          The JSON schema of the response.
+
+        - `type: Optional[Literal["json_schema"]]`
+
+          The type of the response format.
+
+          - `"json_schema"`
+
+      - `class JsonObjectResponseFormat: …`
+
+        Response format for JSON object responses.
+
+        - `type: Optional[Literal["json_object"]]`
+
+          The type of the response format.
+
+          - `"json_object"`
+
+    - `strict: Optional[bool]`
+
+      Enable strict mode for tool calling. When true, tool outputs are guaranteed to match JSON schemas.
+
+    - `temperature: Optional[float]`
+
+      The temperature of the model.
+
+  - `class ModelSettingsSgLangModelSettings: …`
+
+    SGLang model configuration (OpenAI-compatible runtime with SGLang-specific parsing).
+
+    - `max_output_tokens: Optional[int]`
+
+      The maximum number of tokens the model can generate.
+
+    - `parallel_tool_calls: Optional[bool]`
+
+      Whether to enable parallel tool calling.
+
+    - `provider_type: Optional[Literal["sglang"]]`
+
+      The type of the provider.
+
+      - `"sglang"`
+
+    - `reasoning: Optional[ModelSettingsSgLangModelSettingsReasoning]`
+
+      The reasoning configuration for the model.
+
+      - `reasoning_effort: Optional[Literal["none", "minimal", "low", 3 more]]`
+
+        The reasoning effort to use when generating text reasoning models
+
+        - `"none"`
+
+        - `"minimal"`
+
+        - `"low"`
+
+        - `"medium"`
+
+        - `"high"`
+
+        - `"xhigh"`
+
+    - `response_format: Optional[ModelSettingsSgLangModelSettingsResponseFormat]`
+
+      The response format for the model.
+
+      - `class TextResponseFormat: …`
+
+        Response format for plain text responses.
+
+      - `class JsonSchemaResponseFormat: …`
+
+        Response format for JSON schema-based responses.
+
+      - `class JsonObjectResponseFormat: …`
+
+        Response format for JSON object responses.
+
+    - `strict: Optional[bool]`
+
+      Enable strict mode for tool calling. When true, tool outputs are guaranteed to match JSON schemas.
+
+    - `temperature: Optional[float]`
+
+      The temperature of the model.
+
+    - `tool_call_parser: Optional[str]`
+
+      SGLang tool call parser name (for example 'glm47', 'qwen25', or 'hermes').
+
+  - `class AnthropicModelSettings: …`
+
+    - `effort: Optional[Literal["low", "medium", "high", 2 more]]`
+
+      Effort level for supported Anthropic models (controls token spending). 'xhigh' and 'max' are available on Opus 4.6+. Not setting this gives similar performance to 'high'.
+
+      - `"low"`
+
+      - `"medium"`
+
+      - `"high"`
+
+      - `"xhigh"`
+
+      - `"max"`
+
+    - `max_output_tokens: Optional[int]`
+
+      The maximum number of tokens the model can generate.
+
+    - `parallel_tool_calls: Optional[bool]`
+
+      Whether to enable parallel tool calling.
+
+    - `provider_type: Optional[Literal["anthropic"]]`
+
+      The type of the provider.
+
+      - `"anthropic"`
+
+    - `response_format: Optional[ResponseFormat]`
+
+      The response format for the model.
+
+      - `class TextResponseFormat: …`
+
+        Response format for plain text responses.
+
+      - `class JsonSchemaResponseFormat: …`
+
+        Response format for JSON schema-based responses.
+
+      - `class JsonObjectResponseFormat: …`
+
+        Response format for JSON object responses.
+
+    - `strict: Optional[bool]`
+
+      Enable strict mode for tool calling. When true, tool outputs are guaranteed to match JSON schemas.
+
+    - `temperature: Optional[float]`
+
+      The temperature of the model.
+
+    - `thinking: Optional[Thinking]`
+
+      The thinking configuration for the model.
+
+      - `budget_tokens: Optional[int]`
+
+        The maximum number of tokens the model can use for extended thinking.
+
+      - `type: Optional[Literal["enabled", "disabled"]]`
+
+        The type of thinking to use.
+
+        - `"enabled"`
+
+        - `"disabled"`
+
+    - `verbosity: Optional[Literal["low", "medium", "high"]]`
+
+      Soft control for how verbose model output should be, used for GPT-5 models.
+
+      - `"low"`
+
+      - `"medium"`
+
+      - `"high"`
+
+  - `class GoogleAIModelSettings: …`
+
+    - `max_output_tokens: Optional[int]`
+
+      The maximum number of tokens the model can generate.
+
+    - `parallel_tool_calls: Optional[bool]`
+
+      Whether to enable parallel tool calling.
+
+    - `provider_type: Optional[Literal["google_ai"]]`
+
+      The type of the provider.
+
+      - `"google_ai"`
+
+    - `response_schema: Optional[ResponseSchema]`
+
+      The response schema for the model.
+
+      - `class TextResponseFormat: …`
+
+        Response format for plain text responses.
+
+      - `class JsonSchemaResponseFormat: …`
+
+        Response format for JSON schema-based responses.
+
+      - `class JsonObjectResponseFormat: …`
+
+        Response format for JSON object responses.
+
+    - `temperature: Optional[float]`
+
+      The temperature of the model.
+
+    - `thinking_config: Optional[ThinkingConfig]`
+
+      The thinking configuration for the model.
+
+      - `include_thoughts: Optional[bool]`
+
+        Whether to include thoughts in the model's response.
+
+      - `thinking_budget: Optional[int]`
+
+        The thinking budget for the model.
+
+  - `class GoogleVertexModelSettings: …`
+
+    - `max_output_tokens: Optional[int]`
+
+      The maximum number of tokens the model can generate.
+
+    - `parallel_tool_calls: Optional[bool]`
+
+      Whether to enable parallel tool calling.
+
+    - `provider_type: Optional[Literal["google_vertex"]]`
+
+      The type of the provider.
+
+      - `"google_vertex"`
+
+    - `response_schema: Optional[ResponseSchema]`
+
+      The response schema for the model.
+
+      - `class TextResponseFormat: …`
+
+        Response format for plain text responses.
+
+      - `class JsonSchemaResponseFormat: …`
+
+        Response format for JSON schema-based responses.
+
+      - `class JsonObjectResponseFormat: …`
+
+        Response format for JSON object responses.
+
+    - `temperature: Optional[float]`
+
+      The temperature of the model.
+
+    - `thinking_config: Optional[ThinkingConfig]`
+
+      The thinking configuration for the model.
+
+      - `include_thoughts: Optional[bool]`
+
+        Whether to include thoughts in the model's response.
+
+      - `thinking_budget: Optional[int]`
+
+        The thinking budget for the model.
+
+  - `class AzureModelSettings: …`
+
+    Azure OpenAI model configuration (OpenAI-compatible).
+
+    - `max_output_tokens: Optional[int]`
+
+      The maximum number of tokens the model can generate.
+
+    - `parallel_tool_calls: Optional[bool]`
+
+      Whether to enable parallel tool calling.
+
+    - `provider_type: Optional[Literal["azure"]]`
+
+      The type of the provider.
+
+      - `"azure"`
+
+    - `response_format: Optional[ResponseFormat]`
+
+      The response format for the model.
+
+      - `class TextResponseFormat: …`
+
+        Response format for plain text responses.
+
+      - `class JsonSchemaResponseFormat: …`
+
+        Response format for JSON schema-based responses.
+
+      - `class JsonObjectResponseFormat: …`
+
+        Response format for JSON object responses.
+
+    - `temperature: Optional[float]`
+
+      The temperature of the model.
+
+  - `class XaiModelSettings: …`
+
+    xAI model configuration (OpenAI-compatible).
+
+    - `max_output_tokens: Optional[int]`
+
+      The maximum number of tokens the model can generate.
+
+    - `parallel_tool_calls: Optional[bool]`
+
+      Whether to enable parallel tool calling.
+
+    - `provider_type: Optional[Literal["xai"]]`
+
+      The type of the provider.
+
+      - `"xai"`
+
+    - `response_format: Optional[ResponseFormat]`
+
+      The response format for the model.
+
+      - `class TextResponseFormat: …`
+
+        Response format for plain text responses.
+
+      - `class JsonSchemaResponseFormat: …`
+
+        Response format for JSON schema-based responses.
+
+      - `class JsonObjectResponseFormat: …`
+
+        Response format for JSON object responses.
+
+    - `temperature: Optional[float]`
+
+      The temperature of the model.
+
+  - `class ModelSettingsMoonshotModelSettings: …`
+
+    Moonshot/Kimi model configuration (OpenAI-compatible).
+
+    - `max_output_tokens: Optional[int]`
+
+      The maximum number of tokens the model can generate.
+
+    - `parallel_tool_calls: Optional[bool]`
+
+      Whether to enable parallel tool calling.
+
+    - `provider_type: Optional[Literal["moonshot"]]`
+
+      The type of the provider.
+
+      - `"moonshot"`
+
+    - `response_format: Optional[ModelSettingsMoonshotModelSettingsResponseFormat]`
+
+      The response format for the model.
+
+      - `class TextResponseFormat: …`
+
+        Response format for plain text responses.
+
+      - `class JsonSchemaResponseFormat: …`
+
+        Response format for JSON schema-based responses.
+
+      - `class JsonObjectResponseFormat: …`
+
+        Response format for JSON object responses.
+
+    - `strict: Optional[bool]`
+
+      Enable strict mode for tool calling. When true, tool outputs are guaranteed to match JSON schemas.
+
+    - `temperature: Optional[float]`
+
+      The temperature of the model.
+
+  - `class ModelSettingsZaiModelSettings: …`
+
+    Z.ai (ZhipuAI) model configuration (OpenAI-compatible).
+
+    - `max_output_tokens: Optional[int]`
+
+      The maximum number of tokens the model can generate.
+
+    - `parallel_tool_calls: Optional[bool]`
+
+      Whether to enable parallel tool calling.
+
+    - `provider_type: Optional[Literal["zai"]]`
+
+      The type of the provider.
+
+      - `"zai"`
+
+    - `response_format: Optional[ModelSettingsZaiModelSettingsResponseFormat]`
+
+      The response format for the model.
+
+      - `class TextResponseFormat: …`
+
+        Response format for plain text responses.
+
+      - `class JsonSchemaResponseFormat: …`
+
+        Response format for JSON schema-based responses.
+
+      - `class JsonObjectResponseFormat: …`
+
+        Response format for JSON object responses.
+
+    - `temperature: Optional[float]`
+
+      The temperature of the model.
+
+    - `thinking: Optional[ModelSettingsZaiModelSettingsThinking]`
+
+      The thinking configuration for GLM-4.5+ models.
+
+      - `clear_thinking: Optional[bool]`
+
+        If False, preserved thinking is used (recommended for agents).
+
+      - `type: Optional[Literal["enabled", "disabled"]]`
+
+        Whether thinking is enabled or disabled.
+
+        - `"enabled"`
+
+        - `"disabled"`
+
+  - `class ModelSettingsMoonshotCodingModelSettings: …`
+
+    Kimi Code model configuration (Anthropic-compatible).
+
+    - `effort: Optional[Literal["low", "medium", "high", 2 more]]`
+
+      Effort level for supported Anthropic models (controls token spending). 'xhigh' and 'max' are available on Opus 4.6+. Not setting this gives similar performance to 'high'.
+
+      - `"low"`
+
+      - `"medium"`
+
+      - `"high"`
+
+      - `"xhigh"`
+
+      - `"max"`
+
+    - `max_output_tokens: Optional[int]`
+
+      The maximum number of tokens the model can generate.
+
+    - `parallel_tool_calls: Optional[bool]`
+
+      Whether to enable parallel tool calling.
+
+    - `provider_type: Optional[Literal["moonshot_coding"]]`
+
+      The type of the provider.
+
+      - `"moonshot_coding"`
+
+    - `response_format: Optional[ModelSettingsMoonshotCodingModelSettingsResponseFormat]`
+
+      The response format for the model.
+
+      - `class TextResponseFormat: …`
+
+        Response format for plain text responses.
+
+      - `class JsonSchemaResponseFormat: …`
+
+        Response format for JSON schema-based responses.
+
+      - `class JsonObjectResponseFormat: …`
+
+        Response format for JSON object responses.
+
+    - `strict: Optional[bool]`
+
+      Enable strict mode for tool calling. When true, tool outputs are guaranteed to match JSON schemas.
+
+    - `temperature: Optional[float]`
+
+      The temperature of the model.
+
+    - `thinking: Optional[ModelSettingsMoonshotCodingModelSettingsThinking]`
+
+      The thinking configuration for the model.
+
+      - `budget_tokens: Optional[int]`
+
+        The maximum number of tokens the model can use for extended thinking.
+
+      - `type: Optional[Literal["enabled", "disabled"]]`
+
+        The type of thinking to use.
+
+        - `"enabled"`
+
+        - `"disabled"`
+
+    - `verbosity: Optional[Literal["low", "medium", "high"]]`
+
+      Soft control for how verbose model output should be, used for GPT-5 models.
+
+      - `"low"`
+
+      - `"medium"`
+
+      - `"high"`
+
+  - `class GroqModelSettings: …`
+
+    Groq model configuration (OpenAI-compatible).
+
+    - `max_output_tokens: Optional[int]`
+
+      The maximum number of tokens the model can generate.
+
+    - `parallel_tool_calls: Optional[bool]`
+
+      Whether to enable parallel tool calling.
+
+    - `provider_type: Optional[Literal["groq"]]`
+
+      The type of the provider.
+
+      - `"groq"`
+
+    - `response_format: Optional[ResponseFormat]`
+
+      The response format for the model.
+
+      - `class TextResponseFormat: …`
+
+        Response format for plain text responses.
+
+      - `class JsonSchemaResponseFormat: …`
+
+        Response format for JSON schema-based responses.
+
+      - `class JsonObjectResponseFormat: …`
+
+        Response format for JSON object responses.
+
+    - `temperature: Optional[float]`
+
+      The temperature of the model.
+
+  - `class DeepseekModelSettings: …`
+
+    Deepseek model configuration (OpenAI-compatible).
+
+    - `max_output_tokens: Optional[int]`
+
+      The maximum number of tokens the model can generate.
+
+    - `parallel_tool_calls: Optional[bool]`
+
+      Whether to enable parallel tool calling.
+
+    - `provider_type: Optional[Literal["deepseek"]]`
+
+      The type of the provider.
+
+      - `"deepseek"`
+
+    - `response_format: Optional[ResponseFormat]`
+
+      The response format for the model.
+
+      - `class TextResponseFormat: …`
+
+        Response format for plain text responses.
+
+      - `class JsonSchemaResponseFormat: …`
+
+        Response format for JSON schema-based responses.
+
+      - `class JsonObjectResponseFormat: …`
+
+        Response format for JSON object responses.
+
+    - `temperature: Optional[float]`
+
+      The temperature of the model.
+
+  - `class TogetherModelSettings: …`
+
+    Together AI model configuration (OpenAI-compatible).
+
+    - `max_output_tokens: Optional[int]`
+
+      The maximum number of tokens the model can generate.
+
+    - `parallel_tool_calls: Optional[bool]`
+
+      Whether to enable parallel tool calling.
+
+    - `provider_type: Optional[Literal["together"]]`
+
+      The type of the provider.
+
+      - `"together"`
+
+    - `response_format: Optional[ResponseFormat]`
+
+      The response format for the model.
+
+      - `class TextResponseFormat: …`
+
+        Response format for plain text responses.
+
+      - `class JsonSchemaResponseFormat: …`
+
+        Response format for JSON schema-based responses.
+
+      - `class JsonObjectResponseFormat: …`
+
+        Response format for JSON object responses.
+
+    - `temperature: Optional[float]`
+
+      The temperature of the model.
+
+  - `class BedrockModelSettings: …`
+
+    AWS Bedrock model configuration.
+
+    - `max_output_tokens: Optional[int]`
+
+      The maximum number of tokens the model can generate.
+
+    - `parallel_tool_calls: Optional[bool]`
+
+      Whether to enable parallel tool calling.
+
+    - `provider_type: Optional[Literal["bedrock"]]`
+
+      The type of the provider.
+
+      - `"bedrock"`
+
+    - `response_format: Optional[ResponseFormat]`
+
+      The response format for the model.
+
+      - `class TextResponseFormat: …`
+
+        Response format for plain text responses.
+
+      - `class JsonSchemaResponseFormat: …`
+
+        Response format for JSON schema-based responses.
+
+      - `class JsonObjectResponseFormat: …`
+
+        Response format for JSON object responses.
+
+    - `temperature: Optional[float]`
+
+      The temperature of the model.
+
+  - `class ModelSettingsBasetenModelSettings: …`
+
+    Baseten model configuration (OpenAI-compatible).
+
+    - `max_output_tokens: Optional[int]`
+
+      The maximum number of tokens the model can generate.
+
+    - `parallel_tool_calls: Optional[bool]`
+
+      Whether to enable parallel tool calling.
+
+    - `provider_type: Optional[Literal["baseten"]]`
+
+      The type of the provider.
+
+      - `"baseten"`
+
+    - `temperature: Optional[float]`
+
+      The temperature of the model.
+
+  - `class ModelSettingsOpenRouterModelSettings: …`
+
+    OpenRouter model configuration (OpenAI-compatible).
+
+    - `max_output_tokens: Optional[int]`
+
+      The maximum number of tokens the model can generate.
+
+    - `parallel_tool_calls: Optional[bool]`
+
+      Whether to enable parallel tool calling.
+
+    - `provider_type: Optional[Literal["openrouter"]]`
+
+      The type of the provider.
+
+      - `"openrouter"`
+
+    - `response_format: Optional[ModelSettingsOpenRouterModelSettingsResponseFormat]`
+
+      The response format for the model.
+
+      - `class TextResponseFormat: …`
+
+        Response format for plain text responses.
+
+      - `class JsonSchemaResponseFormat: …`
+
+        Response format for JSON schema-based responses.
+
+      - `class JsonObjectResponseFormat: …`
+
+        Response format for JSON object responses.
+
+    - `temperature: Optional[float]`
+
+      The temperature of the model.
+
+  - `class ModelSettingsChatGptoAuthModelSettings: …`
+
+    ChatGPT OAuth model configuration (uses ChatGPT backend API).
+
+    - `max_output_tokens: Optional[int]`
+
+      The maximum number of tokens the model can generate.
+
+    - `parallel_tool_calls: Optional[bool]`
+
+      Whether to enable parallel tool calling.
+
+    - `provider_type: Optional[Literal["chatgpt_oauth"]]`
+
+      The type of the provider.
+
+      - `"chatgpt_oauth"`
+
+    - `reasoning: Optional[ModelSettingsChatGptoAuthModelSettingsReasoning]`
+
+      The reasoning configuration for the model.
+
+      - `reasoning_effort: Optional[Literal["none", "low", "medium", 2 more]]`
+
+        The reasoning effort level for GPT-5.x and o-series models.
+
+        - `"none"`
+
+        - `"low"`
+
+        - `"medium"`
+
+        - `"high"`
+
+        - `"xhigh"`
+
+    - `temperature: Optional[float]`
+
+      The temperature of the model.
+
+- `summary: Optional[str]`
+
+  A summary of the conversation.
+
+### Returns
+
+- `class Conversation: …`
+
+  Represents a conversation on an agent for concurrent messaging.
+
+  - `id: str`
+
+    The unique identifier of the conversation.
+
+  - `agent_id: str`
+
+    The ID of the agent this conversation belongs to.
+
+  - `archived: Optional[bool]`
+
+    Whether the conversation is archived.
+
+  - `archived_at: Optional[datetime]`
+
+    Timestamp of when the conversation was archived.
+
+  - `context_window_limit: Optional[int]`
+
+    The context window limit for this conversation (overrides agent's context window).
+
+  - `created_at: Optional[datetime]`
+
+    The timestamp when the object was created.
+
+  - `created_by_id: Optional[str]`
+
+    The id of the user that made this object.
+
+  - `description: Optional[str]`
+
+    A generated description of the conversation used for search and bootstrap context.
+
+  - `in_context_message_ids: Optional[List[str]]`
+
+    The IDs of in-context messages for the conversation. Null means this field was not retrieved/hydrated for this response.
+
+  - `last_message_at: Optional[datetime]`
+
+    Timestamp of the most recent message request sent to this conversation.
+
+  - `last_updated_by_id: Optional[str]`
+
+    The id of the user that made this object.
+
+  - `model: Optional[str]`
+
+    The model handle for this conversation (overrides agent's model). Format: provider/model-name.
+
+  - `model_settings: Optional[ModelSettings]`
+
+    The model settings for this conversation (overrides agent's model settings).
+
+    - `class OpenAIModelSettings: …`
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["openai"]]`
+
+        The type of the provider.
+
+        - `"openai"`
+
+      - `reasoning: Optional[Reasoning]`
+
+        The reasoning configuration for the model.
+
+        - `reasoning_effort: Optional[Literal["none", "minimal", "low", 3 more]]`
+
+          The reasoning effort to use when generating text reasoning models
+
+          - `"none"`
+
+          - `"minimal"`
+
+          - `"low"`
+
+          - `"medium"`
+
+          - `"high"`
+
+          - `"xhigh"`
+
+      - `response_format: Optional[ResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+          - `type: Optional[Literal["text"]]`
+
+            The type of the response format.
+
+            - `"text"`
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+          - `json_schema: Dict[str, object]`
+
+            The JSON schema of the response.
+
+          - `type: Optional[Literal["json_schema"]]`
+
+            The type of the response format.
+
+            - `"json_schema"`
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+          - `type: Optional[Literal["json_object"]]`
+
+            The type of the response format.
+
+            - `"json_object"`
+
+      - `strict: Optional[bool]`
+
+        Enable strict mode for tool calling. When true, tool outputs are guaranteed to match JSON schemas.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class ModelSettingsSgLangModelSettings: …`
+
+      SGLang model configuration (OpenAI-compatible runtime with SGLang-specific parsing).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["sglang"]]`
+
+        The type of the provider.
+
+        - `"sglang"`
+
+      - `reasoning: Optional[ModelSettingsSgLangModelSettingsReasoning]`
+
+        The reasoning configuration for the model.
+
+        - `reasoning_effort: Optional[Literal["none", "minimal", "low", 3 more]]`
+
+          The reasoning effort to use when generating text reasoning models
+
+          - `"none"`
+
+          - `"minimal"`
+
+          - `"low"`
+
+          - `"medium"`
+
+          - `"high"`
+
+          - `"xhigh"`
+
+      - `response_format: Optional[ModelSettingsSgLangModelSettingsResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `strict: Optional[bool]`
+
+        Enable strict mode for tool calling. When true, tool outputs are guaranteed to match JSON schemas.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+      - `tool_call_parser: Optional[str]`
+
+        SGLang tool call parser name (for example 'glm47', 'qwen25', or 'hermes').
+
+    - `class AnthropicModelSettings: …`
+
+      - `effort: Optional[Literal["low", "medium", "high", 2 more]]`
+
+        Effort level for supported Anthropic models (controls token spending). 'xhigh' and 'max' are available on Opus 4.6+. Not setting this gives similar performance to 'high'.
+
+        - `"low"`
+
+        - `"medium"`
+
+        - `"high"`
+
+        - `"xhigh"`
+
+        - `"max"`
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["anthropic"]]`
+
+        The type of the provider.
+
+        - `"anthropic"`
+
+      - `response_format: Optional[ResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `strict: Optional[bool]`
+
+        Enable strict mode for tool calling. When true, tool outputs are guaranteed to match JSON schemas.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+      - `thinking: Optional[Thinking]`
+
+        The thinking configuration for the model.
+
+        - `budget_tokens: Optional[int]`
+
+          The maximum number of tokens the model can use for extended thinking.
+
+        - `type: Optional[Literal["enabled", "disabled"]]`
+
+          The type of thinking to use.
+
+          - `"enabled"`
+
+          - `"disabled"`
+
+      - `verbosity: Optional[Literal["low", "medium", "high"]]`
+
+        Soft control for how verbose model output should be, used for GPT-5 models.
+
+        - `"low"`
+
+        - `"medium"`
+
+        - `"high"`
+
+    - `class GoogleAIModelSettings: …`
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["google_ai"]]`
+
+        The type of the provider.
+
+        - `"google_ai"`
+
+      - `response_schema: Optional[ResponseSchema]`
+
+        The response schema for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+      - `thinking_config: Optional[ThinkingConfig]`
+
+        The thinking configuration for the model.
+
+        - `include_thoughts: Optional[bool]`
+
+          Whether to include thoughts in the model's response.
+
+        - `thinking_budget: Optional[int]`
+
+          The thinking budget for the model.
+
+    - `class GoogleVertexModelSettings: …`
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["google_vertex"]]`
+
+        The type of the provider.
+
+        - `"google_vertex"`
+
+      - `response_schema: Optional[ResponseSchema]`
+
+        The response schema for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+      - `thinking_config: Optional[ThinkingConfig]`
+
+        The thinking configuration for the model.
+
+        - `include_thoughts: Optional[bool]`
+
+          Whether to include thoughts in the model's response.
+
+        - `thinking_budget: Optional[int]`
+
+          The thinking budget for the model.
+
+    - `class AzureModelSettings: …`
+
+      Azure OpenAI model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["azure"]]`
+
+        The type of the provider.
+
+        - `"azure"`
+
+      - `response_format: Optional[ResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class XaiModelSettings: …`
+
+      xAI model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["xai"]]`
+
+        The type of the provider.
+
+        - `"xai"`
+
+      - `response_format: Optional[ResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class ModelSettingsMoonshotModelSettings: …`
+
+      Moonshot/Kimi model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["moonshot"]]`
+
+        The type of the provider.
+
+        - `"moonshot"`
+
+      - `response_format: Optional[ModelSettingsMoonshotModelSettingsResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `strict: Optional[bool]`
+
+        Enable strict mode for tool calling. When true, tool outputs are guaranteed to match JSON schemas.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class ModelSettingsZaiModelSettings: …`
+
+      Z.ai (ZhipuAI) model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["zai"]]`
+
+        The type of the provider.
+
+        - `"zai"`
+
+      - `response_format: Optional[ModelSettingsZaiModelSettingsResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+      - `thinking: Optional[ModelSettingsZaiModelSettingsThinking]`
+
+        The thinking configuration for GLM-4.5+ models.
+
+        - `clear_thinking: Optional[bool]`
+
+          If False, preserved thinking is used (recommended for agents).
+
+        - `type: Optional[Literal["enabled", "disabled"]]`
+
+          Whether thinking is enabled or disabled.
+
+          - `"enabled"`
+
+          - `"disabled"`
+
+    - `class ModelSettingsMoonshotCodingModelSettings: …`
+
+      Kimi Code model configuration (Anthropic-compatible).
+
+      - `effort: Optional[Literal["low", "medium", "high", 2 more]]`
+
+        Effort level for supported Anthropic models (controls token spending). 'xhigh' and 'max' are available on Opus 4.6+. Not setting this gives similar performance to 'high'.
+
+        - `"low"`
+
+        - `"medium"`
+
+        - `"high"`
+
+        - `"xhigh"`
+
+        - `"max"`
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["moonshot_coding"]]`
+
+        The type of the provider.
+
+        - `"moonshot_coding"`
+
+      - `response_format: Optional[ModelSettingsMoonshotCodingModelSettingsResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `strict: Optional[bool]`
+
+        Enable strict mode for tool calling. When true, tool outputs are guaranteed to match JSON schemas.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+      - `thinking: Optional[ModelSettingsMoonshotCodingModelSettingsThinking]`
+
+        The thinking configuration for the model.
+
+        - `budget_tokens: Optional[int]`
+
+          The maximum number of tokens the model can use for extended thinking.
+
+        - `type: Optional[Literal["enabled", "disabled"]]`
+
+          The type of thinking to use.
+
+          - `"enabled"`
+
+          - `"disabled"`
+
+      - `verbosity: Optional[Literal["low", "medium", "high"]]`
+
+        Soft control for how verbose model output should be, used for GPT-5 models.
+
+        - `"low"`
+
+        - `"medium"`
+
+        - `"high"`
+
+    - `class GroqModelSettings: …`
+
+      Groq model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["groq"]]`
+
+        The type of the provider.
+
+        - `"groq"`
+
+      - `response_format: Optional[ResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class DeepseekModelSettings: …`
+
+      Deepseek model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["deepseek"]]`
+
+        The type of the provider.
+
+        - `"deepseek"`
+
+      - `response_format: Optional[ResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class TogetherModelSettings: …`
+
+      Together AI model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["together"]]`
+
+        The type of the provider.
+
+        - `"together"`
+
+      - `response_format: Optional[ResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class BedrockModelSettings: …`
+
+      AWS Bedrock model configuration.
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["bedrock"]]`
+
+        The type of the provider.
+
+        - `"bedrock"`
+
+      - `response_format: Optional[ResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class ModelSettingsBasetenModelSettings: …`
+
+      Baseten model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["baseten"]]`
+
+        The type of the provider.
+
+        - `"baseten"`
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class ModelSettingsOpenRouterModelSettings: …`
+
+      OpenRouter model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["openrouter"]]`
+
+        The type of the provider.
+
+        - `"openrouter"`
+
+      - `response_format: Optional[ModelSettingsOpenRouterModelSettingsResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class ModelSettingsChatGptoAuthModelSettings: …`
+
+      ChatGPT OAuth model configuration (uses ChatGPT backend API).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["chatgpt_oauth"]]`
+
+        The type of the provider.
+
+        - `"chatgpt_oauth"`
+
+      - `reasoning: Optional[ModelSettingsChatGptoAuthModelSettingsReasoning]`
+
+        The reasoning configuration for the model.
+
+        - `reasoning_effort: Optional[Literal["none", "low", "medium", 2 more]]`
+
+          The reasoning effort level for GPT-5.x and o-series models.
+
+          - `"none"`
+
+          - `"low"`
+
+          - `"medium"`
+
+          - `"high"`
+
+          - `"xhigh"`
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+  - `summary: Optional[str]`
+
+    A summary of the conversation.
+
+  - `updated_at: Optional[datetime]`
+
+    The timestamp when the object was last updated.
+
+### Example
+
+```python
+import os
+from letta_client import Letta
+
+client = Letta(
+    api_key=os.environ.get("LETTA_API_KEY"),  # This is the default and can be omitted
+)
+conversation = client.conversations.update(
+    conversation_id="conv-123e4567-e89b-42d3-8456-426614174000",
+)
+print(conversation.id)
+```
+
+#### Response
+
+```json
+{
+  "id": "id",
+  "agent_id": "agent_id",
+  "archived": true,
+  "archived_at": "2019-12-27T18:11:19.117Z",
+  "context_window_limit": 0,
+  "created_at": "2019-12-27T18:11:19.117Z",
+  "created_by_id": "created_by_id",
+  "description": "description",
+  "in_context_message_ids": [
+    "string"
+  ],
+  "last_message_at": "2019-12-27T18:11:19.117Z",
+  "last_updated_by_id": "last_updated_by_id",
+  "model": "model",
+  "model_settings": {
+    "max_output_tokens": 0,
+    "parallel_tool_calls": true,
+    "provider_type": "openai",
+    "reasoning": {
+      "reasoning_effort": "none"
+    },
+    "response_format": {
+      "type": "text"
+    },
+    "strict": true,
+    "temperature": 0
+  },
+  "summary": "summary",
+  "updated_at": "2019-12-27T18:11:19.117Z"
+}
+```
+
+## Delete Conversation
+
+`conversations.delete(strconversation_id)  -> object`
+
+**delete** `/v1/conversations/{conversation_id}`
+
+Delete a conversation.
+
+The conversation will no longer appear in list operations.
+
+### Parameters
+
+- `conversation_id: str`
+
+  The ID of the conv in the format 'conv-<uuid4>'
+
+### Returns
+
+- `object`
+
+### Example
+
+```python
+import os
+from letta_client import Letta
+
+client = Letta(
+    api_key=os.environ.get("LETTA_API_KEY"),  # This is the default and can be omitted
+)
+conversation = client.conversations.delete(
+    "conv-123e4567-e89b-42d3-8456-426614174000",
+)
+print(conversation)
+```
+
+#### Response
+
+```json
+{}
+```
+
+## Cancel Conversation
+
+`conversations.cancel(strconversation_id, ConversationCancelParams**kwargs)  -> ConversationCancelResponse`
+
+**post** `/v1/conversations/{conversation_id}/cancel`
+
+Cancel runs associated with a conversation.
+
+Note: To cancel active runs, Redis is required.
+
+**Agent-direct mode**: Pass conversation_id="default" with agent_id query parameter
+to cancel runs for the agent's default conversation.
+
+**Deprecated**: Passing an agent ID as conversation_id still works but will be removed.
+
+### Parameters
+
+- `conversation_id: str`
+
+  The conversation identifier. Can be a conversation ID ('conv-<uuid4>'), 'default' for agent-direct mode (with agent_id parameter), or an agent ID ('agent-<uuid4>') for backwards compatibility (deprecated).
+
+- `agent_id: Optional[str]`
+
+  Agent ID for agent-direct mode with 'default' conversation
+
+### Returns
+
+- `Dict[str, object]`
+
+### Example
+
+```python
+import os
+from letta_client import Letta
+
+client = Letta(
+    api_key=os.environ.get("LETTA_API_KEY"),  # This is the default and can be omitted
+)
+response = client.conversations.cancel(
+    conversation_id="default",
+)
+print(response)
+```
+
+#### Response
+
+```json
+{
+  "foo": "bar"
+}
+```
+
+## Recompile Conversation
+
+`conversations.recompile(strconversation_id, ConversationRecompileParams**kwargs)  -> ConversationRecompileResponse`
+
+**post** `/v1/conversations/{conversation_id}/recompile`
+
+Manually trigger system prompt recompilation for a conversation.
+
+### Parameters
+
+- `conversation_id: str`
+
+  The conversation identifier. Can be a conversation ID ('conv-<uuid4>'), 'default' for agent-direct mode (with agent_id parameter), or an agent ID ('agent-<uuid4>') for backwards compatibility (deprecated).
+
+- `dry_run: Optional[bool]`
+
+  If True, do not persist changes; still returns the compiled system prompt.
+
+- `agent_id: Optional[str]`
+
+  Agent ID for agent-direct mode with 'default' conversation. Use with conversation_id='default' in the URL path.
+
+- `compaction_settings: Optional[CompactionSettings]`
+
+  Configuration for conversation compaction / summarization.
+
+  Per-model settings (temperature,
+  max tokens, etc.) are derived from the default configuration for that handle.
+
+  - `clip_chars: Optional[int]`
+
+    The maximum length of the summary in characters. If none, no clipping is performed.
+
+  - `mode: Optional[Literal["all", "sliding_window", "self_compact_all", "self_compact_sliding_window"]]`
+
+    The type of summarization technique use.
+
+    - `"all"`
+
+    - `"sliding_window"`
+
+    - `"self_compact_all"`
+
+    - `"self_compact_sliding_window"`
+
+  - `model: Optional[str]`
+
+    Model handle to use for sliding_window/all summarization (format: provider/model-name). If None, uses lightweight provider-specific defaults.
+
+  - `model_settings: Optional[CompactionSettingsModelSettings]`
+
+    Optional model settings used to override defaults for the summarizer model.
+
+    - `class OpenAIModelSettings: …`
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["openai"]]`
+
+        The type of the provider.
+
+        - `"openai"`
+
+      - `reasoning: Optional[Reasoning]`
+
+        The reasoning configuration for the model.
+
+        - `reasoning_effort: Optional[Literal["none", "minimal", "low", 3 more]]`
+
+          The reasoning effort to use when generating text reasoning models
+
+          - `"none"`
+
+          - `"minimal"`
+
+          - `"low"`
+
+          - `"medium"`
+
+          - `"high"`
+
+          - `"xhigh"`
+
+      - `response_format: Optional[ResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+          - `type: Optional[Literal["text"]]`
+
+            The type of the response format.
+
+            - `"text"`
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+          - `json_schema: Dict[str, object]`
+
+            The JSON schema of the response.
+
+          - `type: Optional[Literal["json_schema"]]`
+
+            The type of the response format.
+
+            - `"json_schema"`
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+          - `type: Optional[Literal["json_object"]]`
+
+            The type of the response format.
+
+            - `"json_object"`
+
+      - `strict: Optional[bool]`
+
+        Enable strict mode for tool calling. When true, tool outputs are guaranteed to match JSON schemas.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class CompactionSettingsModelSettingsSgLangModelSettings: …`
+
+      SGLang model configuration (OpenAI-compatible runtime with SGLang-specific parsing).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["sglang"]]`
+
+        The type of the provider.
+
+        - `"sglang"`
+
+      - `reasoning: Optional[CompactionSettingsModelSettingsSgLangModelSettingsReasoning]`
+
+        The reasoning configuration for the model.
+
+        - `reasoning_effort: Optional[Literal["none", "minimal", "low", 3 more]]`
+
+          The reasoning effort to use when generating text reasoning models
+
+          - `"none"`
+
+          - `"minimal"`
+
+          - `"low"`
+
+          - `"medium"`
+
+          - `"high"`
+
+          - `"xhigh"`
+
+      - `response_format: Optional[CompactionSettingsModelSettingsSgLangModelSettingsResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `strict: Optional[bool]`
+
+        Enable strict mode for tool calling. When true, tool outputs are guaranteed to match JSON schemas.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+      - `tool_call_parser: Optional[str]`
+
+        SGLang tool call parser name (for example 'glm47', 'qwen25', or 'hermes').
+
+    - `class AnthropicModelSettings: …`
+
+      - `effort: Optional[Literal["low", "medium", "high", 2 more]]`
+
+        Effort level for supported Anthropic models (controls token spending). 'xhigh' and 'max' are available on Opus 4.6+. Not setting this gives similar performance to 'high'.
+
+        - `"low"`
+
+        - `"medium"`
+
+        - `"high"`
+
+        - `"xhigh"`
+
+        - `"max"`
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["anthropic"]]`
+
+        The type of the provider.
+
+        - `"anthropic"`
+
+      - `response_format: Optional[ResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `strict: Optional[bool]`
+
+        Enable strict mode for tool calling. When true, tool outputs are guaranteed to match JSON schemas.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+      - `thinking: Optional[Thinking]`
+
+        The thinking configuration for the model.
+
+        - `budget_tokens: Optional[int]`
+
+          The maximum number of tokens the model can use for extended thinking.
+
+        - `type: Optional[Literal["enabled", "disabled"]]`
+
+          The type of thinking to use.
+
+          - `"enabled"`
+
+          - `"disabled"`
+
+      - `verbosity: Optional[Literal["low", "medium", "high"]]`
+
+        Soft control for how verbose model output should be, used for GPT-5 models.
+
+        - `"low"`
+
+        - `"medium"`
+
+        - `"high"`
+
+    - `class GoogleAIModelSettings: …`
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["google_ai"]]`
+
+        The type of the provider.
+
+        - `"google_ai"`
+
+      - `response_schema: Optional[ResponseSchema]`
+
+        The response schema for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+      - `thinking_config: Optional[ThinkingConfig]`
+
+        The thinking configuration for the model.
+
+        - `include_thoughts: Optional[bool]`
+
+          Whether to include thoughts in the model's response.
+
+        - `thinking_budget: Optional[int]`
+
+          The thinking budget for the model.
+
+    - `class GoogleVertexModelSettings: …`
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["google_vertex"]]`
+
+        The type of the provider.
+
+        - `"google_vertex"`
+
+      - `response_schema: Optional[ResponseSchema]`
+
+        The response schema for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+      - `thinking_config: Optional[ThinkingConfig]`
+
+        The thinking configuration for the model.
+
+        - `include_thoughts: Optional[bool]`
+
+          Whether to include thoughts in the model's response.
+
+        - `thinking_budget: Optional[int]`
+
+          The thinking budget for the model.
+
+    - `class AzureModelSettings: …`
+
+      Azure OpenAI model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["azure"]]`
+
+        The type of the provider.
+
+        - `"azure"`
+
+      - `response_format: Optional[ResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class XaiModelSettings: …`
+
+      xAI model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["xai"]]`
+
+        The type of the provider.
+
+        - `"xai"`
+
+      - `response_format: Optional[ResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class CompactionSettingsModelSettingsMoonshotModelSettings: …`
+
+      Moonshot/Kimi model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["moonshot"]]`
+
+        The type of the provider.
+
+        - `"moonshot"`
+
+      - `response_format: Optional[CompactionSettingsModelSettingsMoonshotModelSettingsResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `strict: Optional[bool]`
+
+        Enable strict mode for tool calling. When true, tool outputs are guaranteed to match JSON schemas.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class CompactionSettingsModelSettingsZaiModelSettings: …`
+
+      Z.ai (ZhipuAI) model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["zai"]]`
+
+        The type of the provider.
+
+        - `"zai"`
+
+      - `response_format: Optional[CompactionSettingsModelSettingsZaiModelSettingsResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+      - `thinking: Optional[CompactionSettingsModelSettingsZaiModelSettingsThinking]`
+
+        The thinking configuration for GLM-4.5+ models.
+
+        - `clear_thinking: Optional[bool]`
+
+          If False, preserved thinking is used (recommended for agents).
+
+        - `type: Optional[Literal["enabled", "disabled"]]`
+
+          Whether thinking is enabled or disabled.
+
+          - `"enabled"`
+
+          - `"disabled"`
+
+    - `class CompactionSettingsModelSettingsMoonshotCodingModelSettings: …`
+
+      Kimi Code model configuration (Anthropic-compatible).
+
+      - `effort: Optional[Literal["low", "medium", "high", 2 more]]`
+
+        Effort level for supported Anthropic models (controls token spending). 'xhigh' and 'max' are available on Opus 4.6+. Not setting this gives similar performance to 'high'.
+
+        - `"low"`
+
+        - `"medium"`
+
+        - `"high"`
+
+        - `"xhigh"`
+
+        - `"max"`
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["moonshot_coding"]]`
+
+        The type of the provider.
+
+        - `"moonshot_coding"`
+
+      - `response_format: Optional[CompactionSettingsModelSettingsMoonshotCodingModelSettingsResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `strict: Optional[bool]`
+
+        Enable strict mode for tool calling. When true, tool outputs are guaranteed to match JSON schemas.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+      - `thinking: Optional[CompactionSettingsModelSettingsMoonshotCodingModelSettingsThinking]`
+
+        The thinking configuration for the model.
+
+        - `budget_tokens: Optional[int]`
+
+          The maximum number of tokens the model can use for extended thinking.
+
+        - `type: Optional[Literal["enabled", "disabled"]]`
+
+          The type of thinking to use.
+
+          - `"enabled"`
+
+          - `"disabled"`
+
+      - `verbosity: Optional[Literal["low", "medium", "high"]]`
+
+        Soft control for how verbose model output should be, used for GPT-5 models.
+
+        - `"low"`
+
+        - `"medium"`
+
+        - `"high"`
+
+    - `class GroqModelSettings: …`
+
+      Groq model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["groq"]]`
+
+        The type of the provider.
+
+        - `"groq"`
+
+      - `response_format: Optional[ResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class DeepseekModelSettings: …`
+
+      Deepseek model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["deepseek"]]`
+
+        The type of the provider.
+
+        - `"deepseek"`
+
+      - `response_format: Optional[ResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class TogetherModelSettings: …`
+
+      Together AI model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["together"]]`
+
+        The type of the provider.
+
+        - `"together"`
+
+      - `response_format: Optional[ResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class BedrockModelSettings: …`
+
+      AWS Bedrock model configuration.
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["bedrock"]]`
+
+        The type of the provider.
+
+        - `"bedrock"`
+
+      - `response_format: Optional[ResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class CompactionSettingsModelSettingsBasetenModelSettings: …`
+
+      Baseten model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["baseten"]]`
+
+        The type of the provider.
+
+        - `"baseten"`
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class CompactionSettingsModelSettingsOpenRouterModelSettings: …`
+
+      OpenRouter model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["openrouter"]]`
+
+        The type of the provider.
+
+        - `"openrouter"`
+
+      - `response_format: Optional[CompactionSettingsModelSettingsOpenRouterModelSettingsResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class CompactionSettingsModelSettingsChatGptoAuthModelSettings: …`
+
+      ChatGPT OAuth model configuration (uses ChatGPT backend API).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["chatgpt_oauth"]]`
+
+        The type of the provider.
+
+        - `"chatgpt_oauth"`
+
+      - `reasoning: Optional[CompactionSettingsModelSettingsChatGptoAuthModelSettingsReasoning]`
+
+        The reasoning configuration for the model.
+
+        - `reasoning_effort: Optional[Literal["none", "low", "medium", 2 more]]`
+
+          The reasoning effort level for GPT-5.x and o-series models.
+
+          - `"none"`
+
+          - `"low"`
+
+          - `"medium"`
+
+          - `"high"`
+
+          - `"xhigh"`
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+  - `prompt: Optional[str]`
+
+    The prompt to use for summarization. If None, uses mode-specific default.
+
+  - `prompt_acknowledgement: Optional[bool]`
+
+    Whether to include an acknowledgement post-prompt (helps prevent non-summary outputs).
+
+  - `sliding_window_percentage: Optional[float]`
+
+    The percentage of the context window to keep post-summarization (only used in sliding window modes).
+
+### Returns
+
+- `str`
+
+### Example
+
+```python
+import os
+from letta_client import Letta
+
+client = Letta(
+    api_key=os.environ.get("LETTA_API_KEY"),  # This is the default and can be omitted
+)
+response = client.conversations.recompile(
+    conversation_id="default",
+)
+print(response)
+```
+
+#### Response
+
+```json
+"string"
+```
+
+## Fork Conversation
+
+`conversations.fork(strconversation_id, ConversationForkParams**kwargs)  -> Conversation`
+
+**post** `/v1/conversations/{conversation_id}/fork`
+
+Fork an existing conversation.
+
+Creates a new conversation that shares the same in-context messages as the source
+conversation, but with a newly compiled system message reflecting the latest memory
+block values. The forked conversation belongs to the same agent as the source.
+
+If message_id is provided, only source in-context messages up to and including
+that message are included in the fork.
+
+**Agent-direct mode**: Pass conversation_id="default" with agent_id query parameter
+to fork the agent's default (agent-direct) message history into a new conversation.
+
+**Deprecated**: Passing an agent ID as conversation_id still works but will be removed.
+
+### Parameters
+
+- `conversation_id: str`
+
+  The conversation identifier. Can be a conversation ID ('conv-<uuid4>'), 'default' for agent-direct mode (with agent_id parameter), or an agent ID ('agent-<uuid4>') for backwards compatibility (deprecated).
+
+- `agent_id: Optional[str]`
+
+  Agent ID for agent-direct mode with 'default' conversation
+
+- `hidden: Optional[bool]`
+
+  Whether the forked conversation should be hidden from listings
+
+- `message_id: Optional[str]`
+
+  The ID of the message in the format 'message-<uuid4>'
+
+### Returns
+
+- `class Conversation: …`
+
+  Represents a conversation on an agent for concurrent messaging.
+
+  - `id: str`
+
+    The unique identifier of the conversation.
+
+  - `agent_id: str`
+
+    The ID of the agent this conversation belongs to.
+
+  - `archived: Optional[bool]`
+
+    Whether the conversation is archived.
+
+  - `archived_at: Optional[datetime]`
+
+    Timestamp of when the conversation was archived.
+
+  - `context_window_limit: Optional[int]`
+
+    The context window limit for this conversation (overrides agent's context window).
+
+  - `created_at: Optional[datetime]`
+
+    The timestamp when the object was created.
+
+  - `created_by_id: Optional[str]`
+
+    The id of the user that made this object.
+
+  - `description: Optional[str]`
+
+    A generated description of the conversation used for search and bootstrap context.
+
+  - `in_context_message_ids: Optional[List[str]]`
+
+    The IDs of in-context messages for the conversation. Null means this field was not retrieved/hydrated for this response.
+
+  - `last_message_at: Optional[datetime]`
+
+    Timestamp of the most recent message request sent to this conversation.
+
+  - `last_updated_by_id: Optional[str]`
+
+    The id of the user that made this object.
+
+  - `model: Optional[str]`
+
+    The model handle for this conversation (overrides agent's model). Format: provider/model-name.
+
+  - `model_settings: Optional[ModelSettings]`
+
+    The model settings for this conversation (overrides agent's model settings).
+
+    - `class OpenAIModelSettings: …`
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["openai"]]`
+
+        The type of the provider.
+
+        - `"openai"`
+
+      - `reasoning: Optional[Reasoning]`
+
+        The reasoning configuration for the model.
+
+        - `reasoning_effort: Optional[Literal["none", "minimal", "low", 3 more]]`
+
+          The reasoning effort to use when generating text reasoning models
+
+          - `"none"`
+
+          - `"minimal"`
+
+          - `"low"`
+
+          - `"medium"`
+
+          - `"high"`
+
+          - `"xhigh"`
+
+      - `response_format: Optional[ResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+          - `type: Optional[Literal["text"]]`
+
+            The type of the response format.
+
+            - `"text"`
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+          - `json_schema: Dict[str, object]`
+
+            The JSON schema of the response.
+
+          - `type: Optional[Literal["json_schema"]]`
+
+            The type of the response format.
+
+            - `"json_schema"`
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+          - `type: Optional[Literal["json_object"]]`
+
+            The type of the response format.
+
+            - `"json_object"`
+
+      - `strict: Optional[bool]`
+
+        Enable strict mode for tool calling. When true, tool outputs are guaranteed to match JSON schemas.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class ModelSettingsSgLangModelSettings: …`
+
+      SGLang model configuration (OpenAI-compatible runtime with SGLang-specific parsing).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["sglang"]]`
+
+        The type of the provider.
+
+        - `"sglang"`
+
+      - `reasoning: Optional[ModelSettingsSgLangModelSettingsReasoning]`
+
+        The reasoning configuration for the model.
+
+        - `reasoning_effort: Optional[Literal["none", "minimal", "low", 3 more]]`
+
+          The reasoning effort to use when generating text reasoning models
+
+          - `"none"`
+
+          - `"minimal"`
+
+          - `"low"`
+
+          - `"medium"`
+
+          - `"high"`
+
+          - `"xhigh"`
+
+      - `response_format: Optional[ModelSettingsSgLangModelSettingsResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `strict: Optional[bool]`
+
+        Enable strict mode for tool calling. When true, tool outputs are guaranteed to match JSON schemas.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+      - `tool_call_parser: Optional[str]`
+
+        SGLang tool call parser name (for example 'glm47', 'qwen25', or 'hermes').
+
+    - `class AnthropicModelSettings: …`
+
+      - `effort: Optional[Literal["low", "medium", "high", 2 more]]`
+
+        Effort level for supported Anthropic models (controls token spending). 'xhigh' and 'max' are available on Opus 4.6+. Not setting this gives similar performance to 'high'.
+
+        - `"low"`
+
+        - `"medium"`
+
+        - `"high"`
+
+        - `"xhigh"`
+
+        - `"max"`
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["anthropic"]]`
+
+        The type of the provider.
+
+        - `"anthropic"`
+
+      - `response_format: Optional[ResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `strict: Optional[bool]`
+
+        Enable strict mode for tool calling. When true, tool outputs are guaranteed to match JSON schemas.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+      - `thinking: Optional[Thinking]`
+
+        The thinking configuration for the model.
+
+        - `budget_tokens: Optional[int]`
+
+          The maximum number of tokens the model can use for extended thinking.
+
+        - `type: Optional[Literal["enabled", "disabled"]]`
+
+          The type of thinking to use.
+
+          - `"enabled"`
+
+          - `"disabled"`
+
+      - `verbosity: Optional[Literal["low", "medium", "high"]]`
+
+        Soft control for how verbose model output should be, used for GPT-5 models.
+
+        - `"low"`
+
+        - `"medium"`
+
+        - `"high"`
+
+    - `class GoogleAIModelSettings: …`
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["google_ai"]]`
+
+        The type of the provider.
+
+        - `"google_ai"`
+
+      - `response_schema: Optional[ResponseSchema]`
+
+        The response schema for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+      - `thinking_config: Optional[ThinkingConfig]`
+
+        The thinking configuration for the model.
+
+        - `include_thoughts: Optional[bool]`
+
+          Whether to include thoughts in the model's response.
+
+        - `thinking_budget: Optional[int]`
+
+          The thinking budget for the model.
+
+    - `class GoogleVertexModelSettings: …`
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["google_vertex"]]`
+
+        The type of the provider.
+
+        - `"google_vertex"`
+
+      - `response_schema: Optional[ResponseSchema]`
+
+        The response schema for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+      - `thinking_config: Optional[ThinkingConfig]`
+
+        The thinking configuration for the model.
+
+        - `include_thoughts: Optional[bool]`
+
+          Whether to include thoughts in the model's response.
+
+        - `thinking_budget: Optional[int]`
+
+          The thinking budget for the model.
+
+    - `class AzureModelSettings: …`
+
+      Azure OpenAI model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["azure"]]`
+
+        The type of the provider.
+
+        - `"azure"`
+
+      - `response_format: Optional[ResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class XaiModelSettings: …`
+
+      xAI model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["xai"]]`
+
+        The type of the provider.
+
+        - `"xai"`
+
+      - `response_format: Optional[ResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class ModelSettingsMoonshotModelSettings: …`
+
+      Moonshot/Kimi model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["moonshot"]]`
+
+        The type of the provider.
+
+        - `"moonshot"`
+
+      - `response_format: Optional[ModelSettingsMoonshotModelSettingsResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `strict: Optional[bool]`
+
+        Enable strict mode for tool calling. When true, tool outputs are guaranteed to match JSON schemas.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class ModelSettingsZaiModelSettings: …`
+
+      Z.ai (ZhipuAI) model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["zai"]]`
+
+        The type of the provider.
+
+        - `"zai"`
+
+      - `response_format: Optional[ModelSettingsZaiModelSettingsResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+      - `thinking: Optional[ModelSettingsZaiModelSettingsThinking]`
+
+        The thinking configuration for GLM-4.5+ models.
+
+        - `clear_thinking: Optional[bool]`
+
+          If False, preserved thinking is used (recommended for agents).
+
+        - `type: Optional[Literal["enabled", "disabled"]]`
+
+          Whether thinking is enabled or disabled.
+
+          - `"enabled"`
+
+          - `"disabled"`
+
+    - `class ModelSettingsMoonshotCodingModelSettings: …`
+
+      Kimi Code model configuration (Anthropic-compatible).
+
+      - `effort: Optional[Literal["low", "medium", "high", 2 more]]`
+
+        Effort level for supported Anthropic models (controls token spending). 'xhigh' and 'max' are available on Opus 4.6+. Not setting this gives similar performance to 'high'.
+
+        - `"low"`
+
+        - `"medium"`
+
+        - `"high"`
+
+        - `"xhigh"`
+
+        - `"max"`
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["moonshot_coding"]]`
+
+        The type of the provider.
+
+        - `"moonshot_coding"`
+
+      - `response_format: Optional[ModelSettingsMoonshotCodingModelSettingsResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `strict: Optional[bool]`
+
+        Enable strict mode for tool calling. When true, tool outputs are guaranteed to match JSON schemas.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+      - `thinking: Optional[ModelSettingsMoonshotCodingModelSettingsThinking]`
+
+        The thinking configuration for the model.
+
+        - `budget_tokens: Optional[int]`
+
+          The maximum number of tokens the model can use for extended thinking.
+
+        - `type: Optional[Literal["enabled", "disabled"]]`
+
+          The type of thinking to use.
+
+          - `"enabled"`
+
+          - `"disabled"`
+
+      - `verbosity: Optional[Literal["low", "medium", "high"]]`
+
+        Soft control for how verbose model output should be, used for GPT-5 models.
+
+        - `"low"`
+
+        - `"medium"`
+
+        - `"high"`
+
+    - `class GroqModelSettings: …`
+
+      Groq model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["groq"]]`
+
+        The type of the provider.
+
+        - `"groq"`
+
+      - `response_format: Optional[ResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class DeepseekModelSettings: …`
+
+      Deepseek model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["deepseek"]]`
+
+        The type of the provider.
+
+        - `"deepseek"`
+
+      - `response_format: Optional[ResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class TogetherModelSettings: …`
+
+      Together AI model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["together"]]`
+
+        The type of the provider.
+
+        - `"together"`
+
+      - `response_format: Optional[ResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class BedrockModelSettings: …`
+
+      AWS Bedrock model configuration.
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["bedrock"]]`
+
+        The type of the provider.
+
+        - `"bedrock"`
+
+      - `response_format: Optional[ResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class ModelSettingsBasetenModelSettings: …`
+
+      Baseten model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["baseten"]]`
+
+        The type of the provider.
+
+        - `"baseten"`
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class ModelSettingsOpenRouterModelSettings: …`
+
+      OpenRouter model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["openrouter"]]`
+
+        The type of the provider.
+
+        - `"openrouter"`
+
+      - `response_format: Optional[ModelSettingsOpenRouterModelSettingsResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class ModelSettingsChatGptoAuthModelSettings: …`
+
+      ChatGPT OAuth model configuration (uses ChatGPT backend API).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["chatgpt_oauth"]]`
+
+        The type of the provider.
+
+        - `"chatgpt_oauth"`
+
+      - `reasoning: Optional[ModelSettingsChatGptoAuthModelSettingsReasoning]`
+
+        The reasoning configuration for the model.
+
+        - `reasoning_effort: Optional[Literal["none", "low", "medium", 2 more]]`
+
+          The reasoning effort level for GPT-5.x and o-series models.
+
+          - `"none"`
+
+          - `"low"`
+
+          - `"medium"`
+
+          - `"high"`
+
+          - `"xhigh"`
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+  - `summary: Optional[str]`
+
+    A summary of the conversation.
+
+  - `updated_at: Optional[datetime]`
+
+    The timestamp when the object was last updated.
+
+### Example
+
+```python
+import os
+from letta_client import Letta
+
+client = Letta(
+    api_key=os.environ.get("LETTA_API_KEY"),  # This is the default and can be omitted
+)
+conversation = client.conversations.fork(
+    conversation_id="default",
+)
+print(conversation.id)
+```
+
+#### Response
+
+```json
+{
+  "id": "id",
+  "agent_id": "agent_id",
+  "archived": true,
+  "archived_at": "2019-12-27T18:11:19.117Z",
+  "context_window_limit": 0,
+  "created_at": "2019-12-27T18:11:19.117Z",
+  "created_by_id": "created_by_id",
+  "description": "description",
+  "in_context_message_ids": [
+    "string"
+  ],
+  "last_message_at": "2019-12-27T18:11:19.117Z",
+  "last_updated_by_id": "last_updated_by_id",
+  "model": "model",
+  "model_settings": {
+    "max_output_tokens": 0,
+    "parallel_tool_calls": true,
+    "provider_type": "openai",
+    "reasoning": {
+      "reasoning_effort": "none"
+    },
+    "response_format": {
+      "type": "text"
+    },
+    "strict": true,
+    "temperature": 0
+  },
+  "summary": "summary",
+  "updated_at": "2019-12-27T18:11:19.117Z"
+}
+```
+
+## Domain Types
+
+### Conversation
+
+- `class Conversation: …`
+
+  Represents a conversation on an agent for concurrent messaging.
+
+  - `id: str`
+
+    The unique identifier of the conversation.
+
+  - `agent_id: str`
+
+    The ID of the agent this conversation belongs to.
+
+  - `archived: Optional[bool]`
+
+    Whether the conversation is archived.
+
+  - `archived_at: Optional[datetime]`
+
+    Timestamp of when the conversation was archived.
+
+  - `context_window_limit: Optional[int]`
+
+    The context window limit for this conversation (overrides agent's context window).
+
+  - `created_at: Optional[datetime]`
+
+    The timestamp when the object was created.
+
+  - `created_by_id: Optional[str]`
+
+    The id of the user that made this object.
+
+  - `description: Optional[str]`
+
+    A generated description of the conversation used for search and bootstrap context.
+
+  - `in_context_message_ids: Optional[List[str]]`
+
+    The IDs of in-context messages for the conversation. Null means this field was not retrieved/hydrated for this response.
+
+  - `last_message_at: Optional[datetime]`
+
+    Timestamp of the most recent message request sent to this conversation.
+
+  - `last_updated_by_id: Optional[str]`
+
+    The id of the user that made this object.
+
+  - `model: Optional[str]`
+
+    The model handle for this conversation (overrides agent's model). Format: provider/model-name.
+
+  - `model_settings: Optional[ModelSettings]`
+
+    The model settings for this conversation (overrides agent's model settings).
+
+    - `class OpenAIModelSettings: …`
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["openai"]]`
+
+        The type of the provider.
+
+        - `"openai"`
+
+      - `reasoning: Optional[Reasoning]`
+
+        The reasoning configuration for the model.
+
+        - `reasoning_effort: Optional[Literal["none", "minimal", "low", 3 more]]`
+
+          The reasoning effort to use when generating text reasoning models
+
+          - `"none"`
+
+          - `"minimal"`
+
+          - `"low"`
+
+          - `"medium"`
+
+          - `"high"`
+
+          - `"xhigh"`
+
+      - `response_format: Optional[ResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+          - `type: Optional[Literal["text"]]`
+
+            The type of the response format.
+
+            - `"text"`
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+          - `json_schema: Dict[str, object]`
+
+            The JSON schema of the response.
+
+          - `type: Optional[Literal["json_schema"]]`
+
+            The type of the response format.
+
+            - `"json_schema"`
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+          - `type: Optional[Literal["json_object"]]`
+
+            The type of the response format.
+
+            - `"json_object"`
+
+      - `strict: Optional[bool]`
+
+        Enable strict mode for tool calling. When true, tool outputs are guaranteed to match JSON schemas.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class ModelSettingsSgLangModelSettings: …`
+
+      SGLang model configuration (OpenAI-compatible runtime with SGLang-specific parsing).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["sglang"]]`
+
+        The type of the provider.
+
+        - `"sglang"`
+
+      - `reasoning: Optional[ModelSettingsSgLangModelSettingsReasoning]`
+
+        The reasoning configuration for the model.
+
+        - `reasoning_effort: Optional[Literal["none", "minimal", "low", 3 more]]`
+
+          The reasoning effort to use when generating text reasoning models
+
+          - `"none"`
+
+          - `"minimal"`
+
+          - `"low"`
+
+          - `"medium"`
+
+          - `"high"`
+
+          - `"xhigh"`
+
+      - `response_format: Optional[ModelSettingsSgLangModelSettingsResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `strict: Optional[bool]`
+
+        Enable strict mode for tool calling. When true, tool outputs are guaranteed to match JSON schemas.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+      - `tool_call_parser: Optional[str]`
+
+        SGLang tool call parser name (for example 'glm47', 'qwen25', or 'hermes').
+
+    - `class AnthropicModelSettings: …`
+
+      - `effort: Optional[Literal["low", "medium", "high", 2 more]]`
+
+        Effort level for supported Anthropic models (controls token spending). 'xhigh' and 'max' are available on Opus 4.6+. Not setting this gives similar performance to 'high'.
+
+        - `"low"`
+
+        - `"medium"`
+
+        - `"high"`
+
+        - `"xhigh"`
+
+        - `"max"`
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["anthropic"]]`
+
+        The type of the provider.
+
+        - `"anthropic"`
+
+      - `response_format: Optional[ResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `strict: Optional[bool]`
+
+        Enable strict mode for tool calling. When true, tool outputs are guaranteed to match JSON schemas.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+      - `thinking: Optional[Thinking]`
+
+        The thinking configuration for the model.
+
+        - `budget_tokens: Optional[int]`
+
+          The maximum number of tokens the model can use for extended thinking.
+
+        - `type: Optional[Literal["enabled", "disabled"]]`
+
+          The type of thinking to use.
+
+          - `"enabled"`
+
+          - `"disabled"`
+
+      - `verbosity: Optional[Literal["low", "medium", "high"]]`
+
+        Soft control for how verbose model output should be, used for GPT-5 models.
+
+        - `"low"`
+
+        - `"medium"`
+
+        - `"high"`
+
+    - `class GoogleAIModelSettings: …`
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["google_ai"]]`
+
+        The type of the provider.
+
+        - `"google_ai"`
+
+      - `response_schema: Optional[ResponseSchema]`
+
+        The response schema for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+      - `thinking_config: Optional[ThinkingConfig]`
+
+        The thinking configuration for the model.
+
+        - `include_thoughts: Optional[bool]`
+
+          Whether to include thoughts in the model's response.
+
+        - `thinking_budget: Optional[int]`
+
+          The thinking budget for the model.
+
+    - `class GoogleVertexModelSettings: …`
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["google_vertex"]]`
+
+        The type of the provider.
+
+        - `"google_vertex"`
+
+      - `response_schema: Optional[ResponseSchema]`
+
+        The response schema for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+      - `thinking_config: Optional[ThinkingConfig]`
+
+        The thinking configuration for the model.
+
+        - `include_thoughts: Optional[bool]`
+
+          Whether to include thoughts in the model's response.
+
+        - `thinking_budget: Optional[int]`
+
+          The thinking budget for the model.
+
+    - `class AzureModelSettings: …`
+
+      Azure OpenAI model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["azure"]]`
+
+        The type of the provider.
+
+        - `"azure"`
+
+      - `response_format: Optional[ResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class XaiModelSettings: …`
+
+      xAI model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["xai"]]`
+
+        The type of the provider.
+
+        - `"xai"`
+
+      - `response_format: Optional[ResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class ModelSettingsMoonshotModelSettings: …`
+
+      Moonshot/Kimi model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["moonshot"]]`
+
+        The type of the provider.
+
+        - `"moonshot"`
+
+      - `response_format: Optional[ModelSettingsMoonshotModelSettingsResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `strict: Optional[bool]`
+
+        Enable strict mode for tool calling. When true, tool outputs are guaranteed to match JSON schemas.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class ModelSettingsZaiModelSettings: …`
+
+      Z.ai (ZhipuAI) model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["zai"]]`
+
+        The type of the provider.
+
+        - `"zai"`
+
+      - `response_format: Optional[ModelSettingsZaiModelSettingsResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+      - `thinking: Optional[ModelSettingsZaiModelSettingsThinking]`
+
+        The thinking configuration for GLM-4.5+ models.
+
+        - `clear_thinking: Optional[bool]`
+
+          If False, preserved thinking is used (recommended for agents).
+
+        - `type: Optional[Literal["enabled", "disabled"]]`
+
+          Whether thinking is enabled or disabled.
+
+          - `"enabled"`
+
+          - `"disabled"`
+
+    - `class ModelSettingsMoonshotCodingModelSettings: …`
+
+      Kimi Code model configuration (Anthropic-compatible).
+
+      - `effort: Optional[Literal["low", "medium", "high", 2 more]]`
+
+        Effort level for supported Anthropic models (controls token spending). 'xhigh' and 'max' are available on Opus 4.6+. Not setting this gives similar performance to 'high'.
+
+        - `"low"`
+
+        - `"medium"`
+
+        - `"high"`
+
+        - `"xhigh"`
+
+        - `"max"`
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["moonshot_coding"]]`
+
+        The type of the provider.
+
+        - `"moonshot_coding"`
+
+      - `response_format: Optional[ModelSettingsMoonshotCodingModelSettingsResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `strict: Optional[bool]`
+
+        Enable strict mode for tool calling. When true, tool outputs are guaranteed to match JSON schemas.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+      - `thinking: Optional[ModelSettingsMoonshotCodingModelSettingsThinking]`
+
+        The thinking configuration for the model.
+
+        - `budget_tokens: Optional[int]`
+
+          The maximum number of tokens the model can use for extended thinking.
+
+        - `type: Optional[Literal["enabled", "disabled"]]`
+
+          The type of thinking to use.
+
+          - `"enabled"`
+
+          - `"disabled"`
+
+      - `verbosity: Optional[Literal["low", "medium", "high"]]`
+
+        Soft control for how verbose model output should be, used for GPT-5 models.
+
+        - `"low"`
+
+        - `"medium"`
+
+        - `"high"`
+
+    - `class GroqModelSettings: …`
+
+      Groq model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["groq"]]`
+
+        The type of the provider.
+
+        - `"groq"`
+
+      - `response_format: Optional[ResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class DeepseekModelSettings: …`
+
+      Deepseek model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["deepseek"]]`
+
+        The type of the provider.
+
+        - `"deepseek"`
+
+      - `response_format: Optional[ResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class TogetherModelSettings: …`
+
+      Together AI model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["together"]]`
+
+        The type of the provider.
+
+        - `"together"`
+
+      - `response_format: Optional[ResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class BedrockModelSettings: …`
+
+      AWS Bedrock model configuration.
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["bedrock"]]`
+
+        The type of the provider.
+
+        - `"bedrock"`
+
+      - `response_format: Optional[ResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class ModelSettingsBasetenModelSettings: …`
+
+      Baseten model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["baseten"]]`
+
+        The type of the provider.
+
+        - `"baseten"`
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class ModelSettingsOpenRouterModelSettings: …`
+
+      OpenRouter model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["openrouter"]]`
+
+        The type of the provider.
+
+        - `"openrouter"`
+
+      - `response_format: Optional[ModelSettingsOpenRouterModelSettingsResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class ModelSettingsChatGptoAuthModelSettings: …`
+
+      ChatGPT OAuth model configuration (uses ChatGPT backend API).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["chatgpt_oauth"]]`
+
+        The type of the provider.
+
+        - `"chatgpt_oauth"`
+
+      - `reasoning: Optional[ModelSettingsChatGptoAuthModelSettingsReasoning]`
+
+        The reasoning configuration for the model.
+
+        - `reasoning_effort: Optional[Literal["none", "low", "medium", 2 more]]`
+
+          The reasoning effort level for GPT-5.x and o-series models.
+
+          - `"none"`
+
+          - `"low"`
+
+          - `"medium"`
+
+          - `"high"`
+
+          - `"xhigh"`
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+  - `summary: Optional[str]`
+
+    A summary of the conversation.
+
+  - `updated_at: Optional[datetime]`
+
+    The timestamp when the object was last updated.
+
+### Create Conversation
+
+- `class CreateConversation: …`
+
+  Request model for creating a new conversation.
+
+  - `context_window_limit: Optional[int]`
+
+    The context window limit for this conversation (overrides agent's context window).
+
+  - `description: Optional[str]`
+
+    A generated description of the conversation used for search and bootstrap context.
+
+  - `hidden: Optional[bool]`
+
+    Whether the new conversation should be hidden from listings.
+
+  - `model: Optional[str]`
+
+    The model handle for this conversation (overrides agent's model). Format: provider/model-name.
+
+  - `model_settings: Optional[ModelSettings]`
+
+    The model settings for this conversation (overrides agent's model settings).
+
+    - `class OpenAIModelSettings: …`
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["openai"]]`
+
+        The type of the provider.
+
+        - `"openai"`
+
+      - `reasoning: Optional[Reasoning]`
+
+        The reasoning configuration for the model.
+
+        - `reasoning_effort: Optional[Literal["none", "minimal", "low", 3 more]]`
+
+          The reasoning effort to use when generating text reasoning models
+
+          - `"none"`
+
+          - `"minimal"`
+
+          - `"low"`
+
+          - `"medium"`
+
+          - `"high"`
+
+          - `"xhigh"`
+
+      - `response_format: Optional[ResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+          - `type: Optional[Literal["text"]]`
+
+            The type of the response format.
+
+            - `"text"`
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+          - `json_schema: Dict[str, object]`
+
+            The JSON schema of the response.
+
+          - `type: Optional[Literal["json_schema"]]`
+
+            The type of the response format.
+
+            - `"json_schema"`
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+          - `type: Optional[Literal["json_object"]]`
+
+            The type of the response format.
+
+            - `"json_object"`
+
+      - `strict: Optional[bool]`
+
+        Enable strict mode for tool calling. When true, tool outputs are guaranteed to match JSON schemas.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class ModelSettingsSgLangModelSettings: …`
+
+      SGLang model configuration (OpenAI-compatible runtime with SGLang-specific parsing).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["sglang"]]`
+
+        The type of the provider.
+
+        - `"sglang"`
+
+      - `reasoning: Optional[ModelSettingsSgLangModelSettingsReasoning]`
+
+        The reasoning configuration for the model.
+
+        - `reasoning_effort: Optional[Literal["none", "minimal", "low", 3 more]]`
+
+          The reasoning effort to use when generating text reasoning models
+
+          - `"none"`
+
+          - `"minimal"`
+
+          - `"low"`
+
+          - `"medium"`
+
+          - `"high"`
+
+          - `"xhigh"`
+
+      - `response_format: Optional[ModelSettingsSgLangModelSettingsResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `strict: Optional[bool]`
+
+        Enable strict mode for tool calling. When true, tool outputs are guaranteed to match JSON schemas.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+      - `tool_call_parser: Optional[str]`
+
+        SGLang tool call parser name (for example 'glm47', 'qwen25', or 'hermes').
+
+    - `class AnthropicModelSettings: …`
+
+      - `effort: Optional[Literal["low", "medium", "high", 2 more]]`
+
+        Effort level for supported Anthropic models (controls token spending). 'xhigh' and 'max' are available on Opus 4.6+. Not setting this gives similar performance to 'high'.
+
+        - `"low"`
+
+        - `"medium"`
+
+        - `"high"`
+
+        - `"xhigh"`
+
+        - `"max"`
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["anthropic"]]`
+
+        The type of the provider.
+
+        - `"anthropic"`
+
+      - `response_format: Optional[ResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `strict: Optional[bool]`
+
+        Enable strict mode for tool calling. When true, tool outputs are guaranteed to match JSON schemas.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+      - `thinking: Optional[Thinking]`
+
+        The thinking configuration for the model.
+
+        - `budget_tokens: Optional[int]`
+
+          The maximum number of tokens the model can use for extended thinking.
+
+        - `type: Optional[Literal["enabled", "disabled"]]`
+
+          The type of thinking to use.
+
+          - `"enabled"`
+
+          - `"disabled"`
+
+      - `verbosity: Optional[Literal["low", "medium", "high"]]`
+
+        Soft control for how verbose model output should be, used for GPT-5 models.
+
+        - `"low"`
+
+        - `"medium"`
+
+        - `"high"`
+
+    - `class GoogleAIModelSettings: …`
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["google_ai"]]`
+
+        The type of the provider.
+
+        - `"google_ai"`
+
+      - `response_schema: Optional[ResponseSchema]`
+
+        The response schema for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+      - `thinking_config: Optional[ThinkingConfig]`
+
+        The thinking configuration for the model.
+
+        - `include_thoughts: Optional[bool]`
+
+          Whether to include thoughts in the model's response.
+
+        - `thinking_budget: Optional[int]`
+
+          The thinking budget for the model.
+
+    - `class GoogleVertexModelSettings: …`
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["google_vertex"]]`
+
+        The type of the provider.
+
+        - `"google_vertex"`
+
+      - `response_schema: Optional[ResponseSchema]`
+
+        The response schema for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+      - `thinking_config: Optional[ThinkingConfig]`
+
+        The thinking configuration for the model.
+
+        - `include_thoughts: Optional[bool]`
+
+          Whether to include thoughts in the model's response.
+
+        - `thinking_budget: Optional[int]`
+
+          The thinking budget for the model.
+
+    - `class AzureModelSettings: …`
+
+      Azure OpenAI model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["azure"]]`
+
+        The type of the provider.
+
+        - `"azure"`
+
+      - `response_format: Optional[ResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class XaiModelSettings: …`
+
+      xAI model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["xai"]]`
+
+        The type of the provider.
+
+        - `"xai"`
+
+      - `response_format: Optional[ResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class ModelSettingsMoonshotModelSettings: …`
+
+      Moonshot/Kimi model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["moonshot"]]`
+
+        The type of the provider.
+
+        - `"moonshot"`
+
+      - `response_format: Optional[ModelSettingsMoonshotModelSettingsResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `strict: Optional[bool]`
+
+        Enable strict mode for tool calling. When true, tool outputs are guaranteed to match JSON schemas.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class ModelSettingsZaiModelSettings: …`
+
+      Z.ai (ZhipuAI) model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["zai"]]`
+
+        The type of the provider.
+
+        - `"zai"`
+
+      - `response_format: Optional[ModelSettingsZaiModelSettingsResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+      - `thinking: Optional[ModelSettingsZaiModelSettingsThinking]`
+
+        The thinking configuration for GLM-4.5+ models.
+
+        - `clear_thinking: Optional[bool]`
+
+          If False, preserved thinking is used (recommended for agents).
+
+        - `type: Optional[Literal["enabled", "disabled"]]`
+
+          Whether thinking is enabled or disabled.
+
+          - `"enabled"`
+
+          - `"disabled"`
+
+    - `class ModelSettingsMoonshotCodingModelSettings: …`
+
+      Kimi Code model configuration (Anthropic-compatible).
+
+      - `effort: Optional[Literal["low", "medium", "high", 2 more]]`
+
+        Effort level for supported Anthropic models (controls token spending). 'xhigh' and 'max' are available on Opus 4.6+. Not setting this gives similar performance to 'high'.
+
+        - `"low"`
+
+        - `"medium"`
+
+        - `"high"`
+
+        - `"xhigh"`
+
+        - `"max"`
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["moonshot_coding"]]`
+
+        The type of the provider.
+
+        - `"moonshot_coding"`
+
+      - `response_format: Optional[ModelSettingsMoonshotCodingModelSettingsResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `strict: Optional[bool]`
+
+        Enable strict mode for tool calling. When true, tool outputs are guaranteed to match JSON schemas.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+      - `thinking: Optional[ModelSettingsMoonshotCodingModelSettingsThinking]`
+
+        The thinking configuration for the model.
+
+        - `budget_tokens: Optional[int]`
+
+          The maximum number of tokens the model can use for extended thinking.
+
+        - `type: Optional[Literal["enabled", "disabled"]]`
+
+          The type of thinking to use.
+
+          - `"enabled"`
+
+          - `"disabled"`
+
+      - `verbosity: Optional[Literal["low", "medium", "high"]]`
+
+        Soft control for how verbose model output should be, used for GPT-5 models.
+
+        - `"low"`
+
+        - `"medium"`
+
+        - `"high"`
+
+    - `class GroqModelSettings: …`
+
+      Groq model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["groq"]]`
+
+        The type of the provider.
+
+        - `"groq"`
+
+      - `response_format: Optional[ResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class DeepseekModelSettings: …`
+
+      Deepseek model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["deepseek"]]`
+
+        The type of the provider.
+
+        - `"deepseek"`
+
+      - `response_format: Optional[ResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class TogetherModelSettings: …`
+
+      Together AI model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["together"]]`
+
+        The type of the provider.
+
+        - `"together"`
+
+      - `response_format: Optional[ResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class BedrockModelSettings: …`
+
+      AWS Bedrock model configuration.
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["bedrock"]]`
+
+        The type of the provider.
+
+        - `"bedrock"`
+
+      - `response_format: Optional[ResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class ModelSettingsBasetenModelSettings: …`
+
+      Baseten model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["baseten"]]`
+
+        The type of the provider.
+
+        - `"baseten"`
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class ModelSettingsOpenRouterModelSettings: …`
+
+      OpenRouter model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["openrouter"]]`
+
+        The type of the provider.
+
+        - `"openrouter"`
+
+      - `response_format: Optional[ModelSettingsOpenRouterModelSettingsResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class ModelSettingsChatGptoAuthModelSettings: …`
+
+      ChatGPT OAuth model configuration (uses ChatGPT backend API).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["chatgpt_oauth"]]`
+
+        The type of the provider.
+
+        - `"chatgpt_oauth"`
+
+      - `reasoning: Optional[ModelSettingsChatGptoAuthModelSettingsReasoning]`
+
+        The reasoning configuration for the model.
+
+        - `reasoning_effort: Optional[Literal["none", "low", "medium", 2 more]]`
+
+          The reasoning effort level for GPT-5.x and o-series models.
+
+          - `"none"`
+
+          - `"low"`
+
+          - `"medium"`
+
+          - `"high"`
+
+          - `"xhigh"`
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+  - `summary: Optional[str]`
+
+    A summary of the conversation.
+
+### Update Conversation
+
+- `class UpdateConversation: …`
+
+  Request model for updating a conversation.
+
+  - `archived: Optional[bool]`
+
+    Whether the conversation is archived.
+
+  - `context_window_limit: Optional[int]`
+
+    The context window limit for this conversation (overrides agent's context window).
+
+  - `description: Optional[str]`
+
+    A generated description of the conversation used for search and bootstrap context.
+
+  - `last_message_at: Optional[datetime]`
+
+    Timestamp of the most recent message request sent to this conversation.
+
+  - `model: Optional[str]`
+
+    The model handle for this conversation (overrides agent's model). Format: provider/model-name.
+
+  - `model_settings: Optional[ModelSettings]`
+
+    The model settings for this conversation (overrides agent's model settings).
+
+    - `class OpenAIModelSettings: …`
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["openai"]]`
+
+        The type of the provider.
+
+        - `"openai"`
+
+      - `reasoning: Optional[Reasoning]`
+
+        The reasoning configuration for the model.
+
+        - `reasoning_effort: Optional[Literal["none", "minimal", "low", 3 more]]`
+
+          The reasoning effort to use when generating text reasoning models
+
+          - `"none"`
+
+          - `"minimal"`
+
+          - `"low"`
+
+          - `"medium"`
+
+          - `"high"`
+
+          - `"xhigh"`
+
+      - `response_format: Optional[ResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+          - `type: Optional[Literal["text"]]`
+
+            The type of the response format.
+
+            - `"text"`
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+          - `json_schema: Dict[str, object]`
+
+            The JSON schema of the response.
+
+          - `type: Optional[Literal["json_schema"]]`
+
+            The type of the response format.
+
+            - `"json_schema"`
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+          - `type: Optional[Literal["json_object"]]`
+
+            The type of the response format.
+
+            - `"json_object"`
+
+      - `strict: Optional[bool]`
+
+        Enable strict mode for tool calling. When true, tool outputs are guaranteed to match JSON schemas.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class ModelSettingsSgLangModelSettings: …`
+
+      SGLang model configuration (OpenAI-compatible runtime with SGLang-specific parsing).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["sglang"]]`
+
+        The type of the provider.
+
+        - `"sglang"`
+
+      - `reasoning: Optional[ModelSettingsSgLangModelSettingsReasoning]`
+
+        The reasoning configuration for the model.
+
+        - `reasoning_effort: Optional[Literal["none", "minimal", "low", 3 more]]`
+
+          The reasoning effort to use when generating text reasoning models
+
+          - `"none"`
+
+          - `"minimal"`
+
+          - `"low"`
+
+          - `"medium"`
+
+          - `"high"`
+
+          - `"xhigh"`
+
+      - `response_format: Optional[ModelSettingsSgLangModelSettingsResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `strict: Optional[bool]`
+
+        Enable strict mode for tool calling. When true, tool outputs are guaranteed to match JSON schemas.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+      - `tool_call_parser: Optional[str]`
+
+        SGLang tool call parser name (for example 'glm47', 'qwen25', or 'hermes').
+
+    - `class AnthropicModelSettings: …`
+
+      - `effort: Optional[Literal["low", "medium", "high", 2 more]]`
+
+        Effort level for supported Anthropic models (controls token spending). 'xhigh' and 'max' are available on Opus 4.6+. Not setting this gives similar performance to 'high'.
+
+        - `"low"`
+
+        - `"medium"`
+
+        - `"high"`
+
+        - `"xhigh"`
+
+        - `"max"`
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["anthropic"]]`
+
+        The type of the provider.
+
+        - `"anthropic"`
+
+      - `response_format: Optional[ResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `strict: Optional[bool]`
+
+        Enable strict mode for tool calling. When true, tool outputs are guaranteed to match JSON schemas.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+      - `thinking: Optional[Thinking]`
+
+        The thinking configuration for the model.
+
+        - `budget_tokens: Optional[int]`
+
+          The maximum number of tokens the model can use for extended thinking.
+
+        - `type: Optional[Literal["enabled", "disabled"]]`
+
+          The type of thinking to use.
+
+          - `"enabled"`
+
+          - `"disabled"`
+
+      - `verbosity: Optional[Literal["low", "medium", "high"]]`
+
+        Soft control for how verbose model output should be, used for GPT-5 models.
+
+        - `"low"`
+
+        - `"medium"`
+
+        - `"high"`
+
+    - `class GoogleAIModelSettings: …`
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["google_ai"]]`
+
+        The type of the provider.
+
+        - `"google_ai"`
+
+      - `response_schema: Optional[ResponseSchema]`
+
+        The response schema for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+      - `thinking_config: Optional[ThinkingConfig]`
+
+        The thinking configuration for the model.
+
+        - `include_thoughts: Optional[bool]`
+
+          Whether to include thoughts in the model's response.
+
+        - `thinking_budget: Optional[int]`
+
+          The thinking budget for the model.
+
+    - `class GoogleVertexModelSettings: …`
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["google_vertex"]]`
+
+        The type of the provider.
+
+        - `"google_vertex"`
+
+      - `response_schema: Optional[ResponseSchema]`
+
+        The response schema for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+      - `thinking_config: Optional[ThinkingConfig]`
+
+        The thinking configuration for the model.
+
+        - `include_thoughts: Optional[bool]`
+
+          Whether to include thoughts in the model's response.
+
+        - `thinking_budget: Optional[int]`
+
+          The thinking budget for the model.
+
+    - `class AzureModelSettings: …`
+
+      Azure OpenAI model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["azure"]]`
+
+        The type of the provider.
+
+        - `"azure"`
+
+      - `response_format: Optional[ResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class XaiModelSettings: …`
+
+      xAI model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["xai"]]`
+
+        The type of the provider.
+
+        - `"xai"`
+
+      - `response_format: Optional[ResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class ModelSettingsMoonshotModelSettings: …`
+
+      Moonshot/Kimi model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["moonshot"]]`
+
+        The type of the provider.
+
+        - `"moonshot"`
+
+      - `response_format: Optional[ModelSettingsMoonshotModelSettingsResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `strict: Optional[bool]`
+
+        Enable strict mode for tool calling. When true, tool outputs are guaranteed to match JSON schemas.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class ModelSettingsZaiModelSettings: …`
+
+      Z.ai (ZhipuAI) model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["zai"]]`
+
+        The type of the provider.
+
+        - `"zai"`
+
+      - `response_format: Optional[ModelSettingsZaiModelSettingsResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+      - `thinking: Optional[ModelSettingsZaiModelSettingsThinking]`
+
+        The thinking configuration for GLM-4.5+ models.
+
+        - `clear_thinking: Optional[bool]`
+
+          If False, preserved thinking is used (recommended for agents).
+
+        - `type: Optional[Literal["enabled", "disabled"]]`
+
+          Whether thinking is enabled or disabled.
+
+          - `"enabled"`
+
+          - `"disabled"`
+
+    - `class ModelSettingsMoonshotCodingModelSettings: …`
+
+      Kimi Code model configuration (Anthropic-compatible).
+
+      - `effort: Optional[Literal["low", "medium", "high", 2 more]]`
+
+        Effort level for supported Anthropic models (controls token spending). 'xhigh' and 'max' are available on Opus 4.6+. Not setting this gives similar performance to 'high'.
+
+        - `"low"`
+
+        - `"medium"`
+
+        - `"high"`
+
+        - `"xhigh"`
+
+        - `"max"`
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["moonshot_coding"]]`
+
+        The type of the provider.
+
+        - `"moonshot_coding"`
+
+      - `response_format: Optional[ModelSettingsMoonshotCodingModelSettingsResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `strict: Optional[bool]`
+
+        Enable strict mode for tool calling. When true, tool outputs are guaranteed to match JSON schemas.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+      - `thinking: Optional[ModelSettingsMoonshotCodingModelSettingsThinking]`
+
+        The thinking configuration for the model.
+
+        - `budget_tokens: Optional[int]`
+
+          The maximum number of tokens the model can use for extended thinking.
+
+        - `type: Optional[Literal["enabled", "disabled"]]`
+
+          The type of thinking to use.
+
+          - `"enabled"`
+
+          - `"disabled"`
+
+      - `verbosity: Optional[Literal["low", "medium", "high"]]`
+
+        Soft control for how verbose model output should be, used for GPT-5 models.
+
+        - `"low"`
+
+        - `"medium"`
+
+        - `"high"`
+
+    - `class GroqModelSettings: …`
+
+      Groq model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["groq"]]`
+
+        The type of the provider.
+
+        - `"groq"`
+
+      - `response_format: Optional[ResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class DeepseekModelSettings: …`
+
+      Deepseek model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["deepseek"]]`
+
+        The type of the provider.
+
+        - `"deepseek"`
+
+      - `response_format: Optional[ResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class TogetherModelSettings: …`
+
+      Together AI model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["together"]]`
+
+        The type of the provider.
+
+        - `"together"`
+
+      - `response_format: Optional[ResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class BedrockModelSettings: …`
+
+      AWS Bedrock model configuration.
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["bedrock"]]`
+
+        The type of the provider.
+
+        - `"bedrock"`
+
+      - `response_format: Optional[ResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class ModelSettingsBasetenModelSettings: …`
+
+      Baseten model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["baseten"]]`
+
+        The type of the provider.
+
+        - `"baseten"`
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class ModelSettingsOpenRouterModelSettings: …`
+
+      OpenRouter model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["openrouter"]]`
+
+        The type of the provider.
+
+        - `"openrouter"`
+
+      - `response_format: Optional[ModelSettingsOpenRouterModelSettingsResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class ModelSettingsChatGptoAuthModelSettings: …`
+
+      ChatGPT OAuth model configuration (uses ChatGPT backend API).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["chatgpt_oauth"]]`
+
+        The type of the provider.
+
+        - `"chatgpt_oauth"`
+
+      - `reasoning: Optional[ModelSettingsChatGptoAuthModelSettingsReasoning]`
+
+        The reasoning configuration for the model.
+
+        - `reasoning_effort: Optional[Literal["none", "low", "medium", 2 more]]`
+
+          The reasoning effort level for GPT-5.x and o-series models.
+
+          - `"none"`
+
+          - `"low"`
+
+          - `"medium"`
+
+          - `"high"`
+
+          - `"xhigh"`
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+  - `summary: Optional[str]`
+
+    A summary of the conversation.
+
+### Conversation List Response
+
+- `List[Conversation]`
+
+  - `id: str`
+
+    The unique identifier of the conversation.
+
+  - `agent_id: str`
+
+    The ID of the agent this conversation belongs to.
+
+  - `archived: Optional[bool]`
+
+    Whether the conversation is archived.
+
+  - `archived_at: Optional[datetime]`
+
+    Timestamp of when the conversation was archived.
+
+  - `context_window_limit: Optional[int]`
+
+    The context window limit for this conversation (overrides agent's context window).
+
+  - `created_at: Optional[datetime]`
+
+    The timestamp when the object was created.
+
+  - `created_by_id: Optional[str]`
+
+    The id of the user that made this object.
+
+  - `description: Optional[str]`
+
+    A generated description of the conversation used for search and bootstrap context.
+
+  - `in_context_message_ids: Optional[List[str]]`
+
+    The IDs of in-context messages for the conversation. Null means this field was not retrieved/hydrated for this response.
+
+  - `last_message_at: Optional[datetime]`
+
+    Timestamp of the most recent message request sent to this conversation.
+
+  - `last_updated_by_id: Optional[str]`
+
+    The id of the user that made this object.
+
+  - `model: Optional[str]`
+
+    The model handle for this conversation (overrides agent's model). Format: provider/model-name.
+
+  - `model_settings: Optional[ModelSettings]`
+
+    The model settings for this conversation (overrides agent's model settings).
+
+    - `class OpenAIModelSettings: …`
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["openai"]]`
+
+        The type of the provider.
+
+        - `"openai"`
+
+      - `reasoning: Optional[Reasoning]`
+
+        The reasoning configuration for the model.
+
+        - `reasoning_effort: Optional[Literal["none", "minimal", "low", 3 more]]`
+
+          The reasoning effort to use when generating text reasoning models
+
+          - `"none"`
+
+          - `"minimal"`
+
+          - `"low"`
+
+          - `"medium"`
+
+          - `"high"`
+
+          - `"xhigh"`
+
+      - `response_format: Optional[ResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+          - `type: Optional[Literal["text"]]`
+
+            The type of the response format.
+
+            - `"text"`
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+          - `json_schema: Dict[str, object]`
+
+            The JSON schema of the response.
+
+          - `type: Optional[Literal["json_schema"]]`
+
+            The type of the response format.
+
+            - `"json_schema"`
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+          - `type: Optional[Literal["json_object"]]`
+
+            The type of the response format.
+
+            - `"json_object"`
+
+      - `strict: Optional[bool]`
+
+        Enable strict mode for tool calling. When true, tool outputs are guaranteed to match JSON schemas.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class ModelSettingsSgLangModelSettings: …`
+
+      SGLang model configuration (OpenAI-compatible runtime with SGLang-specific parsing).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["sglang"]]`
+
+        The type of the provider.
+
+        - `"sglang"`
+
+      - `reasoning: Optional[ModelSettingsSgLangModelSettingsReasoning]`
+
+        The reasoning configuration for the model.
+
+        - `reasoning_effort: Optional[Literal["none", "minimal", "low", 3 more]]`
+
+          The reasoning effort to use when generating text reasoning models
+
+          - `"none"`
+
+          - `"minimal"`
+
+          - `"low"`
+
+          - `"medium"`
+
+          - `"high"`
+
+          - `"xhigh"`
+
+      - `response_format: Optional[ModelSettingsSgLangModelSettingsResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `strict: Optional[bool]`
+
+        Enable strict mode for tool calling. When true, tool outputs are guaranteed to match JSON schemas.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+      - `tool_call_parser: Optional[str]`
+
+        SGLang tool call parser name (for example 'glm47', 'qwen25', or 'hermes').
+
+    - `class AnthropicModelSettings: …`
+
+      - `effort: Optional[Literal["low", "medium", "high", 2 more]]`
+
+        Effort level for supported Anthropic models (controls token spending). 'xhigh' and 'max' are available on Opus 4.6+. Not setting this gives similar performance to 'high'.
+
+        - `"low"`
+
+        - `"medium"`
+
+        - `"high"`
+
+        - `"xhigh"`
+
+        - `"max"`
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["anthropic"]]`
+
+        The type of the provider.
+
+        - `"anthropic"`
+
+      - `response_format: Optional[ResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `strict: Optional[bool]`
+
+        Enable strict mode for tool calling. When true, tool outputs are guaranteed to match JSON schemas.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+      - `thinking: Optional[Thinking]`
+
+        The thinking configuration for the model.
+
+        - `budget_tokens: Optional[int]`
+
+          The maximum number of tokens the model can use for extended thinking.
+
+        - `type: Optional[Literal["enabled", "disabled"]]`
+
+          The type of thinking to use.
+
+          - `"enabled"`
+
+          - `"disabled"`
+
+      - `verbosity: Optional[Literal["low", "medium", "high"]]`
+
+        Soft control for how verbose model output should be, used for GPT-5 models.
+
+        - `"low"`
+
+        - `"medium"`
+
+        - `"high"`
+
+    - `class GoogleAIModelSettings: …`
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["google_ai"]]`
+
+        The type of the provider.
+
+        - `"google_ai"`
+
+      - `response_schema: Optional[ResponseSchema]`
+
+        The response schema for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+      - `thinking_config: Optional[ThinkingConfig]`
+
+        The thinking configuration for the model.
+
+        - `include_thoughts: Optional[bool]`
+
+          Whether to include thoughts in the model's response.
+
+        - `thinking_budget: Optional[int]`
+
+          The thinking budget for the model.
+
+    - `class GoogleVertexModelSettings: …`
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["google_vertex"]]`
+
+        The type of the provider.
+
+        - `"google_vertex"`
+
+      - `response_schema: Optional[ResponseSchema]`
+
+        The response schema for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+      - `thinking_config: Optional[ThinkingConfig]`
+
+        The thinking configuration for the model.
+
+        - `include_thoughts: Optional[bool]`
+
+          Whether to include thoughts in the model's response.
+
+        - `thinking_budget: Optional[int]`
+
+          The thinking budget for the model.
+
+    - `class AzureModelSettings: …`
+
+      Azure OpenAI model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["azure"]]`
+
+        The type of the provider.
+
+        - `"azure"`
+
+      - `response_format: Optional[ResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class XaiModelSettings: …`
+
+      xAI model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["xai"]]`
+
+        The type of the provider.
+
+        - `"xai"`
+
+      - `response_format: Optional[ResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class ModelSettingsMoonshotModelSettings: …`
+
+      Moonshot/Kimi model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["moonshot"]]`
+
+        The type of the provider.
+
+        - `"moonshot"`
+
+      - `response_format: Optional[ModelSettingsMoonshotModelSettingsResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `strict: Optional[bool]`
+
+        Enable strict mode for tool calling. When true, tool outputs are guaranteed to match JSON schemas.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class ModelSettingsZaiModelSettings: …`
+
+      Z.ai (ZhipuAI) model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["zai"]]`
+
+        The type of the provider.
+
+        - `"zai"`
+
+      - `response_format: Optional[ModelSettingsZaiModelSettingsResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+      - `thinking: Optional[ModelSettingsZaiModelSettingsThinking]`
+
+        The thinking configuration for GLM-4.5+ models.
+
+        - `clear_thinking: Optional[bool]`
+
+          If False, preserved thinking is used (recommended for agents).
+
+        - `type: Optional[Literal["enabled", "disabled"]]`
+
+          Whether thinking is enabled or disabled.
+
+          - `"enabled"`
+
+          - `"disabled"`
+
+    - `class ModelSettingsMoonshotCodingModelSettings: …`
+
+      Kimi Code model configuration (Anthropic-compatible).
+
+      - `effort: Optional[Literal["low", "medium", "high", 2 more]]`
+
+        Effort level for supported Anthropic models (controls token spending). 'xhigh' and 'max' are available on Opus 4.6+. Not setting this gives similar performance to 'high'.
+
+        - `"low"`
+
+        - `"medium"`
+
+        - `"high"`
+
+        - `"xhigh"`
+
+        - `"max"`
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["moonshot_coding"]]`
+
+        The type of the provider.
+
+        - `"moonshot_coding"`
+
+      - `response_format: Optional[ModelSettingsMoonshotCodingModelSettingsResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `strict: Optional[bool]`
+
+        Enable strict mode for tool calling. When true, tool outputs are guaranteed to match JSON schemas.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+      - `thinking: Optional[ModelSettingsMoonshotCodingModelSettingsThinking]`
+
+        The thinking configuration for the model.
+
+        - `budget_tokens: Optional[int]`
+
+          The maximum number of tokens the model can use for extended thinking.
+
+        - `type: Optional[Literal["enabled", "disabled"]]`
+
+          The type of thinking to use.
+
+          - `"enabled"`
+
+          - `"disabled"`
+
+      - `verbosity: Optional[Literal["low", "medium", "high"]]`
+
+        Soft control for how verbose model output should be, used for GPT-5 models.
+
+        - `"low"`
+
+        - `"medium"`
+
+        - `"high"`
+
+    - `class GroqModelSettings: …`
+
+      Groq model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["groq"]]`
+
+        The type of the provider.
+
+        - `"groq"`
+
+      - `response_format: Optional[ResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class DeepseekModelSettings: …`
+
+      Deepseek model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["deepseek"]]`
+
+        The type of the provider.
+
+        - `"deepseek"`
+
+      - `response_format: Optional[ResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class TogetherModelSettings: …`
+
+      Together AI model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["together"]]`
+
+        The type of the provider.
+
+        - `"together"`
+
+      - `response_format: Optional[ResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class BedrockModelSettings: …`
+
+      AWS Bedrock model configuration.
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["bedrock"]]`
+
+        The type of the provider.
+
+        - `"bedrock"`
+
+      - `response_format: Optional[ResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class ModelSettingsBasetenModelSettings: …`
+
+      Baseten model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["baseten"]]`
+
+        The type of the provider.
+
+        - `"baseten"`
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class ModelSettingsOpenRouterModelSettings: …`
+
+      OpenRouter model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["openrouter"]]`
+
+        The type of the provider.
+
+        - `"openrouter"`
+
+      - `response_format: Optional[ModelSettingsOpenRouterModelSettingsResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class ModelSettingsChatGptoAuthModelSettings: …`
+
+      ChatGPT OAuth model configuration (uses ChatGPT backend API).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["chatgpt_oauth"]]`
+
+        The type of the provider.
+
+        - `"chatgpt_oauth"`
+
+      - `reasoning: Optional[ModelSettingsChatGptoAuthModelSettingsReasoning]`
+
+        The reasoning configuration for the model.
+
+        - `reasoning_effort: Optional[Literal["none", "low", "medium", 2 more]]`
+
+          The reasoning effort level for GPT-5.x and o-series models.
+
+          - `"none"`
+
+          - `"low"`
+
+          - `"medium"`
+
+          - `"high"`
+
+          - `"xhigh"`
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+  - `summary: Optional[str]`
+
+    A summary of the conversation.
+
+  - `updated_at: Optional[datetime]`
+
+    The timestamp when the object was last updated.
+
+### Conversation Cancel Response
+
+- `Dict[str, object]`
+
+### Conversation Recompile Response
+
+- `str`
+
+# Messages
+
+## List Conversation Messages
+
+`conversations.messages.list(strconversation_id, MessageListParams**kwargs)  -> SyncArrayPage[Message]`
+
+**get** `/v1/conversations/{conversation_id}/messages`
+
+List all messages in a conversation.
+
+Returns LettaMessage objects (UserMessage, AssistantMessage, etc.) for all
+messages in the conversation, with support for cursor-based pagination.
+
+**Agent-direct mode**: Pass conversation_id="default" with agent_id parameter
+to list messages from the agent's default conversation.
+
+**Deprecated**: Passing an agent ID as conversation_id still works but will be removed.
+
+### Parameters
+
+- `conversation_id: str`
+
+  The conversation identifier. Can be a conversation ID ('conv-<uuid4>'), 'default' for agent-direct mode (with agent_id parameter), or an agent ID ('agent-<uuid4>') for backwards compatibility (deprecated).
+
+- `after: Optional[str]`
+
+  Cursor for pagination (message ID). Returns results relative to this ID in the specified sort order. Expected format: 'message-<uuid4>'
+
+- `agent_id: Optional[str]`
+
+  Agent ID for agent-direct mode with 'default' conversation
+
+- `before: Optional[str]`
+
+  Cursor for pagination (message ID). Returns results relative to this ID in the specified sort order. Expected format: 'message-<uuid4>'
+
+- `group_id: Optional[str]`
+
+  Group ID to filter messages by.
+
+- `include_err: Optional[bool]`
+
+  Whether to include error messages and error statuses. For debugging purposes only.
+
+- `include_return_message_types: Optional[List[MessageType]]`
+
+  Message types to include in response. When null, all message types are returned.
+
+  - `"system_message"`
+
+  - `"user_message"`
+
+  - `"assistant_message"`
+
+  - `"reasoning_message"`
+
+  - `"hidden_reasoning_message"`
+
+  - `"tool_call_message"`
+
+  - `"tool_return_message"`
+
+  - `"approval_request_message"`
+
+  - `"approval_response_message"`
+
+  - `"summary_message"`
+
+  - `"event_message"`
+
+- `limit: Optional[int]`
+
+  Maximum number of messages to return
+
+- `order: Optional[Literal["asc", "desc"]]`
+
+  Sort order for messages by creation time. 'asc' for oldest first, 'desc' for newest first
+
+  - `"asc"`
+
+  - `"desc"`
+
+- `order_by: Optional[Literal["created_at"]]`
+
+  Field to sort by
+
+  - `"created_at"`
+
+### Returns
+
+- `Message`
+
+  A message generated by the system. Never streamed back on a response, only used for cursor pagination.
+
+  Args:
+  id (str): The ID of the message
+  date (datetime): The date the message was created in ISO format
+  name (Optional[str]): The name of the sender of the message
+  content (str): The message content sent by the system
+
+  - `class SystemMessage: …`
+
+    A message generated by the system. Never streamed back on a response, only used for cursor pagination.
+
+    Args:
+    id (str): The ID of the message
+    date (datetime): The date the message was created in ISO format
+    name (Optional[str]): The name of the sender of the message
+    content (str): The message content sent by the system
+
+    - `id: str`
+
+    - `content: str`
+
+      The message content sent by the system
+
+    - `date: datetime`
+
+    - `is_err: Optional[bool]`
+
+    - `message_type: Optional[Literal["system_message"]]`
+
+      The type of the message.
+
+      - `"system_message"`
+
+    - `name: Optional[str]`
+
+    - `otid: Optional[str]`
+
+      The offline threading id (OTID). Set by the client to deduplicate requests. Used for idempotency in background streaming mode — each message in a request must have a unique OTID. Retries of the same request should reuse the same OTIDs.
+
+    - `run_id: Optional[str]`
+
+    - `sender_id: Optional[str]`
+
+    - `seq_id: Optional[int]`
+
+    - `step_id: Optional[str]`
+
+  - `class UserMessage: …`
+
+    A message sent by the user. Never streamed back on a response, only used for cursor pagination.
+
+    Args:
+    id (str): The ID of the message
+    date (datetime): The date the message was created in ISO format
+    name (Optional[str]): The name of the sender of the message
+    content (Union[str, List[LettaUserMessageContentUnion]]): The message content sent by the user (can be a string or an array of multi-modal content parts)
+
+    - `id: str`
+
+    - `content: Union[List[LettaUserMessageContentUnion], str]`
+
+      The message content sent by the user (can be a string or an array of multi-modal content parts)
+
+      - `List[LettaUserMessageContentUnion]`
+
+        - `class TextContent: …`
+
+          - `text: str`
+
+            The text content of the message.
+
+          - `signature: Optional[str]`
+
+            Stores a unique identifier for any reasoning associated with this text content.
+
+          - `type: Optional[Literal["text"]]`
+
+            The type of the message.
+
+            - `"text"`
+
+        - `class ImageContent: …`
+
+          - `source: Source`
+
+            The source of the image.
+
+            - `class SourceURLImage: …`
+
+              - `url: str`
+
+                The URL of the image.
+
+              - `type: Optional[Literal["url"]]`
+
+                The source type for the image.
+
+                - `"url"`
+
+            - `class SourceBase64Image: …`
+
+              - `data: str`
+
+                The base64 encoded image data.
+
+              - `media_type: str`
+
+                The media type for the image.
+
+              - `detail: Optional[str]`
+
+                What level of detail to use when processing and understanding the image (low, high, or auto to let the model decide)
+
+              - `type: Optional[Literal["base64"]]`
+
+                The source type for the image.
+
+                - `"base64"`
+
+            - `class SourceLettaImage: …`
+
+              - `file_id: str`
+
+                The unique identifier of the image file persisted in storage.
+
+              - `data: Optional[str]`
+
+                The base64 encoded image data.
+
+              - `detail: Optional[str]`
+
+                What level of detail to use when processing and understanding the image (low, high, or auto to let the model decide)
+
+              - `media_type: Optional[str]`
+
+                The media type for the image.
+
+              - `type: Optional[Literal["letta"]]`
+
+                The source type for the image.
+
+                - `"letta"`
+
+          - `type: Optional[Literal["image"]]`
+
+            The type of the message.
+
+            - `"image"`
+
+      - `str`
+
+    - `date: datetime`
+
+    - `is_err: Optional[bool]`
+
+    - `message_type: Optional[Literal["user_message"]]`
+
+      The type of the message.
+
+      - `"user_message"`
+
+    - `name: Optional[str]`
+
+    - `otid: Optional[str]`
+
+      The offline threading id (OTID). Set by the client to deduplicate requests. Used for idempotency in background streaming mode — each message in a request must have a unique OTID. Retries of the same request should reuse the same OTIDs.
+
+    - `run_id: Optional[str]`
+
+    - `sender_id: Optional[str]`
+
+    - `seq_id: Optional[int]`
+
+    - `step_id: Optional[str]`
+
+  - `class ReasoningMessage: …`
+
+    Representation of an agent's internal reasoning.
+
+    Args:
+    id (str): The ID of the message
+    date (datetime): The date the message was created in ISO format
+    name (Optional[str]): The name of the sender of the message
+    source (Literal["reasoner_model", "non_reasoner_model"]): Whether the reasoning
+    content was generated natively by a reasoner model or derived via prompting
+    reasoning (str): The internal reasoning of the agent
+    signature (Optional[str]): The model-generated signature of the reasoning step
+
+    - `id: str`
+
+    - `date: datetime`
+
+    - `reasoning: str`
+
+    - `is_err: Optional[bool]`
+
+    - `message_type: Optional[Literal["reasoning_message"]]`
+
+      The type of the message.
+
+      - `"reasoning_message"`
+
+    - `name: Optional[str]`
+
+    - `otid: Optional[str]`
+
+      The offline threading id (OTID). Set by the client to deduplicate requests. Used for idempotency in background streaming mode — each message in a request must have a unique OTID. Retries of the same request should reuse the same OTIDs.
+
+    - `run_id: Optional[str]`
+
+    - `sender_id: Optional[str]`
+
+    - `seq_id: Optional[int]`
+
+    - `signature: Optional[str]`
+
+    - `source: Optional[Literal["reasoner_model", "non_reasoner_model"]]`
+
+      - `"reasoner_model"`
+
+      - `"non_reasoner_model"`
+
+    - `step_id: Optional[str]`
+
+  - `class HiddenReasoningMessage: …`
+
+    Representation of an agent's internal reasoning where reasoning content
+    has been hidden from the response.
+
+    Args:
+    id (str): The ID of the message
+    date (datetime): The date the message was created in ISO format
+    name (Optional[str]): The name of the sender of the message
+    state (Literal["redacted", "omitted"]): Whether the reasoning
+    content was redacted by the provider or simply omitted by the API
+    hidden_reasoning (Optional[str]): The internal reasoning of the agent
+
+    - `id: str`
+
+    - `date: datetime`
+
+    - `state: Literal["redacted", "omitted"]`
+
+      - `"redacted"`
+
+      - `"omitted"`
+
+    - `hidden_reasoning: Optional[str]`
+
+    - `is_err: Optional[bool]`
+
+    - `message_type: Optional[Literal["hidden_reasoning_message"]]`
+
+      The type of the message.
+
+      - `"hidden_reasoning_message"`
+
+    - `name: Optional[str]`
+
+    - `otid: Optional[str]`
+
+      The offline threading id (OTID). Set by the client to deduplicate requests. Used for idempotency in background streaming mode — each message in a request must have a unique OTID. Retries of the same request should reuse the same OTIDs.
+
+    - `run_id: Optional[str]`
+
+    - `sender_id: Optional[str]`
+
+    - `seq_id: Optional[int]`
+
+    - `step_id: Optional[str]`
+
+  - `class ToolCallMessage: …`
+
+    A message representing a request to call a tool (generated by the LLM to trigger tool execution).
+
+    Args:
+    id (str): The ID of the message
+    date (datetime): The date the message was created in ISO format
+    name (Optional[str]): The name of the sender of the message
+    tool_call (Union[ToolCall, ToolCallDelta]): The tool call
+
+    - `id: str`
+
+    - `date: datetime`
+
+    - `tool_call: ToolCall`
+
+      - `class ToolCall: …`
+
+        - `arguments: str`
+
+        - `name: str`
+
+        - `tool_call_id: str`
+
+      - `class ToolCallDelta: …`
+
+        - `arguments: Optional[str]`
+
+        - `name: Optional[str]`
+
+        - `tool_call_id: Optional[str]`
+
+    - `is_err: Optional[bool]`
+
+    - `message_type: Optional[Literal["tool_call_message"]]`
+
+      The type of the message.
+
+      - `"tool_call_message"`
+
+    - `name: Optional[str]`
+
+    - `otid: Optional[str]`
+
+      The offline threading id (OTID). Set by the client to deduplicate requests. Used for idempotency in background streaming mode — each message in a request must have a unique OTID. Retries of the same request should reuse the same OTIDs.
+
+    - `run_id: Optional[str]`
+
+    - `sender_id: Optional[str]`
+
+    - `seq_id: Optional[int]`
+
+    - `step_id: Optional[str]`
+
+    - `tool_calls: Optional[ToolCalls]`
+
+      - `List[ToolCall]`
+
+        - `arguments: str`
+
+        - `name: str`
+
+        - `tool_call_id: str`
+
+      - `class ToolCallDelta: …`
+
+  - `class ToolReturnMessage: …`
+
+    A message representing the return value of a tool call (generated by Letta executing the requested tool).
+
+    Args:
+    id (str): The ID of the message
+    date (datetime): The date the message was created in ISO format
+    name (Optional[str]): The name of the sender of the message
+    tool_return (str): The return value of the tool (deprecated, use tool_returns)
+    status (Literal["success", "error"]): The status of the tool call (deprecated, use tool_returns)
+    tool_call_id (str): A unique identifier for the tool call that generated this message (deprecated, use tool_returns)
+    stdout (Optional[List(str)]): Captured stdout (e.g. prints, logs) from the tool invocation (deprecated, use tool_returns)
+    stderr (Optional[List(str)]): Captured stderr from the tool invocation (deprecated, use tool_returns)
+    tool_returns (Optional[List[ToolReturn]]): List of tool returns for multi-tool support
+
+    - `id: str`
+
+    - `date: datetime`
+
+    - `status: Literal["success", "error"]`
+
+      - `"success"`
+
+      - `"error"`
+
+    - `tool_call_id: str`
+
+    - `tool_return: str`
+
+    - `is_err: Optional[bool]`
+
+    - `message_type: Optional[Literal["tool_return_message"]]`
+
+      The type of the message.
+
+      - `"tool_return_message"`
+
+    - `name: Optional[str]`
+
+    - `otid: Optional[str]`
+
+      The offline threading id (OTID). Set by the client to deduplicate requests. Used for idempotency in background streaming mode — each message in a request must have a unique OTID. Retries of the same request should reuse the same OTIDs.
+
+    - `run_id: Optional[str]`
+
+    - `sender_id: Optional[str]`
+
+    - `seq_id: Optional[int]`
+
+    - `stderr: Optional[List[str]]`
+
+    - `stdout: Optional[List[str]]`
+
+    - `step_id: Optional[str]`
+
+    - `tool_returns: Optional[List[ToolReturn]]`
+
+      - `status: Literal["success", "error"]`
+
+        - `"success"`
+
+        - `"error"`
+
+      - `tool_call_id: str`
+
+      - `tool_return: Union[List[ToolReturnUnionMember0], str]`
+
+        The tool return value - either a string or list of content parts (text/image)
+
+        - `List[ToolReturnUnionMember0]`
+
+          - `class TextContent: …`
+
+          - `class ImageContent: …`
+
+        - `str`
+
+      - `stderr: Optional[List[str]]`
+
+      - `stdout: Optional[List[str]]`
+
+      - `type: Optional[Literal["tool"]]`
+
+        The message type to be created.
+
+        - `"tool"`
+
+  - `class AssistantMessage: …`
+
+    A message sent by the LLM in response to user input. Used in the LLM context.
+
+    Args:
+    id (str): The ID of the message
+    date (datetime): The date the message was created in ISO format
+    name (Optional[str]): The name of the sender of the message
+    content (Union[str, List[LettaAssistantMessageContentUnion]]): The message content sent by the agent (can be a string or an array of content parts)
+
+    - `id: str`
+
+    - `content: Union[List[LettaAssistantMessageContentUnion], str]`
+
+      The message content sent by the agent (can be a string or an array of content parts)
+
+      - `List[LettaAssistantMessageContentUnion]`
+
+        - `text: str`
+
+          The text content of the message.
+
+        - `signature: Optional[str]`
+
+          Stores a unique identifier for any reasoning associated with this text content.
+
+        - `type: Optional[Literal["text"]]`
+
+          The type of the message.
+
+          - `"text"`
+
+      - `str`
+
+    - `date: datetime`
+
+    - `is_err: Optional[bool]`
+
+    - `message_type: Optional[Literal["assistant_message"]]`
+
+      The type of the message.
+
+      - `"assistant_message"`
+
+    - `name: Optional[str]`
+
+    - `otid: Optional[str]`
+
+      The offline threading id (OTID). Set by the client to deduplicate requests. Used for idempotency in background streaming mode — each message in a request must have a unique OTID. Retries of the same request should reuse the same OTIDs.
+
+    - `run_id: Optional[str]`
+
+    - `sender_id: Optional[str]`
+
+    - `seq_id: Optional[int]`
+
+    - `step_id: Optional[str]`
+
+  - `class ApprovalRequestMessage: …`
+
+    A message representing a request for approval to call a tool (generated by the LLM to trigger tool execution).
+
+    Args:
+    id (str): The ID of the message
+    date (datetime): The date the message was created in ISO format
+    name (Optional[str]): The name of the sender of the message
+    tool_call (ToolCall): The tool call
+
+    - `id: str`
+
+    - `date: datetime`
+
+    - `tool_call: ToolCall`
+
+      The tool call that has been requested by the llm to run
+
+      - `class ToolCall: …`
+
+      - `class ToolCallDelta: …`
+
+    - `is_err: Optional[bool]`
+
+    - `message_type: Optional[Literal["approval_request_message"]]`
+
+      The type of the message.
+
+      - `"approval_request_message"`
+
+    - `name: Optional[str]`
+
+    - `otid: Optional[str]`
+
+      The offline threading id (OTID). Set by the client to deduplicate requests. Used for idempotency in background streaming mode — each message in a request must have a unique OTID. Retries of the same request should reuse the same OTIDs.
+
+    - `run_id: Optional[str]`
+
+    - `sender_id: Optional[str]`
+
+    - `seq_id: Optional[int]`
+
+    - `step_id: Optional[str]`
+
+    - `tool_calls: Optional[ToolCalls]`
+
+      The tool calls that have been requested by the llm to run, which are pending approval
+
+      - `List[ToolCall]`
+
+        - `arguments: str`
+
+        - `name: str`
+
+        - `tool_call_id: str`
+
+      - `class ToolCallDelta: …`
+
+  - `class ApprovalResponseMessage: …`
+
+    A message representing a response form the user indicating whether a tool has been approved to run.
+
+    Args:
+    id (str): The ID of the message
+    date (datetime): The date the message was created in ISO format
+    name (Optional[str]): The name of the sender of the message
+    approve: (bool) Whether the tool has been approved
+    approval_request_id: The ID of the approval request
+    reason: (Optional[str]) An optional explanation for the provided approval status
+
+    - `id: str`
+
+    - `date: datetime`
+
+    - `approval_request_id: Optional[str]`
+
+      The message ID of the approval request
+
+    - `approvals: Optional[List[Approval]]`
+
+      The list of approval responses
+
+      - `class ApprovalReturn: …`
+
+        - `approve: bool`
+
+          Whether the tool has been approved
+
+        - `tool_call_id: str`
+
+          The ID of the tool call that corresponds to this approval
+
+        - `reason: Optional[str]`
+
+          An optional explanation for the provided approval status
+
+        - `type: Optional[Literal["approval"]]`
+
+          The message type to be created.
+
+          - `"approval"`
+
+      - `class ToolReturn: …`
+
+        - `status: Literal["success", "error"]`
+
+        - `tool_call_id: str`
+
+        - `tool_return: Union[List[ToolReturnUnionMember0], str]`
+
+          The tool return value - either a string or list of content parts (text/image)
+
+        - `stderr: Optional[List[str]]`
+
+        - `stdout: Optional[List[str]]`
+
+        - `type: Optional[Literal["tool"]]`
+
+          The message type to be created.
+
+    - `approve: Optional[bool]`
+
+      Whether the tool has been approved
+
+    - `is_err: Optional[bool]`
+
+    - `message_type: Optional[Literal["approval_response_message"]]`
+
+      The type of the message.
+
+      - `"approval_response_message"`
+
+    - `name: Optional[str]`
+
+    - `otid: Optional[str]`
+
+      The offline threading id (OTID). Set by the client to deduplicate requests. Used for idempotency in background streaming mode — each message in a request must have a unique OTID. Retries of the same request should reuse the same OTIDs.
+
+    - `reason: Optional[str]`
+
+      An optional explanation for the provided approval status
+
+    - `run_id: Optional[str]`
+
+    - `sender_id: Optional[str]`
+
+    - `seq_id: Optional[int]`
+
+    - `step_id: Optional[str]`
+
+  - `class SummaryMessage: …`
+
+    A message representing a summary of the conversation. Sent to the LLM as a user or system message depending on the provider.
+
+    - `id: str`
+
+    - `date: datetime`
+
+    - `summary: str`
+
+    - `compaction_stats: Optional[CompactionStats]`
+
+      Statistics about a memory compaction operation.
+
+      - `context_window: int`
+
+        The model's context window size
+
+      - `messages_count_after: int`
+
+        Number of messages after compaction
+
+      - `messages_count_before: int`
+
+        Number of messages before compaction
+
+      - `trigger: str`
+
+        What triggered the compaction (e.g., 'context_window_exceeded', 'post_step_context_check')
+
+      - `context_tokens_after: Optional[int]`
+
+        Token count after compaction (message tokens only, does not include tool definitions)
+
+      - `context_tokens_before: Optional[int]`
+
+        Token count before compaction (from LLM usage stats, includes full context sent to LLM)
+
+    - `is_err: Optional[bool]`
+
+    - `message_type: Optional[Literal["summary_message"]]`
+
+      - `"summary_message"`
+
+    - `name: Optional[str]`
+
+    - `otid: Optional[str]`
+
+      The offline threading id (OTID). Set by the client to deduplicate requests. Used for idempotency in background streaming mode — each message in a request must have a unique OTID. Retries of the same request should reuse the same OTIDs.
+
+    - `run_id: Optional[str]`
+
+    - `sender_id: Optional[str]`
+
+    - `seq_id: Optional[int]`
+
+    - `step_id: Optional[str]`
+
+  - `class EventMessage: …`
+
+    A message for notifying the developer that an event that has occured (e.g. a compaction). Events are NOT part of the context window.
+
+    - `id: str`
+
+    - `date: datetime`
+
+    - `event_data: Dict[str, object]`
+
+    - `event_type: Literal["compaction"]`
+
+      - `"compaction"`
+
+    - `is_err: Optional[bool]`
+
+    - `message_type: Optional[Literal["event_message"]]`
+
+      - `"event_message"`
+
+    - `name: Optional[str]`
+
+    - `otid: Optional[str]`
+
+      The offline threading id (OTID). Set by the client to deduplicate requests. Used for idempotency in background streaming mode — each message in a request must have a unique OTID. Retries of the same request should reuse the same OTIDs.
+
+    - `run_id: Optional[str]`
+
+    - `sender_id: Optional[str]`
+
+    - `seq_id: Optional[int]`
+
+    - `step_id: Optional[str]`
+
+### Example
+
+```python
+import os
+from letta_client import Letta
+
+client = Letta(
+    api_key=os.environ.get("LETTA_API_KEY"),  # This is the default and can be omitted
+)
+page = client.conversations.messages.list(
+    conversation_id="default",
+)
+page = page.items[0]
+print(page)
+```
+
+#### Response
+
+```json
+[
+  {
+    "id": "id",
+    "content": "content",
+    "date": "2019-12-27T18:11:19.117Z",
+    "is_err": true,
+    "message_type": "system_message",
+    "name": "name",
+    "otid": "otid",
+    "run_id": "run_id",
+    "sender_id": "sender_id",
+    "seq_id": 0,
+    "step_id": "step_id"
+  }
+]
+```
+
+## Send Conversation Message
+
+`conversations.messages.create(strconversation_id, MessageCreateParams**kwargs)  -> LettaResponse`
+
+**post** `/v1/conversations/{conversation_id}/messages`
+
+Send a message to a conversation and get a response.
+
+This endpoint sends a message to an existing conversation.
+By default (streaming=true), returns a streaming response (Server-Sent Events).
+Set streaming=false to get a complete JSON response.
+
+**Agent-direct mode**: Pass conversation_id="default" with agent_id in request body
+to send messages to the agent's default conversation with locking.
+
+**Deprecated**: Passing an agent ID as conversation_id still works but will be removed.
+
+### Parameters
+
+- `conversation_id: str`
+
+  The conversation identifier. Can be a conversation ID ('conv-<uuid4>'), 'default' for agent-direct mode (with agent_id parameter), or an agent ID ('agent-<uuid4>') for backwards compatibility (deprecated).
+
+- `agent_id: Optional[str]`
+
+  Agent ID for agent-direct mode with 'default' conversation. Use with conversation_id='default' in the URL path.
+
+- `assistant_message_tool_kwarg: Optional[str]`
+
+  The name of the message argument in the designated message tool. Still supported for legacy agent types, but deprecated for letta_v1_agent onward.
+
+- `assistant_message_tool_name: Optional[str]`
+
+  The name of the designated message tool. Still supported for legacy agent types, but deprecated for letta_v1_agent onward.
+
+- `background: Optional[bool]`
+
+  Whether to process the request in the background (only used when streaming=true).
+
+- `client_skills: Optional[Iterable[ClientSkill]]`
+
+  Client-side skills available in the environment. These are rendered in the system prompt's available skills section alongside agent-scoped skills from MemFS.
+
+  - `description: str`
+
+    Description of what the skill does
+
+  - `location: str`
+
+    Path or location hint for the skill (e.g. skills/my-skill/SKILL.md)
+
+  - `name: str`
+
+    The name of the skill
+
+- `client_tools: Optional[Iterable[ClientTool]]`
+
+  Client-side tools that the agent can call. When the agent calls a client-side tool, execution pauses and returns control to the client to execute the tool and provide the result via a ToolReturn.
+
+  - `name: str`
+
+    The name of the tool function
+
+  - `description: Optional[str]`
+
+    Description of what the tool does
+
+  - `parameters: Optional[Dict[str, object]]`
+
+    JSON Schema for the function parameters
+
+- `enable_thinking: Optional[str]`
+
+  If set to True, enables reasoning before responses or tool calls from the agent.
+
+- `include_compaction_messages: Optional[bool]`
+
+  If True, compaction events emit structured `SummaryMessage` and `EventMessage` types. If False (default), compaction messages are not included in the response.
+
+- `include_pings: Optional[bool]`
+
+  Whether to include periodic keepalive ping messages in the stream to prevent connection timeouts (only used when streaming=true).
+
+- `include_return_message_types: Optional[List[MessageType]]`
+
+  Only return specified message types in the response. If `None` (default) returns all messages.
+
+  - `"system_message"`
+
+  - `"user_message"`
+
+  - `"assistant_message"`
+
+  - `"reasoning_message"`
+
+  - `"hidden_reasoning_message"`
+
+  - `"tool_call_message"`
+
+  - `"tool_return_message"`
+
+  - `"approval_request_message"`
+
+  - `"approval_response_message"`
+
+  - `"summary_message"`
+
+  - `"event_message"`
+
+- `input: Optional[Union[str, Iterable[InputUnionMember1], null]]`
+
+  Syntactic sugar for a single user message. Equivalent to messages=[{'role': 'user', 'content': input}].
+
+  - `str`
+
+  - `Iterable[InputUnionMember1]`
+
+    - `class TextContent: …`
+
+      - `text: str`
+
+        The text content of the message.
+
+      - `signature: Optional[str]`
+
+        Stores a unique identifier for any reasoning associated with this text content.
+
+      - `type: Optional[Literal["text"]]`
+
+        The type of the message.
+
+        - `"text"`
+
+    - `class ImageContent: …`
+
+      - `source: Source`
+
+        The source of the image.
+
+        - `class SourceURLImage: …`
+
+          - `url: str`
+
+            The URL of the image.
+
+          - `type: Optional[Literal["url"]]`
+
+            The source type for the image.
+
+            - `"url"`
+
+        - `class SourceBase64Image: …`
+
+          - `data: str`
+
+            The base64 encoded image data.
+
+          - `media_type: str`
+
+            The media type for the image.
+
+          - `detail: Optional[str]`
+
+            What level of detail to use when processing and understanding the image (low, high, or auto to let the model decide)
+
+          - `type: Optional[Literal["base64"]]`
+
+            The source type for the image.
+
+            - `"base64"`
+
+        - `class SourceLettaImage: …`
+
+          - `file_id: str`
+
+            The unique identifier of the image file persisted in storage.
+
+          - `data: Optional[str]`
+
+            The base64 encoded image data.
+
+          - `detail: Optional[str]`
+
+            What level of detail to use when processing and understanding the image (low, high, or auto to let the model decide)
+
+          - `media_type: Optional[str]`
+
+            The media type for the image.
+
+          - `type: Optional[Literal["letta"]]`
+
+            The source type for the image.
+
+            - `"letta"`
+
+      - `type: Optional[Literal["image"]]`
+
+        The type of the message.
+
+        - `"image"`
+
+    - `class ToolCallContent: …`
+
+      - `id: str`
+
+        A unique identifier for this specific tool call instance.
+
+      - `input: Dict[str, object]`
+
+        The parameters being passed to the tool, structured as a dictionary of parameter names to values.
+
+      - `name: str`
+
+        The name of the tool being called.
+
+      - `signature: Optional[str]`
+
+        Stores a unique identifier for any reasoning associated with this tool call.
+
+      - `type: Optional[Literal["tool_call"]]`
+
+        Indicates this content represents a tool call event.
+
+        - `"tool_call"`
+
+    - `class ToolReturnContent: …`
+
+      - `content: str`
+
+        The content returned by the tool execution.
+
+      - `is_error: bool`
+
+        Indicates whether the tool execution resulted in an error.
+
+      - `tool_call_id: str`
+
+        References the ID of the ToolCallContent that initiated this tool call.
+
+      - `type: Optional[Literal["tool_return"]]`
+
+        Indicates this content represents a tool return event.
+
+        - `"tool_return"`
+
+    - `class ReasoningContent: …`
+
+      Sent via the Anthropic Messages API
+
+      - `is_native: bool`
+
+        Whether the reasoning content was generated by a reasoner model that processed this step.
+
+      - `reasoning: str`
+
+        The intermediate reasoning or thought process content.
+
+      - `signature: Optional[str]`
+
+        A unique identifier for this reasoning step.
+
+      - `type: Optional[Literal["reasoning"]]`
+
+        Indicates this is a reasoning/intermediate step.
+
+        - `"reasoning"`
+
+    - `class RedactedReasoningContent: …`
+
+      Sent via the Anthropic Messages API
+
+      - `data: str`
+
+        The redacted or filtered intermediate reasoning content.
+
+      - `type: Optional[Literal["redacted_reasoning"]]`
+
+        Indicates this is a redacted thinking step.
+
+        - `"redacted_reasoning"`
+
+    - `class OmittedReasoningContent: …`
+
+      A placeholder for reasoning content we know is present, but isn't returned by the provider (e.g. OpenAI GPT-5 on ChatCompletions)
+
+      - `signature: Optional[str]`
+
+        A unique identifier for this reasoning step.
+
+      - `type: Optional[Literal["omitted_reasoning"]]`
+
+        Indicates this is an omitted reasoning step.
+
+        - `"omitted_reasoning"`
+
+    - `class InputUnionMember1SummarizedReasoningContent: …`
+
+      The style of reasoning content returned by the OpenAI Responses API
+
+      - `id: str`
+
+        The unique identifier for this reasoning step.
+
+      - `summary: Iterable[InputUnionMember1SummarizedReasoningContentSummary]`
+
+        Summaries of the reasoning content.
+
+        - `index: int`
+
+          The index of the summary part.
+
+        - `text: str`
+
+          The text of the summary part.
+
+      - `encrypted_content: Optional[str]`
+
+        The encrypted reasoning content.
+
+      - `type: Optional[Literal["summarized_reasoning"]]`
+
+        Indicates this is a summarized reasoning step.
+
+        - `"summarized_reasoning"`
+
+- `max_steps: Optional[int]`
+
+  Maximum number of steps the agent should take to process the request.
+
+- `messages: Optional[Iterable[Message]]`
+
+  The messages to be sent to the agent.
+
+  - `class MessageCreate: …`
+
+    Request to create a message
+
+    - `content: Union[List[LettaMessageContentUnion], str]`
+
+      The content of the message.
+
+      - `List[LettaMessageContentUnion]`
+
+        - `class TextContent: …`
+
+        - `class ImageContent: …`
+
+        - `class ToolCallContent: …`
+
+        - `class ToolReturnContent: …`
+
+        - `class ReasoningContent: …`
+
+          Sent via the Anthropic Messages API
+
+        - `class RedactedReasoningContent: …`
+
+          Sent via the Anthropic Messages API
+
+        - `class OmittedReasoningContent: …`
+
+          A placeholder for reasoning content we know is present, but isn't returned by the provider (e.g. OpenAI GPT-5 on ChatCompletions)
+
+      - `str`
+
+    - `role: Literal["user", "system", "assistant"]`
+
+      The role of the participant.
+
+      - `"user"`
+
+      - `"system"`
+
+      - `"assistant"`
+
+    - `batch_item_id: Optional[str]`
+
+      The id of the LLMBatchItem that this message is associated with
+
+    - `group_id: Optional[str]`
+
+      The multi-agent group that the message was sent in
+
+    - `name: Optional[str]`
+
+      The name of the participant.
+
+    - `otid: Optional[str]`
+
+      The offline threading id (OTID). Set by the client to deduplicate requests. Used for idempotency in background streaming mode — each message in a request must have a unique OTID. Retries of the same request should reuse the same OTIDs.
+
+    - `sender_id: Optional[str]`
+
+      The id of the sender of the message, can be an identity id or agent id
+
+    - `type: Optional[Literal["message"]]`
+
+      The message type to be created.
+
+      - `"message"`
+
+  - `class ApprovalCreate: …`
+
+    Input to approve or deny a tool call request
+
+    - `approval_request_id: Optional[str]`
+
+      The message ID of the approval request
+
+    - `approvals: Optional[List[Approval]]`
+
+      The list of approval responses
+
+      - `class ApprovalReturn: …`
+
+        - `approve: bool`
+
+          Whether the tool has been approved
+
+        - `tool_call_id: str`
+
+          The ID of the tool call that corresponds to this approval
+
+        - `reason: Optional[str]`
+
+          An optional explanation for the provided approval status
+
+        - `type: Optional[Literal["approval"]]`
+
+          The message type to be created.
+
+          - `"approval"`
+
+      - `class ToolReturn: …`
+
+        - `status: Literal["success", "error"]`
+
+          - `"success"`
+
+          - `"error"`
+
+        - `tool_call_id: str`
+
+        - `tool_return: Union[List[ToolReturnUnionMember0], str]`
+
+          The tool return value - either a string or list of content parts (text/image)
+
+          - `List[ToolReturnUnionMember0]`
+
+            - `class TextContent: …`
+
+            - `class ImageContent: …`
+
+          - `str`
+
+        - `stderr: Optional[List[str]]`
+
+        - `stdout: Optional[List[str]]`
+
+        - `type: Optional[Literal["tool"]]`
+
+          The message type to be created.
+
+          - `"tool"`
+
+    - `approve: Optional[bool]`
+
+      Whether the tool has been approved
+
+    - `group_id: Optional[str]`
+
+      The multi-agent group that the message was sent in
+
+    - `otid: Optional[str]`
+
+      The offline threading id (OTID). Set by the client to deduplicate requests. Used for idempotency in background streaming mode — each message in a request must have a unique OTID. Retries of the same request should reuse the same OTIDs.
+
+    - `reason: Optional[str]`
+
+      An optional explanation for the provided approval status
+
+    - `type: Optional[Literal["approval"]]`
+
+      The message type to be created.
+
+      - `"approval"`
+
+  - `class MessageToolReturnCreate: …`
+
+    Submit tool return(s) from client-side tool execution.
+
+    This is the preferred way to send tool results back to the agent after
+    client-side tool execution. It is equivalent to sending an ApprovalCreate
+    with tool return approvals, but provides a cleaner API for the common case.
+
+    - `tool_returns: Iterable[ToolReturnParam]`
+
+      List of tool returns from client-side execution
+
+      - `status: Literal["success", "error"]`
+
+      - `tool_call_id: str`
+
+      - `tool_return: Union[List[ToolReturnUnionMember0], str]`
+
+        The tool return value - either a string or list of content parts (text/image)
+
+      - `stderr: Optional[List[str]]`
+
+      - `stdout: Optional[List[str]]`
+
+      - `type: Optional[Literal["tool"]]`
+
+        The message type to be created.
+
+    - `group_id: Optional[str]`
+
+      The multi-agent group that the message was sent in
+
+    - `otid: Optional[str]`
+
+      The offline threading id (OTID). Set by the client to deduplicate requests. Used for idempotency in background streaming mode — each message in a request must have a unique OTID. Retries of the same request should reuse the same OTIDs.
+
+    - `type: Optional[Literal["tool_return"]]`
+
+      The message type to be created.
+
+      - `"tool_return"`
+
+- `override_model: Optional[str]`
+
+  Model handle to use for this request instead of the agent's default model. This allows sending a message to a different model without changing the agent's configuration.
+
+- `override_system: Optional[str]`
+
+  Optional per-request system prompt override. When set, this is passed directly to the underlying LLM request and bypasses the persisted/compiled system message for that request.
+
+- `return_logprobs: Optional[bool]`
+
+  If True, returns log probabilities of the output tokens in the response. Useful for RL training. Only supported for OpenAI-compatible providers (including SGLang).
+
+- `return_token_ids: Optional[bool]`
+
+  If True, returns token IDs and logprobs for ALL LLM generations in the agent step, not just the last one. Uses SGLang native /generate endpoint. Returns 'turns' field with TurnTokenData for each assistant/tool turn. Required for proper multi-turn RL training with loss masking.
+
+- `stream_tokens: Optional[bool]`
+
+  Flag to determine if individual tokens should be streamed, rather than streaming per step (only used when streaming=true).
+
+- `streaming: Optional[bool]`
+
+  If True (default), returns a streaming response (Server-Sent Events). If False, returns a complete JSON response.
+
+- `top_logprobs: Optional[int]`
+
+  Number of most likely tokens to return at each position (0-20). Requires return_logprobs=True.
+
+- `use_assistant_message: Optional[bool]`
+
+  Whether the server should parse specific tool call arguments (default `send_message`) as `AssistantMessage` objects. Still supported for legacy agent types, but deprecated for letta_v1_agent onward.
+
+### Returns
+
+- `class LettaResponse: …`
+
+  Response object from an agent interaction, consisting of the new messages generated by the agent and usage statistics.
+  The type of the returned messages can be either `Message` or `LettaMessage`, depending on what was specified in the request.
+
+  Attributes:
+  messages (List[Union[Message, LettaMessage]]): The messages returned by the agent.
+  usage (LettaUsageStatistics): The usage statistics
+
+  - `messages: List[Message]`
+
+    The messages returned by the agent.
+
+    - `class SystemMessage: …`
+
+      A message generated by the system. Never streamed back on a response, only used for cursor pagination.
+
+      Args:
+      id (str): The ID of the message
+      date (datetime): The date the message was created in ISO format
+      name (Optional[str]): The name of the sender of the message
+      content (str): The message content sent by the system
+
+      - `id: str`
+
+      - `content: str`
+
+        The message content sent by the system
+
+      - `date: datetime`
+
+      - `is_err: Optional[bool]`
+
+      - `message_type: Optional[Literal["system_message"]]`
+
+        The type of the message.
+
+        - `"system_message"`
+
+      - `name: Optional[str]`
+
+      - `otid: Optional[str]`
+
+        The offline threading id (OTID). Set by the client to deduplicate requests. Used for idempotency in background streaming mode — each message in a request must have a unique OTID. Retries of the same request should reuse the same OTIDs.
+
+      - `run_id: Optional[str]`
+
+      - `sender_id: Optional[str]`
+
+      - `seq_id: Optional[int]`
+
+      - `step_id: Optional[str]`
+
+    - `class UserMessage: …`
+
+      A message sent by the user. Never streamed back on a response, only used for cursor pagination.
+
+      Args:
+      id (str): The ID of the message
+      date (datetime): The date the message was created in ISO format
+      name (Optional[str]): The name of the sender of the message
+      content (Union[str, List[LettaUserMessageContentUnion]]): The message content sent by the user (can be a string or an array of multi-modal content parts)
+
+      - `id: str`
+
+      - `content: Union[List[LettaUserMessageContentUnion], str]`
+
+        The message content sent by the user (can be a string or an array of multi-modal content parts)
+
+        - `List[LettaUserMessageContentUnion]`
+
+          - `class TextContent: …`
+
+            - `text: str`
+
+              The text content of the message.
+
+            - `signature: Optional[str]`
+
+              Stores a unique identifier for any reasoning associated with this text content.
+
+            - `type: Optional[Literal["text"]]`
+
+              The type of the message.
+
+              - `"text"`
+
+          - `class ImageContent: …`
+
+            - `source: Source`
+
+              The source of the image.
+
+              - `class SourceURLImage: …`
+
+                - `url: str`
+
+                  The URL of the image.
+
+                - `type: Optional[Literal["url"]]`
+
+                  The source type for the image.
+
+                  - `"url"`
+
+              - `class SourceBase64Image: …`
+
+                - `data: str`
+
+                  The base64 encoded image data.
+
+                - `media_type: str`
+
+                  The media type for the image.
+
+                - `detail: Optional[str]`
+
+                  What level of detail to use when processing and understanding the image (low, high, or auto to let the model decide)
+
+                - `type: Optional[Literal["base64"]]`
+
+                  The source type for the image.
+
+                  - `"base64"`
+
+              - `class SourceLettaImage: …`
+
+                - `file_id: str`
+
+                  The unique identifier of the image file persisted in storage.
+
+                - `data: Optional[str]`
+
+                  The base64 encoded image data.
+
+                - `detail: Optional[str]`
+
+                  What level of detail to use when processing and understanding the image (low, high, or auto to let the model decide)
+
+                - `media_type: Optional[str]`
+
+                  The media type for the image.
+
+                - `type: Optional[Literal["letta"]]`
+
+                  The source type for the image.
+
+                  - `"letta"`
+
+            - `type: Optional[Literal["image"]]`
+
+              The type of the message.
+
+              - `"image"`
+
+        - `str`
+
+      - `date: datetime`
+
+      - `is_err: Optional[bool]`
+
+      - `message_type: Optional[Literal["user_message"]]`
+
+        The type of the message.
+
+        - `"user_message"`
+
+      - `name: Optional[str]`
+
+      - `otid: Optional[str]`
+
+        The offline threading id (OTID). Set by the client to deduplicate requests. Used for idempotency in background streaming mode — each message in a request must have a unique OTID. Retries of the same request should reuse the same OTIDs.
+
+      - `run_id: Optional[str]`
+
+      - `sender_id: Optional[str]`
+
+      - `seq_id: Optional[int]`
+
+      - `step_id: Optional[str]`
+
+    - `class ReasoningMessage: …`
+
+      Representation of an agent's internal reasoning.
+
+      Args:
+      id (str): The ID of the message
+      date (datetime): The date the message was created in ISO format
+      name (Optional[str]): The name of the sender of the message
+      source (Literal["reasoner_model", "non_reasoner_model"]): Whether the reasoning
+      content was generated natively by a reasoner model or derived via prompting
+      reasoning (str): The internal reasoning of the agent
+      signature (Optional[str]): The model-generated signature of the reasoning step
+
+      - `id: str`
+
+      - `date: datetime`
+
+      - `reasoning: str`
+
+      - `is_err: Optional[bool]`
+
+      - `message_type: Optional[Literal["reasoning_message"]]`
+
+        The type of the message.
+
+        - `"reasoning_message"`
+
+      - `name: Optional[str]`
+
+      - `otid: Optional[str]`
+
+        The offline threading id (OTID). Set by the client to deduplicate requests. Used for idempotency in background streaming mode — each message in a request must have a unique OTID. Retries of the same request should reuse the same OTIDs.
+
+      - `run_id: Optional[str]`
+
+      - `sender_id: Optional[str]`
+
+      - `seq_id: Optional[int]`
+
+      - `signature: Optional[str]`
+
+      - `source: Optional[Literal["reasoner_model", "non_reasoner_model"]]`
+
+        - `"reasoner_model"`
+
+        - `"non_reasoner_model"`
+
+      - `step_id: Optional[str]`
+
+    - `class HiddenReasoningMessage: …`
+
+      Representation of an agent's internal reasoning where reasoning content
+      has been hidden from the response.
+
+      Args:
+      id (str): The ID of the message
+      date (datetime): The date the message was created in ISO format
+      name (Optional[str]): The name of the sender of the message
+      state (Literal["redacted", "omitted"]): Whether the reasoning
+      content was redacted by the provider or simply omitted by the API
+      hidden_reasoning (Optional[str]): The internal reasoning of the agent
+
+      - `id: str`
+
+      - `date: datetime`
+
+      - `state: Literal["redacted", "omitted"]`
+
+        - `"redacted"`
+
+        - `"omitted"`
+
+      - `hidden_reasoning: Optional[str]`
+
+      - `is_err: Optional[bool]`
+
+      - `message_type: Optional[Literal["hidden_reasoning_message"]]`
+
+        The type of the message.
+
+        - `"hidden_reasoning_message"`
+
+      - `name: Optional[str]`
+
+      - `otid: Optional[str]`
+
+        The offline threading id (OTID). Set by the client to deduplicate requests. Used for idempotency in background streaming mode — each message in a request must have a unique OTID. Retries of the same request should reuse the same OTIDs.
+
+      - `run_id: Optional[str]`
+
+      - `sender_id: Optional[str]`
+
+      - `seq_id: Optional[int]`
+
+      - `step_id: Optional[str]`
+
+    - `class ToolCallMessage: …`
+
+      A message representing a request to call a tool (generated by the LLM to trigger tool execution).
+
+      Args:
+      id (str): The ID of the message
+      date (datetime): The date the message was created in ISO format
+      name (Optional[str]): The name of the sender of the message
+      tool_call (Union[ToolCall, ToolCallDelta]): The tool call
+
+      - `id: str`
+
+      - `date: datetime`
+
+      - `tool_call: ToolCall`
+
+        - `class ToolCall: …`
+
+          - `arguments: str`
+
+          - `name: str`
+
+          - `tool_call_id: str`
+
+        - `class ToolCallDelta: …`
+
+          - `arguments: Optional[str]`
+
+          - `name: Optional[str]`
+
+          - `tool_call_id: Optional[str]`
+
+      - `is_err: Optional[bool]`
+
+      - `message_type: Optional[Literal["tool_call_message"]]`
+
+        The type of the message.
+
+        - `"tool_call_message"`
+
+      - `name: Optional[str]`
+
+      - `otid: Optional[str]`
+
+        The offline threading id (OTID). Set by the client to deduplicate requests. Used for idempotency in background streaming mode — each message in a request must have a unique OTID. Retries of the same request should reuse the same OTIDs.
+
+      - `run_id: Optional[str]`
+
+      - `sender_id: Optional[str]`
+
+      - `seq_id: Optional[int]`
+
+      - `step_id: Optional[str]`
+
+      - `tool_calls: Optional[ToolCalls]`
+
+        - `List[ToolCall]`
+
+          - `arguments: str`
+
+          - `name: str`
+
+          - `tool_call_id: str`
+
+        - `class ToolCallDelta: …`
+
+    - `class ToolReturnMessage: …`
+
+      A message representing the return value of a tool call (generated by Letta executing the requested tool).
+
+      Args:
+      id (str): The ID of the message
+      date (datetime): The date the message was created in ISO format
+      name (Optional[str]): The name of the sender of the message
+      tool_return (str): The return value of the tool (deprecated, use tool_returns)
+      status (Literal["success", "error"]): The status of the tool call (deprecated, use tool_returns)
+      tool_call_id (str): A unique identifier for the tool call that generated this message (deprecated, use tool_returns)
+      stdout (Optional[List(str)]): Captured stdout (e.g. prints, logs) from the tool invocation (deprecated, use tool_returns)
+      stderr (Optional[List(str)]): Captured stderr from the tool invocation (deprecated, use tool_returns)
+      tool_returns (Optional[List[ToolReturn]]): List of tool returns for multi-tool support
+
+      - `id: str`
+
+      - `date: datetime`
+
+      - `status: Literal["success", "error"]`
+
+        - `"success"`
+
+        - `"error"`
+
+      - `tool_call_id: str`
+
+      - `tool_return: str`
+
+      - `is_err: Optional[bool]`
+
+      - `message_type: Optional[Literal["tool_return_message"]]`
+
+        The type of the message.
+
+        - `"tool_return_message"`
+
+      - `name: Optional[str]`
+
+      - `otid: Optional[str]`
+
+        The offline threading id (OTID). Set by the client to deduplicate requests. Used for idempotency in background streaming mode — each message in a request must have a unique OTID. Retries of the same request should reuse the same OTIDs.
+
+      - `run_id: Optional[str]`
+
+      - `sender_id: Optional[str]`
+
+      - `seq_id: Optional[int]`
+
+      - `stderr: Optional[List[str]]`
+
+      - `stdout: Optional[List[str]]`
+
+      - `step_id: Optional[str]`
+
+      - `tool_returns: Optional[List[ToolReturn]]`
+
+        - `status: Literal["success", "error"]`
+
+          - `"success"`
+
+          - `"error"`
+
+        - `tool_call_id: str`
+
+        - `tool_return: Union[List[ToolReturnUnionMember0], str]`
+
+          The tool return value - either a string or list of content parts (text/image)
+
+          - `List[ToolReturnUnionMember0]`
+
+            - `class TextContent: …`
+
+            - `class ImageContent: …`
+
+          - `str`
+
+        - `stderr: Optional[List[str]]`
+
+        - `stdout: Optional[List[str]]`
+
+        - `type: Optional[Literal["tool"]]`
+
+          The message type to be created.
+
+          - `"tool"`
+
+    - `class AssistantMessage: …`
+
+      A message sent by the LLM in response to user input. Used in the LLM context.
+
+      Args:
+      id (str): The ID of the message
+      date (datetime): The date the message was created in ISO format
+      name (Optional[str]): The name of the sender of the message
+      content (Union[str, List[LettaAssistantMessageContentUnion]]): The message content sent by the agent (can be a string or an array of content parts)
+
+      - `id: str`
+
+      - `content: Union[List[LettaAssistantMessageContentUnion], str]`
+
+        The message content sent by the agent (can be a string or an array of content parts)
+
+        - `List[LettaAssistantMessageContentUnion]`
+
+          - `text: str`
+
+            The text content of the message.
+
+          - `signature: Optional[str]`
+
+            Stores a unique identifier for any reasoning associated with this text content.
+
+          - `type: Optional[Literal["text"]]`
+
+            The type of the message.
+
+            - `"text"`
+
+        - `str`
+
+      - `date: datetime`
+
+      - `is_err: Optional[bool]`
+
+      - `message_type: Optional[Literal["assistant_message"]]`
+
+        The type of the message.
+
+        - `"assistant_message"`
+
+      - `name: Optional[str]`
+
+      - `otid: Optional[str]`
+
+        The offline threading id (OTID). Set by the client to deduplicate requests. Used for idempotency in background streaming mode — each message in a request must have a unique OTID. Retries of the same request should reuse the same OTIDs.
+
+      - `run_id: Optional[str]`
+
+      - `sender_id: Optional[str]`
+
+      - `seq_id: Optional[int]`
+
+      - `step_id: Optional[str]`
+
+    - `class ApprovalRequestMessage: …`
+
+      A message representing a request for approval to call a tool (generated by the LLM to trigger tool execution).
+
+      Args:
+      id (str): The ID of the message
+      date (datetime): The date the message was created in ISO format
+      name (Optional[str]): The name of the sender of the message
+      tool_call (ToolCall): The tool call
+
+      - `id: str`
+
+      - `date: datetime`
+
+      - `tool_call: ToolCall`
+
+        The tool call that has been requested by the llm to run
+
+        - `class ToolCall: …`
+
+        - `class ToolCallDelta: …`
+
+      - `is_err: Optional[bool]`
+
+      - `message_type: Optional[Literal["approval_request_message"]]`
+
+        The type of the message.
+
+        - `"approval_request_message"`
+
+      - `name: Optional[str]`
+
+      - `otid: Optional[str]`
+
+        The offline threading id (OTID). Set by the client to deduplicate requests. Used for idempotency in background streaming mode — each message in a request must have a unique OTID. Retries of the same request should reuse the same OTIDs.
+
+      - `run_id: Optional[str]`
+
+      - `sender_id: Optional[str]`
+
+      - `seq_id: Optional[int]`
+
+      - `step_id: Optional[str]`
+
+      - `tool_calls: Optional[ToolCalls]`
+
+        The tool calls that have been requested by the llm to run, which are pending approval
+
+        - `List[ToolCall]`
+
+          - `arguments: str`
+
+          - `name: str`
+
+          - `tool_call_id: str`
+
+        - `class ToolCallDelta: …`
+
+    - `class ApprovalResponseMessage: …`
+
+      A message representing a response form the user indicating whether a tool has been approved to run.
+
+      Args:
+      id (str): The ID of the message
+      date (datetime): The date the message was created in ISO format
+      name (Optional[str]): The name of the sender of the message
+      approve: (bool) Whether the tool has been approved
+      approval_request_id: The ID of the approval request
+      reason: (Optional[str]) An optional explanation for the provided approval status
+
+      - `id: str`
+
+      - `date: datetime`
+
+      - `approval_request_id: Optional[str]`
+
+        The message ID of the approval request
+
+      - `approvals: Optional[List[Approval]]`
+
+        The list of approval responses
+
+        - `class ApprovalReturn: …`
+
+          - `approve: bool`
+
+            Whether the tool has been approved
+
+          - `tool_call_id: str`
+
+            The ID of the tool call that corresponds to this approval
+
+          - `reason: Optional[str]`
+
+            An optional explanation for the provided approval status
+
+          - `type: Optional[Literal["approval"]]`
+
+            The message type to be created.
+
+            - `"approval"`
+
+        - `class ToolReturn: …`
+
+          - `status: Literal["success", "error"]`
+
+          - `tool_call_id: str`
+
+          - `tool_return: Union[List[ToolReturnUnionMember0], str]`
+
+            The tool return value - either a string or list of content parts (text/image)
+
+          - `stderr: Optional[List[str]]`
+
+          - `stdout: Optional[List[str]]`
+
+          - `type: Optional[Literal["tool"]]`
+
+            The message type to be created.
+
+      - `approve: Optional[bool]`
+
+        Whether the tool has been approved
+
+      - `is_err: Optional[bool]`
+
+      - `message_type: Optional[Literal["approval_response_message"]]`
+
+        The type of the message.
+
+        - `"approval_response_message"`
+
+      - `name: Optional[str]`
+
+      - `otid: Optional[str]`
+
+        The offline threading id (OTID). Set by the client to deduplicate requests. Used for idempotency in background streaming mode — each message in a request must have a unique OTID. Retries of the same request should reuse the same OTIDs.
+
+      - `reason: Optional[str]`
+
+        An optional explanation for the provided approval status
+
+      - `run_id: Optional[str]`
+
+      - `sender_id: Optional[str]`
+
+      - `seq_id: Optional[int]`
+
+      - `step_id: Optional[str]`
+
+    - `class SummaryMessage: …`
+
+      A message representing a summary of the conversation. Sent to the LLM as a user or system message depending on the provider.
+
+      - `id: str`
+
+      - `date: datetime`
+
+      - `summary: str`
+
+      - `compaction_stats: Optional[CompactionStats]`
+
+        Statistics about a memory compaction operation.
+
+        - `context_window: int`
+
+          The model's context window size
+
+        - `messages_count_after: int`
+
+          Number of messages after compaction
+
+        - `messages_count_before: int`
+
+          Number of messages before compaction
+
+        - `trigger: str`
+
+          What triggered the compaction (e.g., 'context_window_exceeded', 'post_step_context_check')
+
+        - `context_tokens_after: Optional[int]`
+
+          Token count after compaction (message tokens only, does not include tool definitions)
+
+        - `context_tokens_before: Optional[int]`
+
+          Token count before compaction (from LLM usage stats, includes full context sent to LLM)
+
+      - `is_err: Optional[bool]`
+
+      - `message_type: Optional[Literal["summary_message"]]`
+
+        - `"summary_message"`
+
+      - `name: Optional[str]`
+
+      - `otid: Optional[str]`
+
+        The offline threading id (OTID). Set by the client to deduplicate requests. Used for idempotency in background streaming mode — each message in a request must have a unique OTID. Retries of the same request should reuse the same OTIDs.
+
+      - `run_id: Optional[str]`
+
+      - `sender_id: Optional[str]`
+
+      - `seq_id: Optional[int]`
+
+      - `step_id: Optional[str]`
+
+    - `class EventMessage: …`
+
+      A message for notifying the developer that an event that has occured (e.g. a compaction). Events are NOT part of the context window.
+
+      - `id: str`
+
+      - `date: datetime`
+
+      - `event_data: Dict[str, object]`
+
+      - `event_type: Literal["compaction"]`
+
+        - `"compaction"`
+
+      - `is_err: Optional[bool]`
+
+      - `message_type: Optional[Literal["event_message"]]`
+
+        - `"event_message"`
+
+      - `name: Optional[str]`
+
+      - `otid: Optional[str]`
+
+        The offline threading id (OTID). Set by the client to deduplicate requests. Used for idempotency in background streaming mode — each message in a request must have a unique OTID. Retries of the same request should reuse the same OTIDs.
+
+      - `run_id: Optional[str]`
+
+      - `sender_id: Optional[str]`
+
+      - `seq_id: Optional[int]`
+
+      - `step_id: Optional[str]`
+
+  - `stop_reason: StopReason`
+
+    The stop reason from Letta indicating why agent loop stopped execution.
+
+    - `stop_reason: StopReasonType`
+
+      The reason why execution stopped.
+
+      - `"end_turn"`
+
+      - `"error"`
+
+      - `"llm_api_error"`
+
+      - `"invalid_llm_response"`
+
+      - `"invalid_tool_call"`
+
+      - `"max_steps"`
+
+      - `"max_tokens_exceeded"`
+
+      - `"no_tool_call"`
+
+      - `"tool_rule"`
+
+      - `"cancelled"`
+
+      - `"insufficient_credits"`
+
+      - `"requires_approval"`
+
+      - `"context_window_overflow_in_system_prompt"`
+
+    - `message_type: Optional[Literal["stop_reason"]]`
+
+      The type of the message.
+
+      - `"stop_reason"`
+
+  - `usage: Usage`
+
+    The usage statistics of the agent.
+
+    - `cache_write_tokens: Optional[int]`
+
+      The number of input tokens written to cache (Anthropic only). None if not reported by provider.
+
+    - `cached_input_tokens: Optional[int]`
+
+      The number of input tokens served from cache. None if not reported by provider.
+
+    - `completion_tokens: Optional[int]`
+
+      The number of tokens generated by the agent.
+
+    - `context_tokens: Optional[int]`
+
+      Estimate of tokens currently in the context window.
+
+    - `message_type: Optional[Literal["usage_statistics"]]`
+
+      - `"usage_statistics"`
+
+    - `prompt_tokens: Optional[int]`
+
+      The number of tokens in the prompt.
+
+    - `reasoning_tokens: Optional[int]`
+
+      The number of reasoning/thinking tokens generated. None if not reported by provider.
+
+    - `run_ids: Optional[List[str]]`
+
+      The background task run IDs associated with the agent interaction
+
+    - `step_count: Optional[int]`
+
+      The number of steps taken by the agent.
+
+    - `total_tokens: Optional[int]`
+
+      The total number of tokens processed by the agent.
+
+  - `logprobs: Optional[Logprobs]`
+
+    Log probabilities of the output tokens from the last LLM call. Only present if return_logprobs was enabled.
+
+    - `content: Optional[List[LogprobsContent]]`
+
+      - `token: str`
+
+      - `logprob: float`
+
+      - `top_logprobs: List[LogprobsContentTopLogprob]`
+
+        - `token: str`
+
+        - `logprob: float`
+
+        - `bytes: Optional[List[int]]`
+
+      - `bytes: Optional[List[int]]`
+
+    - `refusal: Optional[List[LogprobsRefusal]]`
+
+      - `token: str`
+
+      - `logprob: float`
+
+      - `top_logprobs: List[LogprobsRefusalTopLogprob]`
+
+        - `token: str`
+
+        - `logprob: float`
+
+        - `bytes: Optional[List[int]]`
+
+      - `bytes: Optional[List[int]]`
+
+  - `turns: Optional[List[Turn]]`
+
+    Token data for all LLM generations in multi-turn agent interaction. Includes token IDs and logprobs for each assistant turn, plus tool result content. Only present if return_token_ids was enabled. Used for RL training with loss masking.
+
+    - `role: Literal["assistant", "tool"]`
+
+      Role of this turn: 'assistant' for LLM generations (trainable), 'tool' for tool results (non-trainable).
+
+      - `"assistant"`
+
+      - `"tool"`
+
+    - `content: Optional[str]`
+
+      Text content. For tool turns, client tokenizes this with loss_mask=0.
+
+    - `output_ids: Optional[List[int]]`
+
+      Token IDs from SGLang native endpoint. Only present for assistant turns.
+
+    - `output_token_logprobs: Optional[List[List[object]]]`
+
+      Logprobs from SGLang: [[logprob, token_id, top_logprob_or_null], ...]. Only present for assistant turns.
+
+    - `tool_name: Optional[str]`
+
+      Name of the tool called. Only present for tool turns.
+
+### Example
+
+```python
+import os
+from letta_client import Letta
+
+client = Letta(
+    api_key=os.environ.get("LETTA_API_KEY"),  # This is the default and can be omitted
+)
+for message in client.conversations.messages.create(
+    conversation_id="default",
+):
+  print(message)
+```
+
+#### Response
+
+```json
+{
+  "messages": [
+    {
+      "id": "id",
+      "content": "content",
+      "date": "2019-12-27T18:11:19.117Z",
+      "is_err": true,
+      "message_type": "system_message",
+      "name": "name",
+      "otid": "otid",
+      "run_id": "run_id",
+      "sender_id": "sender_id",
+      "seq_id": 0,
+      "step_id": "step_id"
+    }
+  ],
+  "stop_reason": {
+    "stop_reason": "end_turn",
+    "message_type": "stop_reason"
+  },
+  "usage": {
+    "cache_write_tokens": 0,
+    "cached_input_tokens": 0,
+    "completion_tokens": 0,
+    "context_tokens": 0,
+    "message_type": "usage_statistics",
+    "prompt_tokens": 0,
+    "reasoning_tokens": 0,
+    "run_ids": [
+      "string"
+    ],
+    "step_count": 0,
+    "total_tokens": 0
+  },
+  "logprobs": {
+    "content": [
+      {
+        "token": "token",
+        "logprob": 0,
+        "top_logprobs": [
+          {
+            "token": "token",
+            "logprob": 0,
+            "bytes": [
+              0
+            ]
+          }
+        ],
+        "bytes": [
+          0
+        ]
+      }
+    ],
+    "refusal": [
+      {
+        "token": "token",
+        "logprob": 0,
+        "top_logprobs": [
+          {
+            "token": "token",
+            "logprob": 0,
+            "bytes": [
+              0
+            ]
+          }
+        ],
+        "bytes": [
+          0
+        ]
+      }
+    ]
+  },
+  "turns": [
+    {
+      "role": "assistant",
+      "content": "content",
+      "output_ids": [
+        0
+      ],
+      "output_token_logprobs": [
+        [
+          {}
+        ]
+      ],
+      "tool_name": "tool_name"
+    }
+  ]
+}
+```
+
+## Retrieve Conversation Stream
+
+`conversations.messages.stream(strconversation_id, MessageStreamParams**kwargs)  -> object`
+
+**post** `/v1/conversations/{conversation_id}/stream`
+
+Resume the stream for the most recent active run in a conversation.
+
+This endpoint allows you to reconnect to an active background stream
+for a conversation, enabling recovery from network interruptions.
+
+**Agent-direct mode**: Pass conversation_id="default" with agent_id in request body
+to retrieve the stream for the agent's most recent active run.
+
+**Direct run access**: Pass run_id directly to skip run lookup entirely.
+Useful for recovery from duplicate request 409 errors.
+
+**OTID lookup**: Pass otid to look up the run_id from Redis.
+Useful when you have the otid from a 409 error response.
+
+**Deprecated**: Passing an agent ID as conversation_id still works but will be removed.
+
+### Parameters
+
+- `conversation_id: str`
+
+  The conversation identifier. Can be a conversation ID ('conv-<uuid4>'), 'default' for agent-direct mode (with agent_id parameter), or an agent ID ('agent-<uuid4>') for backwards compatibility (deprecated).
+
+- `agent_id: Optional[str]`
+
+  Agent ID for agent-direct mode with 'default' conversation. Use with conversation_id='default' in the URL path.
+
+- `batch_size: Optional[int]`
+
+  Number of entries to read per batch.
+
+- `include_pings: Optional[bool]`
+
+  Whether to include periodic keepalive ping messages in the stream to prevent connection timeouts.
+
+- `otid: Optional[str]`
+
+  Offline threading ID to look up the run_id. Bypasses active run lookup if run_id not provided.
+
+- `poll_interval: Optional[float]`
+
+  Seconds to wait between polls when no new data.
+
+- `run_id: Optional[str]`
+
+  Run ID to stream directly, bypassing run lookup. Use for recovery from duplicate requests.
+
+- `starting_after: Optional[int]`
+
+  Sequence id to use as a cursor for pagination. Response will start streaming after this chunk sequence id
+
+### Returns
+
+- `object`
+
+### Example
+
+```python
+import os
+from letta_client import Letta
+
+client = Letta(
+    api_key=os.environ.get("LETTA_API_KEY"),  # This is the default and can be omitted
+)
+for message in client.conversations.messages.stream(
+    conversation_id="default",
+):
+  print(message)
+```
+
+#### Response
+
+```json
+{}
+```
+
+## Compact Conversation
+
+`conversations.messages.compact(strconversation_id, MessageCompactParams**kwargs)  -> CompactionResponse`
+
+**post** `/v1/conversations/{conversation_id}/compact`
+
+Compact (summarize) a conversation's message history.
+
+This endpoint summarizes the in-context messages for a specific conversation,
+reducing the message count while preserving important context.
+
+**Agent-direct mode**: Pass conversation_id="default" with agent_id in request body
+to compact the agent's default conversation messages.
+
+**Deprecated**: Passing an agent ID as conversation_id still works but will be removed.
+
+### Parameters
+
+- `conversation_id: str`
+
+  The conversation identifier. Can be a conversation ID ('conv-<uuid4>'), 'default' for agent-direct mode (with agent_id parameter), or an agent ID ('agent-<uuid4>') for backwards compatibility (deprecated).
+
+- `agent_id: Optional[str]`
+
+  Agent ID for agent-direct mode with 'default' conversation. Use with conversation_id='default' in the URL path.
+
+- `compaction_settings: Optional[CompactionSettings]`
+
+  Configuration for conversation compaction / summarization.
+
+  Per-model settings (temperature,
+  max tokens, etc.) are derived from the default configuration for that handle.
+
+  - `clip_chars: Optional[int]`
+
+    The maximum length of the summary in characters. If none, no clipping is performed.
+
+  - `mode: Optional[Literal["all", "sliding_window", "self_compact_all", "self_compact_sliding_window"]]`
+
+    The type of summarization technique use.
+
+    - `"all"`
+
+    - `"sliding_window"`
+
+    - `"self_compact_all"`
+
+    - `"self_compact_sliding_window"`
+
+  - `model: Optional[str]`
+
+    Model handle to use for sliding_window/all summarization (format: provider/model-name). If None, uses lightweight provider-specific defaults.
+
+  - `model_settings: Optional[CompactionSettingsModelSettings]`
+
+    Optional model settings used to override defaults for the summarizer model.
+
+    - `class OpenAIModelSettings: …`
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["openai"]]`
+
+        The type of the provider.
+
+        - `"openai"`
+
+      - `reasoning: Optional[Reasoning]`
+
+        The reasoning configuration for the model.
+
+        - `reasoning_effort: Optional[Literal["none", "minimal", "low", 3 more]]`
+
+          The reasoning effort to use when generating text reasoning models
+
+          - `"none"`
+
+          - `"minimal"`
+
+          - `"low"`
+
+          - `"medium"`
+
+          - `"high"`
+
+          - `"xhigh"`
+
+      - `response_format: Optional[ResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+          - `type: Optional[Literal["text"]]`
+
+            The type of the response format.
+
+            - `"text"`
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+          - `json_schema: Dict[str, object]`
+
+            The JSON schema of the response.
+
+          - `type: Optional[Literal["json_schema"]]`
+
+            The type of the response format.
+
+            - `"json_schema"`
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+          - `type: Optional[Literal["json_object"]]`
+
+            The type of the response format.
+
+            - `"json_object"`
+
+      - `strict: Optional[bool]`
+
+        Enable strict mode for tool calling. When true, tool outputs are guaranteed to match JSON schemas.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class CompactionSettingsModelSettingsSgLangModelSettings: …`
+
+      SGLang model configuration (OpenAI-compatible runtime with SGLang-specific parsing).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["sglang"]]`
+
+        The type of the provider.
+
+        - `"sglang"`
+
+      - `reasoning: Optional[CompactionSettingsModelSettingsSgLangModelSettingsReasoning]`
+
+        The reasoning configuration for the model.
+
+        - `reasoning_effort: Optional[Literal["none", "minimal", "low", 3 more]]`
+
+          The reasoning effort to use when generating text reasoning models
+
+          - `"none"`
+
+          - `"minimal"`
+
+          - `"low"`
+
+          - `"medium"`
+
+          - `"high"`
+
+          - `"xhigh"`
+
+      - `response_format: Optional[CompactionSettingsModelSettingsSgLangModelSettingsResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `strict: Optional[bool]`
+
+        Enable strict mode for tool calling. When true, tool outputs are guaranteed to match JSON schemas.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+      - `tool_call_parser: Optional[str]`
+
+        SGLang tool call parser name (for example 'glm47', 'qwen25', or 'hermes').
+
+    - `class AnthropicModelSettings: …`
+
+      - `effort: Optional[Literal["low", "medium", "high", 2 more]]`
+
+        Effort level for supported Anthropic models (controls token spending). 'xhigh' and 'max' are available on Opus 4.6+. Not setting this gives similar performance to 'high'.
+
+        - `"low"`
+
+        - `"medium"`
+
+        - `"high"`
+
+        - `"xhigh"`
+
+        - `"max"`
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["anthropic"]]`
+
+        The type of the provider.
+
+        - `"anthropic"`
+
+      - `response_format: Optional[ResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `strict: Optional[bool]`
+
+        Enable strict mode for tool calling. When true, tool outputs are guaranteed to match JSON schemas.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+      - `thinking: Optional[Thinking]`
+
+        The thinking configuration for the model.
+
+        - `budget_tokens: Optional[int]`
+
+          The maximum number of tokens the model can use for extended thinking.
+
+        - `type: Optional[Literal["enabled", "disabled"]]`
+
+          The type of thinking to use.
+
+          - `"enabled"`
+
+          - `"disabled"`
+
+      - `verbosity: Optional[Literal["low", "medium", "high"]]`
+
+        Soft control for how verbose model output should be, used for GPT-5 models.
+
+        - `"low"`
+
+        - `"medium"`
+
+        - `"high"`
+
+    - `class GoogleAIModelSettings: …`
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["google_ai"]]`
+
+        The type of the provider.
+
+        - `"google_ai"`
+
+      - `response_schema: Optional[ResponseSchema]`
+
+        The response schema for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+      - `thinking_config: Optional[ThinkingConfig]`
+
+        The thinking configuration for the model.
+
+        - `include_thoughts: Optional[bool]`
+
+          Whether to include thoughts in the model's response.
+
+        - `thinking_budget: Optional[int]`
+
+          The thinking budget for the model.
+
+    - `class GoogleVertexModelSettings: …`
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["google_vertex"]]`
+
+        The type of the provider.
+
+        - `"google_vertex"`
+
+      - `response_schema: Optional[ResponseSchema]`
+
+        The response schema for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+      - `thinking_config: Optional[ThinkingConfig]`
+
+        The thinking configuration for the model.
+
+        - `include_thoughts: Optional[bool]`
+
+          Whether to include thoughts in the model's response.
+
+        - `thinking_budget: Optional[int]`
+
+          The thinking budget for the model.
+
+    - `class AzureModelSettings: …`
+
+      Azure OpenAI model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["azure"]]`
+
+        The type of the provider.
+
+        - `"azure"`
+
+      - `response_format: Optional[ResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class XaiModelSettings: …`
+
+      xAI model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["xai"]]`
+
+        The type of the provider.
+
+        - `"xai"`
+
+      - `response_format: Optional[ResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class CompactionSettingsModelSettingsMoonshotModelSettings: …`
+
+      Moonshot/Kimi model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["moonshot"]]`
+
+        The type of the provider.
+
+        - `"moonshot"`
+
+      - `response_format: Optional[CompactionSettingsModelSettingsMoonshotModelSettingsResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `strict: Optional[bool]`
+
+        Enable strict mode for tool calling. When true, tool outputs are guaranteed to match JSON schemas.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class CompactionSettingsModelSettingsZaiModelSettings: …`
+
+      Z.ai (ZhipuAI) model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["zai"]]`
+
+        The type of the provider.
+
+        - `"zai"`
+
+      - `response_format: Optional[CompactionSettingsModelSettingsZaiModelSettingsResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+      - `thinking: Optional[CompactionSettingsModelSettingsZaiModelSettingsThinking]`
+
+        The thinking configuration for GLM-4.5+ models.
+
+        - `clear_thinking: Optional[bool]`
+
+          If False, preserved thinking is used (recommended for agents).
+
+        - `type: Optional[Literal["enabled", "disabled"]]`
+
+          Whether thinking is enabled or disabled.
+
+          - `"enabled"`
+
+          - `"disabled"`
+
+    - `class CompactionSettingsModelSettingsMoonshotCodingModelSettings: …`
+
+      Kimi Code model configuration (Anthropic-compatible).
+
+      - `effort: Optional[Literal["low", "medium", "high", 2 more]]`
+
+        Effort level for supported Anthropic models (controls token spending). 'xhigh' and 'max' are available on Opus 4.6+. Not setting this gives similar performance to 'high'.
+
+        - `"low"`
+
+        - `"medium"`
+
+        - `"high"`
+
+        - `"xhigh"`
+
+        - `"max"`
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["moonshot_coding"]]`
+
+        The type of the provider.
+
+        - `"moonshot_coding"`
+
+      - `response_format: Optional[CompactionSettingsModelSettingsMoonshotCodingModelSettingsResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `strict: Optional[bool]`
+
+        Enable strict mode for tool calling. When true, tool outputs are guaranteed to match JSON schemas.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+      - `thinking: Optional[CompactionSettingsModelSettingsMoonshotCodingModelSettingsThinking]`
+
+        The thinking configuration for the model.
+
+        - `budget_tokens: Optional[int]`
+
+          The maximum number of tokens the model can use for extended thinking.
+
+        - `type: Optional[Literal["enabled", "disabled"]]`
+
+          The type of thinking to use.
+
+          - `"enabled"`
+
+          - `"disabled"`
+
+      - `verbosity: Optional[Literal["low", "medium", "high"]]`
+
+        Soft control for how verbose model output should be, used for GPT-5 models.
+
+        - `"low"`
+
+        - `"medium"`
+
+        - `"high"`
+
+    - `class GroqModelSettings: …`
+
+      Groq model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["groq"]]`
+
+        The type of the provider.
+
+        - `"groq"`
+
+      - `response_format: Optional[ResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class DeepseekModelSettings: …`
+
+      Deepseek model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["deepseek"]]`
+
+        The type of the provider.
+
+        - `"deepseek"`
+
+      - `response_format: Optional[ResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class TogetherModelSettings: …`
+
+      Together AI model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["together"]]`
+
+        The type of the provider.
+
+        - `"together"`
+
+      - `response_format: Optional[ResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class BedrockModelSettings: …`
+
+      AWS Bedrock model configuration.
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["bedrock"]]`
+
+        The type of the provider.
+
+        - `"bedrock"`
+
+      - `response_format: Optional[ResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class CompactionSettingsModelSettingsBasetenModelSettings: …`
+
+      Baseten model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["baseten"]]`
+
+        The type of the provider.
+
+        - `"baseten"`
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class CompactionSettingsModelSettingsOpenRouterModelSettings: …`
+
+      OpenRouter model configuration (OpenAI-compatible).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["openrouter"]]`
+
+        The type of the provider.
+
+        - `"openrouter"`
+
+      - `response_format: Optional[CompactionSettingsModelSettingsOpenRouterModelSettingsResponseFormat]`
+
+        The response format for the model.
+
+        - `class TextResponseFormat: …`
+
+          Response format for plain text responses.
+
+        - `class JsonSchemaResponseFormat: …`
+
+          Response format for JSON schema-based responses.
+
+        - `class JsonObjectResponseFormat: …`
+
+          Response format for JSON object responses.
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+    - `class CompactionSettingsModelSettingsChatGptoAuthModelSettings: …`
+
+      ChatGPT OAuth model configuration (uses ChatGPT backend API).
+
+      - `max_output_tokens: Optional[int]`
+
+        The maximum number of tokens the model can generate.
+
+      - `parallel_tool_calls: Optional[bool]`
+
+        Whether to enable parallel tool calling.
+
+      - `provider_type: Optional[Literal["chatgpt_oauth"]]`
+
+        The type of the provider.
+
+        - `"chatgpt_oauth"`
+
+      - `reasoning: Optional[CompactionSettingsModelSettingsChatGptoAuthModelSettingsReasoning]`
+
+        The reasoning configuration for the model.
+
+        - `reasoning_effort: Optional[Literal["none", "low", "medium", 2 more]]`
+
+          The reasoning effort level for GPT-5.x and o-series models.
+
+          - `"none"`
+
+          - `"low"`
+
+          - `"medium"`
+
+          - `"high"`
+
+          - `"xhigh"`
+
+      - `temperature: Optional[float]`
+
+        The temperature of the model.
+
+  - `prompt: Optional[str]`
+
+    The prompt to use for summarization. If None, uses mode-specific default.
+
+  - `prompt_acknowledgement: Optional[bool]`
+
+    Whether to include an acknowledgement post-prompt (helps prevent non-summary outputs).
+
+  - `sliding_window_percentage: Optional[float]`
+
+    The percentage of the context window to keep post-summarization (only used in sliding window modes).
+
+### Returns
+
+- `class CompactionResponse: …`
+
+  - `num_messages_after: int`
+
+  - `num_messages_before: int`
+
+  - `summary: str`
+
+### Example
+
+```python
+import os
+from letta_client import Letta
+
+client = Letta(
+    api_key=os.environ.get("LETTA_API_KEY"),  # This is the default and can be omitted
+)
+compaction_response = client.conversations.messages.compact(
+    conversation_id="default",
+)
+print(compaction_response.num_messages_after)
+```
+
+#### Response
+
+```json
+{
+  "num_messages_after": 0,
+  "num_messages_before": 0,
+  "summary": "summary"
+}
+```
+
+## Domain Types
+
+### Compaction Request
+
+- `class CompactionRequest: …`
+
+  - `compaction_settings: Optional[CompactionSettings]`
+
+    Configuration for conversation compaction / summarization.
+
+    Per-model settings (temperature,
+    max tokens, etc.) are derived from the default configuration for that handle.
+
+    - `clip_chars: Optional[int]`
+
+      The maximum length of the summary in characters. If none, no clipping is performed.
+
+    - `mode: Optional[Literal["all", "sliding_window", "self_compact_all", "self_compact_sliding_window"]]`
+
+      The type of summarization technique use.
+
+      - `"all"`
+
+      - `"sliding_window"`
+
+      - `"self_compact_all"`
+
+      - `"self_compact_sliding_window"`
+
+    - `model: Optional[str]`
+
+      Model handle to use for sliding_window/all summarization (format: provider/model-name). If None, uses lightweight provider-specific defaults.
+
+    - `model_settings: Optional[CompactionSettingsModelSettings]`
+
+      Optional model settings used to override defaults for the summarizer model.
+
+      - `class OpenAIModelSettings: …`
+
+        - `max_output_tokens: Optional[int]`
+
+          The maximum number of tokens the model can generate.
+
+        - `parallel_tool_calls: Optional[bool]`
+
+          Whether to enable parallel tool calling.
+
+        - `provider_type: Optional[Literal["openai"]]`
+
+          The type of the provider.
+
+          - `"openai"`
+
+        - `reasoning: Optional[Reasoning]`
+
+          The reasoning configuration for the model.
+
+          - `reasoning_effort: Optional[Literal["none", "minimal", "low", 3 more]]`
+
+            The reasoning effort to use when generating text reasoning models
+
+            - `"none"`
+
+            - `"minimal"`
+
+            - `"low"`
+
+            - `"medium"`
+
+            - `"high"`
+
+            - `"xhigh"`
+
+        - `response_format: Optional[ResponseFormat]`
+
+          The response format for the model.
+
+          - `class TextResponseFormat: …`
+
+            Response format for plain text responses.
+
+            - `type: Optional[Literal["text"]]`
+
+              The type of the response format.
+
+              - `"text"`
+
+          - `class JsonSchemaResponseFormat: …`
+
+            Response format for JSON schema-based responses.
+
+            - `json_schema: Dict[str, object]`
+
+              The JSON schema of the response.
+
+            - `type: Optional[Literal["json_schema"]]`
+
+              The type of the response format.
+
+              - `"json_schema"`
+
+          - `class JsonObjectResponseFormat: …`
+
+            Response format for JSON object responses.
+
+            - `type: Optional[Literal["json_object"]]`
+
+              The type of the response format.
+
+              - `"json_object"`
+
+        - `strict: Optional[bool]`
+
+          Enable strict mode for tool calling. When true, tool outputs are guaranteed to match JSON schemas.
+
+        - `temperature: Optional[float]`
+
+          The temperature of the model.
+
+      - `class CompactionSettingsModelSettingsSgLangModelSettings: …`
+
+        SGLang model configuration (OpenAI-compatible runtime with SGLang-specific parsing).
+
+        - `max_output_tokens: Optional[int]`
+
+          The maximum number of tokens the model can generate.
+
+        - `parallel_tool_calls: Optional[bool]`
+
+          Whether to enable parallel tool calling.
+
+        - `provider_type: Optional[Literal["sglang"]]`
+
+          The type of the provider.
+
+          - `"sglang"`
+
+        - `reasoning: Optional[CompactionSettingsModelSettingsSgLangModelSettingsReasoning]`
+
+          The reasoning configuration for the model.
+
+          - `reasoning_effort: Optional[Literal["none", "minimal", "low", 3 more]]`
+
+            The reasoning effort to use when generating text reasoning models
+
+            - `"none"`
+
+            - `"minimal"`
+
+            - `"low"`
+
+            - `"medium"`
+
+            - `"high"`
+
+            - `"xhigh"`
+
+        - `response_format: Optional[CompactionSettingsModelSettingsSgLangModelSettingsResponseFormat]`
+
+          The response format for the model.
+
+          - `class TextResponseFormat: …`
+
+            Response format for plain text responses.
+
+          - `class JsonSchemaResponseFormat: …`
+
+            Response format for JSON schema-based responses.
+
+          - `class JsonObjectResponseFormat: …`
+
+            Response format for JSON object responses.
+
+        - `strict: Optional[bool]`
+
+          Enable strict mode for tool calling. When true, tool outputs are guaranteed to match JSON schemas.
+
+        - `temperature: Optional[float]`
+
+          The temperature of the model.
+
+        - `tool_call_parser: Optional[str]`
+
+          SGLang tool call parser name (for example 'glm47', 'qwen25', or 'hermes').
+
+      - `class AnthropicModelSettings: …`
+
+        - `effort: Optional[Literal["low", "medium", "high", 2 more]]`
+
+          Effort level for supported Anthropic models (controls token spending). 'xhigh' and 'max' are available on Opus 4.6+. Not setting this gives similar performance to 'high'.
+
+          - `"low"`
+
+          - `"medium"`
+
+          - `"high"`
+
+          - `"xhigh"`
+
+          - `"max"`
+
+        - `max_output_tokens: Optional[int]`
+
+          The maximum number of tokens the model can generate.
+
+        - `parallel_tool_calls: Optional[bool]`
+
+          Whether to enable parallel tool calling.
+
+        - `provider_type: Optional[Literal["anthropic"]]`
+
+          The type of the provider.
+
+          - `"anthropic"`
+
+        - `response_format: Optional[ResponseFormat]`
+
+          The response format for the model.
+
+          - `class TextResponseFormat: …`
+
+            Response format for plain text responses.
+
+          - `class JsonSchemaResponseFormat: …`
+
+            Response format for JSON schema-based responses.
+
+          - `class JsonObjectResponseFormat: …`
+
+            Response format for JSON object responses.
+
+        - `strict: Optional[bool]`
+
+          Enable strict mode for tool calling. When true, tool outputs are guaranteed to match JSON schemas.
+
+        - `temperature: Optional[float]`
+
+          The temperature of the model.
+
+        - `thinking: Optional[Thinking]`
+
+          The thinking configuration for the model.
+
+          - `budget_tokens: Optional[int]`
+
+            The maximum number of tokens the model can use for extended thinking.
+
+          - `type: Optional[Literal["enabled", "disabled"]]`
+
+            The type of thinking to use.
+
+            - `"enabled"`
+
+            - `"disabled"`
+
+        - `verbosity: Optional[Literal["low", "medium", "high"]]`
+
+          Soft control for how verbose model output should be, used for GPT-5 models.
+
+          - `"low"`
+
+          - `"medium"`
+
+          - `"high"`
+
+      - `class GoogleAIModelSettings: …`
+
+        - `max_output_tokens: Optional[int]`
+
+          The maximum number of tokens the model can generate.
+
+        - `parallel_tool_calls: Optional[bool]`
+
+          Whether to enable parallel tool calling.
+
+        - `provider_type: Optional[Literal["google_ai"]]`
+
+          The type of the provider.
+
+          - `"google_ai"`
+
+        - `response_schema: Optional[ResponseSchema]`
+
+          The response schema for the model.
+
+          - `class TextResponseFormat: …`
+
+            Response format for plain text responses.
+
+          - `class JsonSchemaResponseFormat: …`
+
+            Response format for JSON schema-based responses.
+
+          - `class JsonObjectResponseFormat: …`
+
+            Response format for JSON object responses.
+
+        - `temperature: Optional[float]`
+
+          The temperature of the model.
+
+        - `thinking_config: Optional[ThinkingConfig]`
+
+          The thinking configuration for the model.
+
+          - `include_thoughts: Optional[bool]`
+
+            Whether to include thoughts in the model's response.
+
+          - `thinking_budget: Optional[int]`
+
+            The thinking budget for the model.
+
+      - `class GoogleVertexModelSettings: …`
+
+        - `max_output_tokens: Optional[int]`
+
+          The maximum number of tokens the model can generate.
+
+        - `parallel_tool_calls: Optional[bool]`
+
+          Whether to enable parallel tool calling.
+
+        - `provider_type: Optional[Literal["google_vertex"]]`
+
+          The type of the provider.
+
+          - `"google_vertex"`
+
+        - `response_schema: Optional[ResponseSchema]`
+
+          The response schema for the model.
+
+          - `class TextResponseFormat: …`
+
+            Response format for plain text responses.
+
+          - `class JsonSchemaResponseFormat: …`
+
+            Response format for JSON schema-based responses.
+
+          - `class JsonObjectResponseFormat: …`
+
+            Response format for JSON object responses.
+
+        - `temperature: Optional[float]`
+
+          The temperature of the model.
+
+        - `thinking_config: Optional[ThinkingConfig]`
+
+          The thinking configuration for the model.
+
+          - `include_thoughts: Optional[bool]`
+
+            Whether to include thoughts in the model's response.
+
+          - `thinking_budget: Optional[int]`
+
+            The thinking budget for the model.
+
+      - `class AzureModelSettings: …`
+
+        Azure OpenAI model configuration (OpenAI-compatible).
+
+        - `max_output_tokens: Optional[int]`
+
+          The maximum number of tokens the model can generate.
+
+        - `parallel_tool_calls: Optional[bool]`
+
+          Whether to enable parallel tool calling.
+
+        - `provider_type: Optional[Literal["azure"]]`
+
+          The type of the provider.
+
+          - `"azure"`
+
+        - `response_format: Optional[ResponseFormat]`
+
+          The response format for the model.
+
+          - `class TextResponseFormat: …`
+
+            Response format for plain text responses.
+
+          - `class JsonSchemaResponseFormat: …`
+
+            Response format for JSON schema-based responses.
+
+          - `class JsonObjectResponseFormat: …`
+
+            Response format for JSON object responses.
+
+        - `temperature: Optional[float]`
+
+          The temperature of the model.
+
+      - `class XaiModelSettings: …`
+
+        xAI model configuration (OpenAI-compatible).
+
+        - `max_output_tokens: Optional[int]`
+
+          The maximum number of tokens the model can generate.
+
+        - `parallel_tool_calls: Optional[bool]`
+
+          Whether to enable parallel tool calling.
+
+        - `provider_type: Optional[Literal["xai"]]`
+
+          The type of the provider.
+
+          - `"xai"`
+
+        - `response_format: Optional[ResponseFormat]`
+
+          The response format for the model.
+
+          - `class TextResponseFormat: …`
+
+            Response format for plain text responses.
+
+          - `class JsonSchemaResponseFormat: …`
+
+            Response format for JSON schema-based responses.
+
+          - `class JsonObjectResponseFormat: …`
+
+            Response format for JSON object responses.
+
+        - `temperature: Optional[float]`
+
+          The temperature of the model.
+
+      - `class CompactionSettingsModelSettingsMoonshotModelSettings: …`
+
+        Moonshot/Kimi model configuration (OpenAI-compatible).
+
+        - `max_output_tokens: Optional[int]`
+
+          The maximum number of tokens the model can generate.
+
+        - `parallel_tool_calls: Optional[bool]`
+
+          Whether to enable parallel tool calling.
+
+        - `provider_type: Optional[Literal["moonshot"]]`
+
+          The type of the provider.
+
+          - `"moonshot"`
+
+        - `response_format: Optional[CompactionSettingsModelSettingsMoonshotModelSettingsResponseFormat]`
+
+          The response format for the model.
+
+          - `class TextResponseFormat: …`
+
+            Response format for plain text responses.
+
+          - `class JsonSchemaResponseFormat: …`
+
+            Response format for JSON schema-based responses.
+
+          - `class JsonObjectResponseFormat: …`
+
+            Response format for JSON object responses.
+
+        - `strict: Optional[bool]`
+
+          Enable strict mode for tool calling. When true, tool outputs are guaranteed to match JSON schemas.
+
+        - `temperature: Optional[float]`
+
+          The temperature of the model.
+
+      - `class CompactionSettingsModelSettingsZaiModelSettings: …`
+
+        Z.ai (ZhipuAI) model configuration (OpenAI-compatible).
+
+        - `max_output_tokens: Optional[int]`
+
+          The maximum number of tokens the model can generate.
+
+        - `parallel_tool_calls: Optional[bool]`
+
+          Whether to enable parallel tool calling.
+
+        - `provider_type: Optional[Literal["zai"]]`
+
+          The type of the provider.
+
+          - `"zai"`
+
+        - `response_format: Optional[CompactionSettingsModelSettingsZaiModelSettingsResponseFormat]`
+
+          The response format for the model.
+
+          - `class TextResponseFormat: …`
+
+            Response format for plain text responses.
+
+          - `class JsonSchemaResponseFormat: …`
+
+            Response format for JSON schema-based responses.
+
+          - `class JsonObjectResponseFormat: …`
+
+            Response format for JSON object responses.
+
+        - `temperature: Optional[float]`
+
+          The temperature of the model.
+
+        - `thinking: Optional[CompactionSettingsModelSettingsZaiModelSettingsThinking]`
+
+          The thinking configuration for GLM-4.5+ models.
+
+          - `clear_thinking: Optional[bool]`
+
+            If False, preserved thinking is used (recommended for agents).
+
+          - `type: Optional[Literal["enabled", "disabled"]]`
+
+            Whether thinking is enabled or disabled.
+
+            - `"enabled"`
+
+            - `"disabled"`
+
+      - `class CompactionSettingsModelSettingsMoonshotCodingModelSettings: …`
+
+        Kimi Code model configuration (Anthropic-compatible).
+
+        - `effort: Optional[Literal["low", "medium", "high", 2 more]]`
+
+          Effort level for supported Anthropic models (controls token spending). 'xhigh' and 'max' are available on Opus 4.6+. Not setting this gives similar performance to 'high'.
+
+          - `"low"`
+
+          - `"medium"`
+
+          - `"high"`
+
+          - `"xhigh"`
+
+          - `"max"`
+
+        - `max_output_tokens: Optional[int]`
+
+          The maximum number of tokens the model can generate.
+
+        - `parallel_tool_calls: Optional[bool]`
+
+          Whether to enable parallel tool calling.
+
+        - `provider_type: Optional[Literal["moonshot_coding"]]`
+
+          The type of the provider.
+
+          - `"moonshot_coding"`
+
+        - `response_format: Optional[CompactionSettingsModelSettingsMoonshotCodingModelSettingsResponseFormat]`
+
+          The response format for the model.
+
+          - `class TextResponseFormat: …`
+
+            Response format for plain text responses.
+
+          - `class JsonSchemaResponseFormat: …`
+
+            Response format for JSON schema-based responses.
+
+          - `class JsonObjectResponseFormat: …`
+
+            Response format for JSON object responses.
+
+        - `strict: Optional[bool]`
+
+          Enable strict mode for tool calling. When true, tool outputs are guaranteed to match JSON schemas.
+
+        - `temperature: Optional[float]`
+
+          The temperature of the model.
+
+        - `thinking: Optional[CompactionSettingsModelSettingsMoonshotCodingModelSettingsThinking]`
+
+          The thinking configuration for the model.
+
+          - `budget_tokens: Optional[int]`
+
+            The maximum number of tokens the model can use for extended thinking.
+
+          - `type: Optional[Literal["enabled", "disabled"]]`
+
+            The type of thinking to use.
+
+            - `"enabled"`
+
+            - `"disabled"`
+
+        - `verbosity: Optional[Literal["low", "medium", "high"]]`
+
+          Soft control for how verbose model output should be, used for GPT-5 models.
+
+          - `"low"`
+
+          - `"medium"`
+
+          - `"high"`
+
+      - `class GroqModelSettings: …`
+
+        Groq model configuration (OpenAI-compatible).
+
+        - `max_output_tokens: Optional[int]`
+
+          The maximum number of tokens the model can generate.
+
+        - `parallel_tool_calls: Optional[bool]`
+
+          Whether to enable parallel tool calling.
+
+        - `provider_type: Optional[Literal["groq"]]`
+
+          The type of the provider.
+
+          - `"groq"`
+
+        - `response_format: Optional[ResponseFormat]`
+
+          The response format for the model.
+
+          - `class TextResponseFormat: …`
+
+            Response format for plain text responses.
+
+          - `class JsonSchemaResponseFormat: …`
+
+            Response format for JSON schema-based responses.
+
+          - `class JsonObjectResponseFormat: …`
+
+            Response format for JSON object responses.
+
+        - `temperature: Optional[float]`
+
+          The temperature of the model.
+
+      - `class DeepseekModelSettings: …`
+
+        Deepseek model configuration (OpenAI-compatible).
+
+        - `max_output_tokens: Optional[int]`
+
+          The maximum number of tokens the model can generate.
+
+        - `parallel_tool_calls: Optional[bool]`
+
+          Whether to enable parallel tool calling.
+
+        - `provider_type: Optional[Literal["deepseek"]]`
+
+          The type of the provider.
+
+          - `"deepseek"`
+
+        - `response_format: Optional[ResponseFormat]`
+
+          The response format for the model.
+
+          - `class TextResponseFormat: …`
+
+            Response format for plain text responses.
+
+          - `class JsonSchemaResponseFormat: …`
+
+            Response format for JSON schema-based responses.
+
+          - `class JsonObjectResponseFormat: …`
+
+            Response format for JSON object responses.
+
+        - `temperature: Optional[float]`
+
+          The temperature of the model.
+
+      - `class TogetherModelSettings: …`
+
+        Together AI model configuration (OpenAI-compatible).
+
+        - `max_output_tokens: Optional[int]`
+
+          The maximum number of tokens the model can generate.
+
+        - `parallel_tool_calls: Optional[bool]`
+
+          Whether to enable parallel tool calling.
+
+        - `provider_type: Optional[Literal["together"]]`
+
+          The type of the provider.
+
+          - `"together"`
+
+        - `response_format: Optional[ResponseFormat]`
+
+          The response format for the model.
+
+          - `class TextResponseFormat: …`
+
+            Response format for plain text responses.
+
+          - `class JsonSchemaResponseFormat: …`
+
+            Response format for JSON schema-based responses.
+
+          - `class JsonObjectResponseFormat: …`
+
+            Response format for JSON object responses.
+
+        - `temperature: Optional[float]`
+
+          The temperature of the model.
+
+      - `class BedrockModelSettings: …`
+
+        AWS Bedrock model configuration.
+
+        - `max_output_tokens: Optional[int]`
+
+          The maximum number of tokens the model can generate.
+
+        - `parallel_tool_calls: Optional[bool]`
+
+          Whether to enable parallel tool calling.
+
+        - `provider_type: Optional[Literal["bedrock"]]`
+
+          The type of the provider.
+
+          - `"bedrock"`
+
+        - `response_format: Optional[ResponseFormat]`
+
+          The response format for the model.
+
+          - `class TextResponseFormat: …`
+
+            Response format for plain text responses.
+
+          - `class JsonSchemaResponseFormat: …`
+
+            Response format for JSON schema-based responses.
+
+          - `class JsonObjectResponseFormat: …`
+
+            Response format for JSON object responses.
+
+        - `temperature: Optional[float]`
+
+          The temperature of the model.
+
+      - `class CompactionSettingsModelSettingsBasetenModelSettings: …`
+
+        Baseten model configuration (OpenAI-compatible).
+
+        - `max_output_tokens: Optional[int]`
+
+          The maximum number of tokens the model can generate.
+
+        - `parallel_tool_calls: Optional[bool]`
+
+          Whether to enable parallel tool calling.
+
+        - `provider_type: Optional[Literal["baseten"]]`
+
+          The type of the provider.
+
+          - `"baseten"`
+
+        - `temperature: Optional[float]`
+
+          The temperature of the model.
+
+      - `class CompactionSettingsModelSettingsOpenRouterModelSettings: …`
+
+        OpenRouter model configuration (OpenAI-compatible).
+
+        - `max_output_tokens: Optional[int]`
+
+          The maximum number of tokens the model can generate.
+
+        - `parallel_tool_calls: Optional[bool]`
+
+          Whether to enable parallel tool calling.
+
+        - `provider_type: Optional[Literal["openrouter"]]`
+
+          The type of the provider.
+
+          - `"openrouter"`
+
+        - `response_format: Optional[CompactionSettingsModelSettingsOpenRouterModelSettingsResponseFormat]`
+
+          The response format for the model.
+
+          - `class TextResponseFormat: …`
+
+            Response format for plain text responses.
+
+          - `class JsonSchemaResponseFormat: …`
+
+            Response format for JSON schema-based responses.
+
+          - `class JsonObjectResponseFormat: …`
+
+            Response format for JSON object responses.
+
+        - `temperature: Optional[float]`
+
+          The temperature of the model.
+
+      - `class CompactionSettingsModelSettingsChatGptoAuthModelSettings: …`
+
+        ChatGPT OAuth model configuration (uses ChatGPT backend API).
+
+        - `max_output_tokens: Optional[int]`
+
+          The maximum number of tokens the model can generate.
+
+        - `parallel_tool_calls: Optional[bool]`
+
+          Whether to enable parallel tool calling.
+
+        - `provider_type: Optional[Literal["chatgpt_oauth"]]`
+
+          The type of the provider.
+
+          - `"chatgpt_oauth"`
+
+        - `reasoning: Optional[CompactionSettingsModelSettingsChatGptoAuthModelSettingsReasoning]`
+
+          The reasoning configuration for the model.
+
+          - `reasoning_effort: Optional[Literal["none", "low", "medium", 2 more]]`
+
+            The reasoning effort level for GPT-5.x and o-series models.
+
+            - `"none"`
+
+            - `"low"`
+
+            - `"medium"`
+
+            - `"high"`
+
+            - `"xhigh"`
+
+        - `temperature: Optional[float]`
+
+          The temperature of the model.
+
+    - `prompt: Optional[str]`
+
+      The prompt to use for summarization. If None, uses mode-specific default.
+
+    - `prompt_acknowledgement: Optional[bool]`
+
+      Whether to include an acknowledgement post-prompt (helps prevent non-summary outputs).
+
+    - `sliding_window_percentage: Optional[float]`
+
+      The percentage of the context window to keep post-summarization (only used in sliding window modes).
+
+### Compaction Response
+
+- `class CompactionResponse: …`
+
+  - `num_messages_after: int`
+
+  - `num_messages_before: int`
+
+  - `summary: str`

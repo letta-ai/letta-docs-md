@@ -1,0 +1,239 @@
+# Letta
+
+> Letta agents learn from experience and improve with use. The Letta agent harness is fully open source and builds on our lab's latest research in AI memory and continual learning. Use Letta to create coding agents, personal assistants, AI coworkers, and stateful agents embedded in your own applications.
+
+Install the CLI: `npm install -g @letta-ai/letta-code` (Node.js 22.19+)
+
+Download the Letta app: [macOS](https://download.letta.com/mac/zip/arm64) · [Windows](https://download.letta.com/windows/nsis/x64) · [Linux](https://download.letta.com/linux/appImage/x64)
+
+Web app: https://chat.letta.com
+
+Repo: https://github.com/letta-ai/letta-code
+
+Letta's mission is to build machines that learn: agents that build memory, forge identity, and deepen knowledge from their own experience rather than living in short-lived, task-specific sessions. The core of Letta is defined by the [Context Constitution](https://github.com/letta-ai/context-constitution): the principles governing what a Letta agent places in its context window, in what order, at what level of detail, and for how long. Letta agents learn by actively managing their own context — creating durable token-space representations of their identity, memory, and continuity — rather than by updating model weights.
+
+Letta agents can extend their own capabilities through learning: acquiring new [skills](https://docs.letta.com/configuration/skills/index.md), system prompt learning (rewriting their own prompts as they accumulate experience), and even self-modifying the harness itself through [mods](https://docs.letta.com/configuration/mods/index.md) — adding tools, commands, and UI, changing how context is fed into the model, or adding custom model providers — to extend what they can do and customize the harness to how you work.
+
+Letta's main surfaces:
+
+- **The Letta Harness** (formerly Letta Code) — an open source harness designed for stateful, self-evolving agents. Build personal or shared agents that are proactive and can work across different machines and messaging platforms (Telegram, WhatsApp, Slack, Discord, Signal, and custom channels). It provides a git-versioned memory filesystem (MemFS), multi-conversation memory, skills, schedules, and sleep-time subagents for reflection and memory organization.
+- **Letta Desktop and Letta Web** — interact with personal agents or agent teammates (shared across your org) across multiple machines, via the desktop app (macOS/Windows/Linux) or chat.letta.com.
+- **The Letta Agent SDK** — wraps the Letta harness so you can create stateful agents in your own application.
+
+## Accessing Full Content
+
+Append `/index.md` to any documentation URL to get the canonical LLM-friendly markdown version. Authored docs pages also support `.md` aliases. For example:
+
+- `https://docs.letta.com/quickstart` -> `https://docs.letta.com/quickstart/index.md`
+- `https://docs.letta.com/quickstart.md`
+
+API reference pages keep the existing `/api/.../index.md` pattern.
+
+## Getting Started
+
+- [Quickstart](https://docs.letta.com/quickstart/index.md): Get started with the Letta app, CLI, or web app
+- [Letta app](https://docs.letta.com/platform/desktop-app/index.md): Desktop app for macOS, Windows, and Linux — chat, memory, schedules, channels, skills, and file viewing in one place
+- [Letta CLI](https://docs.letta.com/platform/cli/index.md): Run Letta from your terminal — `npm install -g @letta-ai/letta-code`
+- [Cloud agents](https://docs.letta.com/platform/cloud-agents/index.md): Run your stateful agents in cloud computers, and pick which computer your agent runs on
+- [The Letta Handbook](https://docs.letta.com/handbook/index.md): A practical guide to building agents that learn, adapt, and run on their own
+- [Pricing](https://docs.letta.com/pricing/index.md): Pricing for the Letta app, CLI, and developer usage
+- [Self-hosting](https://docs.letta.com/self-hosting/index.md): Run Letta fully locally or on your own infrastructure — no Letta account required
+
+## Supported Model Providers
+
+Letta supports API providers, coding plans, local endpoints, and gateways. Provider availability differs between local setup and agents signed in with Letta. Connect with `/connect`, switch models mid-conversation with `/model`. Full setup details: [Models](https://docs.letta.com/configuration/models/index.md). Model performance benchmarks: [leaderboard.letta.com](https://leaderboard.letta.com).
+
+- **API providers include** Anthropic, OpenAI, Google Gemini, Google Vertex AI, Amazon Bedrock, Azure OpenAI, xAI, Mistral, DeepSeek, Groq, Cerebras, Fireworks, Together AI, Hugging Face, MiniMax, Moonshot AI, Xiaomi MiMo, zAI, and Ollama Cloud
+- **Coding plans and subscriptions include** ChatGPT Plus/Pro (Codex), GitHub Copilot, Kimi Code, zAI Coding Plan, MiniMax coding plan, Xiaomi MiMo token plans, OpenCode Go, and OpenCode Zen
+- **Local inference includes** Ollama, LM Studio, llama.cpp, and OpenAI-compatible endpoints that support Chat Completions and tool calling
+- **Gateways and aggregators include** OpenRouter, Vercel AI Gateway, Cloudflare AI Gateway, and Cloudflare Workers AI
+
+## Core Concepts
+
+- [Stateful agents](https://docs.letta.com/concepts/stateful-agents/index.md): How a Letta agent preserves identity and state over time, across models and machines
+- [Memory & dreaming](https://docs.letta.com/configuration/memory/index.md): Initialize, teach, and improve your agent's memory over time — including background "dreaming" for reflection
+- [MemFS](https://docs.letta.com/concepts/memfs/index.md): The git-versioned memory filesystem — agents read, write, and reorganize their own memory files
+- [Conversations](https://docs.letta.com/concepts/conversations/index.md): One agent, many independent message threads, with shared memory across all of them
+
+## Using Your Agent
+
+The Letta CLI is a full agent harness, not a chat wrapper. Agents have a git-versioned memory filesystem, learn skills, rewrite their own system prompts, spawn subagents, run scheduled tasks, serve messaging channels, run headless in scripts and CI, and can modify the harness itself with mods — adding tools, commands, UI, and custom model providers. A signed-in agent keeps the same memory and identity across the terminal, desktop app, web app, and messaging platforms, and can move between computers.
+
+- [Models](https://docs.letta.com/configuration/models/index.md): Connect model providers and coding plans; switch models and toolsets at any time
+- [Skills](https://docs.letta.com/configuration/skills/index.md): Reusable folders of instructions, scripts, and assets — create your own, have your agent write them, or import from GitHub
+- [Schedules](https://docs.letta.com/configuration/schedules/index.md): One-time or recurring prompts (daily briefings, hourly triage) — agents can create their own schedules
+- [Subagents](https://docs.letta.com/configuration/subagents/index.md): Specialized agents for task decomposition and parallel execution
+- [Permissions](https://docs.letta.com/configuration/permissions/index.md): Allowlist and approval controls over what tools your agent can run
+- [Secrets](https://docs.letta.com/configuration/secrets/index.md): Securely store API keys and tokens for your agent to use in shell commands without exposing them
+- [Mods](https://docs.letta.com/configuration/mods/index.md): Customize the harness itself with trusted local code
+- [Slash commands](https://docs.letta.com/platform/cli/slash-commands/index.md): Control sessions interactively — /model, /connect, /init, and more
+- [Headless mode](https://docs.letta.com/platform/cli/headless/index.md): Run non-interactively for scripting and automation
+- [CLI reference](https://docs.letta.com/platform/cli/reference/index.md): Command-line options and flags
+- [Configuration](https://docs.letta.com/reference/settings/index.md): Settings and preferences
+- [Troubleshooting](https://docs.letta.com/reference/troubleshooting/index.md): Diagnose common setup, connection, and execution problems
+
+## Channels
+
+Connect your agent to messaging platforms. Every message sent and received through a channel is visible in the Letta app, alongside your direct chats — including multi-user threads.
+
+- [Slack](https://docs.letta.com/configuration/channels/slack/index.md): Run your agent as a Slack bot
+- [Discord](https://docs.letta.com/configuration/channels/discord/index.md): Run your agent as a Discord bot
+- [Telegram](https://docs.letta.com/configuration/channels/telegram/index.md): Run your agent as a Telegram bot
+- [WhatsApp](https://docs.letta.com/configuration/channels/whatsapp/index.md): Run your agent on WhatsApp
+- [Signal](https://docs.letta.com/configuration/channels/signal/index.md): Run your agent on Signal
+- [Custom channels](https://docs.letta.com/configuration/channels/custom/index.md): Build your own messaging channel integration
+
+## Computers
+
+A signed-in agent can run on multiple computers, keeping its memory and context wherever it goes.
+
+- [Computers overview](https://docs.letta.com/platform/computers/index.md): Choose where agents run tools and access files
+- [Cloud sandboxes](https://docs.letta.com/platform/computers/cloud-sandboxes/index.md): Isolated computers managed by Letta — zero setup, on by default in the web app
+- [Bring your own machine](https://docs.letta.com/platform/computers/byom/index.md): Connect your laptop, workstation, or cloud VM so agents can use it from the web or Letta app
+
+## Self-Hosting
+
+Letta agents can run entirely on infrastructure you control, in two shapes:
+
+- **Local runtime** — the CLI and desktop app run agents on your machine. All agent state (messages, memory, provider connections) stays on-device, and no Letta account is required.
+- **Self-hosted App Server** — run the Letta App Server to host local agents on a central, always-on machine and expose them to client applications through the Agent SDK. Run messaging channels in a separate server process on the same machine.
+
+```bash
+npm install -g @letta-ai/letta-code
+letta --backend local connect ollama              # or anthropic, openai, lmstudio, ...
+letta server --backend local --listen ws://127.0.0.1:4500
+letta server --backend local --channels slack     # separate process for messaging channels
+```
+
+- [Self-hosting](https://docs.letta.com/self-hosting/index.md): Local runtime and self-hosted App Server setup, step by step
+- [Letta App Server](https://docs.letta.com/platform/app-server/index.md): The agent runtime behind self-hosted deployments
+- [App Server quickstart](https://docs.letta.com/platform/app-server/quickstart/index.md): Authentication, configuration, and running your first turn
+- [Agent SDK overview](https://docs.letta.com/agent-sdk/index.md): Build your own applications on top of your self-hosted server
+
+## Letta Agent SDK
+
+- [Overview](https://docs.letta.com/agent-sdk/index.md): The programmatic interface to the Letta agent harness — embed stateful agents in your own application
+- [Creating agents](https://docs.letta.com/agent-sdk/agents/index.md): Memory blocks, MemFS, skills, dreaming, and agent and conversation IDs
+- [Sessions, turns, and durability](https://docs.letta.com/agent-sdk/sessions/index.md): The agent, conversation, and session model and what the SDK guarantees
+- [Memory](https://docs.letta.com/agent-sdk/memory/index.md): How a Letta agent remembers — memory blocks, MemFS, and dreaming
+- [Permissions](https://docs.letta.com/agent-sdk/permissions/index.md): Permission modes and interactive tool approvals
+- [Examples](https://docs.letta.com/agent-sdk/examples/index.md): Complete example applications built on the SDK
+- [Sending messages](https://docs.letta.com/agent-sdk/messages/index.md): Stream turns and process reasoning, assistant messages, tool calls, and results
+- [Browser and React Native](https://docs.letta.com/agent-sdk/browser/index.md): The portable client entry point for browser, Expo, and React Native
+- [SDK reference](https://docs.letta.com/agent-sdk/reference/index.md): Client methods, session interface, and option types
+- [Letta App Server](https://docs.letta.com/platform/app-server/index.md): Run a Letta agent runtime for local and remote SDK sessions
+- [App Server quickstart](https://docs.letta.com/platform/app-server/quickstart/index.md): Start the App Server, connect WebSocket channels, and run a turn
+- [App Server protocol lifecycle](https://docs.letta.com/platform/app-server/protocol-lifecycle/index.md): WebSocket channels, runtime_start, input, sync, and abort
+- [App Server external tools](https://docs.letta.com/platform/app-server/external-tools/index.md): Register controller-owned tools and handle tool calls
+- [App Server integration patterns](https://docs.letta.com/platform/app-server/integration-patterns/index.md): Build controllers for custom UIs, teams, and dashboards
+- [Remote client API](https://docs.letta.com/agent-sdk/remote-client/index.md): Low-level remote-environment transport for custom clients
+- [Remote client API reference](https://docs.letta.com/agent-sdk/remote-client/reference/index.md): Discovery, authentication, and hosted WebSocket transport
+
+## Optional
+
+- [Context Constitution](https://github.com/letta-ai/context-constitution): The principles governing how Letta agents manage context to learn from experience
+- [GitHub Repository](https://github.com/letta-ai/letta-code): Open source Letta Harness
+- [Discord Community](https://discord.gg/letta): Community support and showcase
+- [Changelog](https://docs.letta.com/reference/changelog/index.md): Release notes and version history
+- [Enterprise: collaborators](https://docs.letta.com/teams/collaborators/index.md): Invite teammates to your Letta organization
+- [Enterprise: permissions](https://docs.letta.com/teams/permissions/index.md): Control access to agents and conversations
+
+## Current Page Index
+
+Current authored documentation pages, generated from the built site. Append `/index.md` to any URL for the LLM-friendly markdown version.
+
+### Get started
+
+- [Letta Documentation](https://docs.letta.com/index.md): The platform for building stateful agents
+- [Conversations](https://docs.letta.com/concepts/conversations/index.md): Work with one agent across independent message threads
+- [MemFS](https://docs.letta.com/concepts/memfs/index.md): Understand the git-backed memory filesystem used by Letta agents
+- [Shared memory](https://docs.letta.com/concepts/shared-memory/index.md): Share Git-backed files between cloud-hosted Letta agents
+- [Stateful agents](https://docs.letta.com/concepts/stateful-agents/index.md): Understand how a Letta agent preserves identity and state over time
+- [Pricing](https://docs.letta.com/pricing/index.md): Pricing for the Letta app, CLI, and developer usage
+- [Quickstart](https://docs.letta.com/quickstart/index.md): Get started with the Letta app, CLI, or web app
+- [Self-hosting](https://docs.letta.com/self-hosting/index.md): Store agents locally or on infrastructure you control
+
+### Platform
+
+- [Use Letta with ACP](https://docs.letta.com/platform/acp/index.md): Connect Letta to clients through the Agent Client Protocol
+- [Letta App Server](https://docs.letta.com/platform/app-server/index.md): Run a Letta agent runtime for local and remote SDK sessions
+- [External tools](https://docs.letta.com/platform/app-server/external-tools/index.md): Register controller-owned tools in runtime_start and handle Letta App Server tool callbacks
+- [Integration patterns](https://docs.letta.com/platform/app-server/integration-patterns/index.md): Build robust Letta App Server controllers for custom UIs, teams, dashboards, and background orchestration
+- [Protocol lifecycle](https://docs.letta.com/platform/app-server/protocol-lifecycle/index.md): Understand the Letta App Server WebSocket connection, runtime_start, input, sync, abort, and event handling
+- [Quickstart](https://docs.letta.com/platform/app-server/quickstart/index.md): Start the Letta App Server, connect over WebSocket, and submit input
+- [Letta CLI](https://docs.letta.com/platform/cli/index.md): Run the Letta CLI from your terminal
+- [Headless mode](https://docs.letta.com/platform/cli/headless/index.md): Run Letta Code non-interactively for scripting and automation
+- [CLI reference](https://docs.letta.com/platform/cli/reference/index.md): Command-line options and flags for Letta Code
+- [Slash commands](https://docs.letta.com/platform/cli/slash-commands/index.md): Control Letta Code's behavior during an interactive session with slash commands
+- [Cloud agents](https://docs.letta.com/platform/cloud-agents/index.md): Run your stateful agents in cloud computers
+- [GitHub integration](https://docs.letta.com/platform/cloud-agents/github/index.md): Give your cloud agents access to your GitHub repositories
+- [Slack integration](https://docs.letta.com/platform/cloud-agents/slack/index.md): Bring your Letta agents to Slack with the native integration
+- [Computers](https://docs.letta.com/platform/computers/index.md): Choose where Letta agents run tools and access files
+- [Bring Your Own Machine (BYOM)](https://docs.letta.com/platform/computers/byom/index.md): Make your computers available to Letta agents from the web or Letta app
+- [Cloud sandboxes](https://docs.letta.com/platform/computers/cloud-sandboxes/index.md): Run a Letta agent in an isolated computer managed by Letta
+- [Teleportation](https://docs.letta.com/platform/computers/teleportation/index.md): Move an active conversation from one computer to another
+- [Letta app](https://docs.letta.com/platform/desktop-app/index.md): Use the Letta app on macOS, Windows, or Linux
+- [GitHub action](https://docs.letta.com/platform/github-action/index.md): Integrate Letta Code into your GitHub repository
+
+### Configuration
+
+- [Channels](https://docs.letta.com/configuration/channels/index.md): Connect external messaging platforms to your Letta agents
+- [Custom channels](https://docs.letta.com/configuration/channels/custom/index.md): Build a custom messaging channel for Letta agents
+- [Discord](https://docs.letta.com/configuration/channels/discord/index.md): Connect Discord to a Letta agent
+- [Signal](https://docs.letta.com/configuration/channels/signal/index.md): Connect Signal to a Letta agent
+- [Slack](https://docs.letta.com/configuration/channels/slack/index.md): Connect Slack to a Letta agent
+- [Telegram](https://docs.letta.com/configuration/channels/telegram/index.md): Connect Telegram to a Letta agent
+- [WhatsApp](https://docs.letta.com/configuration/channels/whatsapp/index.md): Connect WhatsApp to a Letta agent
+- [Memory & dreaming](https://docs.letta.com/configuration/memory/index.md): Initialize, teach, and improve your agent's memory over time
+- [Models](https://docs.letta.com/configuration/models/index.md): Configure models, providers, and reasoning settings in the Letta app or CLI
+- [Mods](https://docs.letta.com/configuration/mods/index.md): Customize Letta Code with trusted local code
+- [Permissions](https://docs.letta.com/configuration/permissions/index.md): Control what tools your agent can use
+- [Schedules](https://docs.letta.com/configuration/schedules/index.md): Schedule one-time or recurring prompts for Letta agents
+- [Secrets](https://docs.letta.com/configuration/secrets/index.md): Securely store API keys and tokens for your agent to use in shell commands
+- [Skills](https://docs.letta.com/configuration/skills/index.md): Create and use reusable skills to extend your agent's capabilities
+- [Subagents](https://docs.letta.com/configuration/subagents/index.md): Specialized agents for task decomposition and parallel execution
+
+### Teams
+
+- [Adding collaborators](https://docs.letta.com/teams/collaborators/index.md): Invite teammates to work with agents in your Letta organization
+- [Configuring permissions](https://docs.letta.com/teams/permissions/index.md): Control who can access agents and conversations in your organization
+- [Get started](https://docs.letta.com/teams/quickstart/index.md): Set up a Letta team for your organization
+
+### Reference
+
+- [Changelog](https://docs.letta.com/reference/changelog/index.md): Release notes and version history for Letta Code
+- [Frequently asked questions](https://docs.letta.com/reference/faq/index.md): Answers to common questions about Letta apps, the CLI, App Server, memory, tools, and troubleshooting
+- [Configuration](https://docs.letta.com/reference/settings/index.md): Configure Letta Code settings and preferences
+- [Terminology](https://docs.letta.com/reference/terminology/index.md): Canonical names for Letta products, runtimes, and agents
+- [Troubleshooting](https://docs.letta.com/reference/troubleshooting/index.md): Diagnose common Letta app and CLI setup, connection, and execution problems
+
+### Agent SDK
+
+- [Letta Agent SDK overview](https://docs.letta.com/agent-sdk/index.md): The SDK for stateful agents — create an agent once, then resume it from anywhere
+- [Creating agents](https://docs.letta.com/agent-sdk/agents/index.md): Create agents with memory, configure skills and dreaming, and understand agent and conversation IDs
+- [Browser and React Native](https://docs.letta.com/agent-sdk/browser/index.md): Use the Agent SDK in browser, Expo, and React Native applications
+- [Build a mobile agent app](https://docs.letta.com/agent-sdk/demo-apps/mobile/index.md): Run a complete Expo mobile client for Letta Cloud or your own App Server
+- [Build a React chat UI](https://docs.letta.com/agent-sdk/demo-apps/react-chat/index.md): Build and customize a persistent React chat with the Letta Agent SDK
+- [Add agents to an existing desktop app](https://docs.letta.com/agent-sdk/demo-apps/signal-desktop/index.md): Study a Letta Agent SDK integration inside the Signal Desktop application shell
+- [Deploying your agents](https://docs.letta.com/agent-sdk/deployment/index.md): Deployment patterns and client setup options for the Letta Agent SDK
+- [Examples](https://docs.letta.com/agent-sdk/examples/index.md): Complete example applications built on the Letta Agent SDK
+- [MCP and client tools](https://docs.letta.com/agent-sdk/mcp/index.md): Connect Letta Agent SDK sessions to stdio, HTTP, and SSE MCP servers
+- [Memory](https://docs.letta.com/agent-sdk/memory/index.md): How a Letta agent remembers — setting memory, what stays in context, and dreaming
+- [Sending messages](https://docs.letta.com/agent-sdk/messages/index.md): Stream turns and process reasoning, assistant messages, tool calls, and results
+- [Permissions](https://docs.letta.com/agent-sdk/permissions/index.md): Control tool use with permission modes and interactive approvals
+- [Letta Agent SDK quickstart](https://docs.letta.com/agent-sdk/quickstart/index.md): Learn the basics of the SDK
+- [Letta Agent SDK reference](https://docs.letta.com/agent-sdk/reference/index.md): Client methods, session interface, and option types for the Letta Agent SDK
+- [Remote client API](https://docs.letta.com/agent-sdk/remote-client/index.md): Low-level hosted transport for custom clients that control Letta Code remote environments.
+- [Remote client API reference](https://docs.letta.com/agent-sdk/remote-client/reference/index.md): Hosted environment discovery, authentication, relay channels, runtime startup, and reliability.
+- [Manage shared memory](https://docs.letta.com/agent-sdk/repositories/index.md): Create shared memory repositories and attach them to Cloud agents with the Agent SDK
+- [Sessions, turns, and durability](https://docs.letta.com/agent-sdk/sessions/index.md): The agent, conversation, and session model, and what the SDK guarantees across connections
+
+### Handbook
+
+- [The Letta Handbook](https://docs.letta.com/handbook/index.md): A practical guide to building agents that learn, adapt, and run on their own.
+- [Meet your agent](https://docs.letta.com/handbook/meet-your-agent/index.md): Create your first Letta agent and verify that its memory persists across conversations.
+- [Set up Letta](https://docs.letta.com/handbook/setup/index.md): Install the Letta app or CLI, connect a model provider, and choose a setup that fits your workflow.
+
+### API Reference
+
+- [API Reference](https://docs.letta.com/api/resources/agents): Auto-generated REST API reference. Endpoint pages support /index.md suffixes.
