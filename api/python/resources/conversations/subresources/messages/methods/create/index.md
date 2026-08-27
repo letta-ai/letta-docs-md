@@ -1,0 +1,1548 @@
+## Send Conversation Message
+
+`conversations.messages.create(strconversation_id, MessageCreateParams**kwargs)  -> LettaResponse`
+
+**post** `/v1/conversations/{conversation_id}/messages`
+
+Send a message to a conversation and get a response.
+
+This endpoint sends a message to an existing conversation.
+By default (streaming=true), returns a streaming response (Server-Sent Events).
+Set streaming=false to get a complete JSON response.
+
+**Agent-direct mode**: Pass conversation_id="default" with agent_id in request body
+to send messages to the agent's default conversation with locking.
+
+**Deprecated**: Passing an agent ID as conversation_id still works but will be removed.
+
+### Parameters
+
+- `conversation_id: str`
+
+  The conversation identifier. Can be a conversation ID ('conv-<uuid4>'), 'default' for agent-direct mode (with agent_id parameter), or an agent ID ('agent-<uuid4>') for backwards compatibility (deprecated).
+
+- `agent_id: Optional[str]`
+
+  Agent ID for agent-direct mode with 'default' conversation. Use with conversation_id='default' in the URL path.
+
+- `assistant_message_tool_kwarg: Optional[str]`
+
+  The name of the message argument in the designated message tool. Still supported for legacy agent types, but deprecated for letta_v1_agent onward.
+
+- `assistant_message_tool_name: Optional[str]`
+
+  The name of the designated message tool. Still supported for legacy agent types, but deprecated for letta_v1_agent onward.
+
+- `background: Optional[bool]`
+
+  Whether to process the request in the background (only used when streaming=true).
+
+- `client_skills: Optional[Iterable[ClientSkill]]`
+
+  Client-side skills available in the environment. These are rendered in the system prompt's available skills section alongside agent-scoped skills from MemFS.
+
+  - `description: str`
+
+    Description of what the skill does
+
+  - `location: str`
+
+    Path or location hint for the skill (e.g. skills/my-skill/SKILL.md)
+
+  - `name: str`
+
+    The name of the skill
+
+- `client_tools: Optional[Iterable[ClientTool]]`
+
+  Client-side tools that the agent can call. When the agent calls a client-side tool, execution pauses and returns control to the client to execute the tool and provide the result via a ToolReturn.
+
+  - `name: str`
+
+    The name of the tool function
+
+  - `description: Optional[str]`
+
+    Description of what the tool does
+
+  - `parameters: Optional[Dict[str, object]]`
+
+    JSON Schema for the function parameters
+
+- `enable_thinking: Optional[str]`
+
+  If set to True, enables reasoning before responses or tool calls from the agent.
+
+- `include_compaction_messages: Optional[bool]`
+
+  If True, compaction events emit structured `SummaryMessage` and `EventMessage` types. If False (default), compaction messages are not included in the response.
+
+- `include_pings: Optional[bool]`
+
+  Whether to include periodic keepalive ping messages in the stream to prevent connection timeouts (only used when streaming=true).
+
+- `include_return_message_types: Optional[List[MessageType]]`
+
+  Only return specified message types in the response. If `None` (default) returns all messages.
+
+  - `"system_message"`
+
+  - `"user_message"`
+
+  - `"assistant_message"`
+
+  - `"reasoning_message"`
+
+  - `"hidden_reasoning_message"`
+
+  - `"tool_call_message"`
+
+  - `"tool_return_message"`
+
+  - `"approval_request_message"`
+
+  - `"approval_response_message"`
+
+  - `"summary_message"`
+
+  - `"event_message"`
+
+- `input: Optional[Union[str, Iterable[InputUnionMember1], null]]`
+
+  Syntactic sugar for a single user message. Equivalent to messages=[{'role': 'user', 'content': input}].
+
+  - `str`
+
+  - `Iterable[InputUnionMember1]`
+
+    - `class TextContent: …`
+
+      - `text: str`
+
+        The text content of the message.
+
+      - `signature: Optional[str]`
+
+        Stores a unique identifier for any reasoning associated with this text content.
+
+      - `type: Optional[Literal["text"]]`
+
+        The type of the message.
+
+        - `"text"`
+
+    - `class ImageContent: …`
+
+      - `source: Source`
+
+        The source of the image.
+
+        - `class SourceURLImage: …`
+
+          - `url: str`
+
+            The URL of the image.
+
+          - `type: Optional[Literal["url"]]`
+
+            The source type for the image.
+
+            - `"url"`
+
+        - `class SourceBase64Image: …`
+
+          - `data: str`
+
+            The base64 encoded image data.
+
+          - `media_type: str`
+
+            The media type for the image.
+
+          - `detail: Optional[str]`
+
+            What level of detail to use when processing and understanding the image (low, high, or auto to let the model decide)
+
+          - `type: Optional[Literal["base64"]]`
+
+            The source type for the image.
+
+            - `"base64"`
+
+        - `class SourceLettaImage: …`
+
+          - `file_id: str`
+
+            The unique identifier of the image file persisted in storage.
+
+          - `data: Optional[str]`
+
+            The base64 encoded image data.
+
+          - `detail: Optional[str]`
+
+            What level of detail to use when processing and understanding the image (low, high, or auto to let the model decide)
+
+          - `media_type: Optional[str]`
+
+            The media type for the image.
+
+          - `type: Optional[Literal["letta"]]`
+
+            The source type for the image.
+
+            - `"letta"`
+
+      - `type: Optional[Literal["image"]]`
+
+        The type of the message.
+
+        - `"image"`
+
+    - `class ToolCallContent: …`
+
+      - `id: str`
+
+        A unique identifier for this specific tool call instance.
+
+      - `input: Dict[str, object]`
+
+        The parameters being passed to the tool, structured as a dictionary of parameter names to values.
+
+      - `name: str`
+
+        The name of the tool being called.
+
+      - `signature: Optional[str]`
+
+        Stores a unique identifier for any reasoning associated with this tool call.
+
+      - `type: Optional[Literal["tool_call"]]`
+
+        Indicates this content represents a tool call event.
+
+        - `"tool_call"`
+
+    - `class ToolReturnContent: …`
+
+      - `content: str`
+
+        The content returned by the tool execution.
+
+      - `is_error: bool`
+
+        Indicates whether the tool execution resulted in an error.
+
+      - `tool_call_id: str`
+
+        References the ID of the ToolCallContent that initiated this tool call.
+
+      - `type: Optional[Literal["tool_return"]]`
+
+        Indicates this content represents a tool return event.
+
+        - `"tool_return"`
+
+    - `class ReasoningContent: …`
+
+      Sent via the Anthropic Messages API
+
+      - `is_native: bool`
+
+        Whether the reasoning content was generated by a reasoner model that processed this step.
+
+      - `reasoning: str`
+
+        The intermediate reasoning or thought process content.
+
+      - `signature: Optional[str]`
+
+        A unique identifier for this reasoning step.
+
+      - `type: Optional[Literal["reasoning"]]`
+
+        Indicates this is a reasoning/intermediate step.
+
+        - `"reasoning"`
+
+    - `class RedactedReasoningContent: …`
+
+      Sent via the Anthropic Messages API
+
+      - `data: str`
+
+        The redacted or filtered intermediate reasoning content.
+
+      - `type: Optional[Literal["redacted_reasoning"]]`
+
+        Indicates this is a redacted thinking step.
+
+        - `"redacted_reasoning"`
+
+    - `class OmittedReasoningContent: …`
+
+      A placeholder for reasoning content we know is present, but isn't returned by the provider (e.g. OpenAI GPT-5 on ChatCompletions)
+
+      - `signature: Optional[str]`
+
+        A unique identifier for this reasoning step.
+
+      - `type: Optional[Literal["omitted_reasoning"]]`
+
+        Indicates this is an omitted reasoning step.
+
+        - `"omitted_reasoning"`
+
+    - `class InputUnionMember1SummarizedReasoningContent: …`
+
+      The style of reasoning content returned by the OpenAI Responses API
+
+      - `id: str`
+
+        The unique identifier for this reasoning step.
+
+      - `summary: Iterable[InputUnionMember1SummarizedReasoningContentSummary]`
+
+        Summaries of the reasoning content.
+
+        - `index: int`
+
+          The index of the summary part.
+
+        - `text: str`
+
+          The text of the summary part.
+
+      - `encrypted_content: Optional[str]`
+
+        The encrypted reasoning content.
+
+      - `type: Optional[Literal["summarized_reasoning"]]`
+
+        Indicates this is a summarized reasoning step.
+
+        - `"summarized_reasoning"`
+
+- `max_steps: Optional[int]`
+
+  Maximum number of steps the agent should take to process the request.
+
+- `messages: Optional[Iterable[Message]]`
+
+  The messages to be sent to the agent.
+
+  - `class MessageCreate: …`
+
+    Request to create a message
+
+    - `content: Union[List[LettaMessageContentUnion], str]`
+
+      The content of the message.
+
+      - `List[LettaMessageContentUnion]`
+
+        - `class TextContent: …`
+
+        - `class ImageContent: …`
+
+        - `class ToolCallContent: …`
+
+        - `class ToolReturnContent: …`
+
+        - `class ReasoningContent: …`
+
+          Sent via the Anthropic Messages API
+
+        - `class RedactedReasoningContent: …`
+
+          Sent via the Anthropic Messages API
+
+        - `class OmittedReasoningContent: …`
+
+          A placeholder for reasoning content we know is present, but isn't returned by the provider (e.g. OpenAI GPT-5 on ChatCompletions)
+
+      - `str`
+
+    - `role: Literal["user", "system", "assistant"]`
+
+      The role of the participant.
+
+      - `"user"`
+
+      - `"system"`
+
+      - `"assistant"`
+
+    - `batch_item_id: Optional[str]`
+
+      The id of the LLMBatchItem that this message is associated with
+
+    - `group_id: Optional[str]`
+
+      The multi-agent group that the message was sent in
+
+    - `name: Optional[str]`
+
+      The name of the participant.
+
+    - `otid: Optional[str]`
+
+      The offline threading id (OTID). Set by the client to deduplicate requests. Used for idempotency in background streaming mode — each message in a request must have a unique OTID. Retries of the same request should reuse the same OTIDs.
+
+    - `sender_id: Optional[str]`
+
+      The id of the sender of the message, can be an identity id or agent id
+
+    - `type: Optional[Literal["message"]]`
+
+      The message type to be created.
+
+      - `"message"`
+
+  - `class ApprovalCreate: …`
+
+    Input to approve or deny a tool call request
+
+    - `approval_request_id: Optional[str]`
+
+      The message ID of the approval request
+
+    - `approvals: Optional[List[Approval]]`
+
+      The list of approval responses
+
+      - `class ApprovalReturn: …`
+
+        - `approve: bool`
+
+          Whether the tool has been approved
+
+        - `tool_call_id: str`
+
+          The ID of the tool call that corresponds to this approval
+
+        - `reason: Optional[str]`
+
+          An optional explanation for the provided approval status
+
+        - `type: Optional[Literal["approval"]]`
+
+          The message type to be created.
+
+          - `"approval"`
+
+      - `class ToolReturn: …`
+
+        - `status: Literal["success", "error"]`
+
+          - `"success"`
+
+          - `"error"`
+
+        - `tool_call_id: str`
+
+        - `tool_return: Union[List[ToolReturnUnionMember0], str]`
+
+          The tool return value - either a string or list of content parts (text/image)
+
+          - `List[ToolReturnUnionMember0]`
+
+            - `class TextContent: …`
+
+            - `class ImageContent: …`
+
+          - `str`
+
+        - `stderr: Optional[List[str]]`
+
+        - `stdout: Optional[List[str]]`
+
+        - `type: Optional[Literal["tool"]]`
+
+          The message type to be created.
+
+          - `"tool"`
+
+    - `approve: Optional[bool]`
+
+      Whether the tool has been approved
+
+    - `group_id: Optional[str]`
+
+      The multi-agent group that the message was sent in
+
+    - `otid: Optional[str]`
+
+      The offline threading id (OTID). Set by the client to deduplicate requests. Used for idempotency in background streaming mode — each message in a request must have a unique OTID. Retries of the same request should reuse the same OTIDs.
+
+    - `reason: Optional[str]`
+
+      An optional explanation for the provided approval status
+
+    - `type: Optional[Literal["approval"]]`
+
+      The message type to be created.
+
+      - `"approval"`
+
+  - `class MessageToolReturnCreate: …`
+
+    Submit tool return(s) from client-side tool execution.
+
+    This is the preferred way to send tool results back to the agent after
+    client-side tool execution. It is equivalent to sending an ApprovalCreate
+    with tool return approvals, but provides a cleaner API for the common case.
+
+    - `tool_returns: Iterable[ToolReturnParam]`
+
+      List of tool returns from client-side execution
+
+      - `status: Literal["success", "error"]`
+
+      - `tool_call_id: str`
+
+      - `tool_return: Union[List[ToolReturnUnionMember0], str]`
+
+        The tool return value - either a string or list of content parts (text/image)
+
+      - `stderr: Optional[List[str]]`
+
+      - `stdout: Optional[List[str]]`
+
+      - `type: Optional[Literal["tool"]]`
+
+        The message type to be created.
+
+    - `group_id: Optional[str]`
+
+      The multi-agent group that the message was sent in
+
+    - `otid: Optional[str]`
+
+      The offline threading id (OTID). Set by the client to deduplicate requests. Used for idempotency in background streaming mode — each message in a request must have a unique OTID. Retries of the same request should reuse the same OTIDs.
+
+    - `type: Optional[Literal["tool_return"]]`
+
+      The message type to be created.
+
+      - `"tool_return"`
+
+- `override_model: Optional[str]`
+
+  Model handle to use for this request instead of the agent's default model. This allows sending a message to a different model without changing the agent's configuration.
+
+- `override_system: Optional[str]`
+
+  Optional per-request system prompt override. When set, this is passed directly to the underlying LLM request and bypasses the persisted/compiled system message for that request.
+
+- `return_logprobs: Optional[bool]`
+
+  If True, returns log probabilities of the output tokens in the response. Useful for RL training. Only supported for OpenAI-compatible providers (including SGLang).
+
+- `return_token_ids: Optional[bool]`
+
+  If True, returns token IDs and logprobs for ALL LLM generations in the agent step, not just the last one. Uses SGLang native /generate endpoint. Returns 'turns' field with TurnTokenData for each assistant/tool turn. Required for proper multi-turn RL training with loss masking.
+
+- `stream_tokens: Optional[bool]`
+
+  Flag to determine if individual tokens should be streamed, rather than streaming per step (only used when streaming=true).
+
+- `streaming: Optional[bool]`
+
+  If True (default), returns a streaming response (Server-Sent Events). If False, returns a complete JSON response.
+
+- `top_logprobs: Optional[int]`
+
+  Number of most likely tokens to return at each position (0-20). Requires return_logprobs=True.
+
+- `use_assistant_message: Optional[bool]`
+
+  Whether the server should parse specific tool call arguments (default `send_message`) as `AssistantMessage` objects. Still supported for legacy agent types, but deprecated for letta_v1_agent onward.
+
+### Returns
+
+- `class LettaResponse: …`
+
+  Response object from an agent interaction, consisting of the new messages generated by the agent and usage statistics.
+  The type of the returned messages can be either `Message` or `LettaMessage`, depending on what was specified in the request.
+
+  Attributes:
+  messages (List[Union[Message, LettaMessage]]): The messages returned by the agent.
+  usage (LettaUsageStatistics): The usage statistics
+
+  - `messages: List[Message]`
+
+    The messages returned by the agent.
+
+    - `class SystemMessage: …`
+
+      A message generated by the system. Never streamed back on a response, only used for cursor pagination.
+
+      Args:
+      id (str): The ID of the message
+      date (datetime): The date the message was created in ISO format
+      name (Optional[str]): The name of the sender of the message
+      content (str): The message content sent by the system
+
+      - `id: str`
+
+      - `content: str`
+
+        The message content sent by the system
+
+      - `date: datetime`
+
+      - `is_err: Optional[bool]`
+
+      - `message_type: Optional[Literal["system_message"]]`
+
+        The type of the message.
+
+        - `"system_message"`
+
+      - `name: Optional[str]`
+
+      - `otid: Optional[str]`
+
+        The offline threading id (OTID). Set by the client to deduplicate requests. Used for idempotency in background streaming mode — each message in a request must have a unique OTID. Retries of the same request should reuse the same OTIDs.
+
+      - `run_id: Optional[str]`
+
+      - `sender_id: Optional[str]`
+
+      - `seq_id: Optional[int]`
+
+      - `step_id: Optional[str]`
+
+    - `class UserMessage: …`
+
+      A message sent by the user. Never streamed back on a response, only used for cursor pagination.
+
+      Args:
+      id (str): The ID of the message
+      date (datetime): The date the message was created in ISO format
+      name (Optional[str]): The name of the sender of the message
+      content (Union[str, List[LettaUserMessageContentUnion]]): The message content sent by the user (can be a string or an array of multi-modal content parts)
+
+      - `id: str`
+
+      - `content: Union[List[LettaUserMessageContentUnion], str]`
+
+        The message content sent by the user (can be a string or an array of multi-modal content parts)
+
+        - `List[LettaUserMessageContentUnion]`
+
+          - `class TextContent: …`
+
+            - `text: str`
+
+              The text content of the message.
+
+            - `signature: Optional[str]`
+
+              Stores a unique identifier for any reasoning associated with this text content.
+
+            - `type: Optional[Literal["text"]]`
+
+              The type of the message.
+
+              - `"text"`
+
+          - `class ImageContent: …`
+
+            - `source: Source`
+
+              The source of the image.
+
+              - `class SourceURLImage: …`
+
+                - `url: str`
+
+                  The URL of the image.
+
+                - `type: Optional[Literal["url"]]`
+
+                  The source type for the image.
+
+                  - `"url"`
+
+              - `class SourceBase64Image: …`
+
+                - `data: str`
+
+                  The base64 encoded image data.
+
+                - `media_type: str`
+
+                  The media type for the image.
+
+                - `detail: Optional[str]`
+
+                  What level of detail to use when processing and understanding the image (low, high, or auto to let the model decide)
+
+                - `type: Optional[Literal["base64"]]`
+
+                  The source type for the image.
+
+                  - `"base64"`
+
+              - `class SourceLettaImage: …`
+
+                - `file_id: str`
+
+                  The unique identifier of the image file persisted in storage.
+
+                - `data: Optional[str]`
+
+                  The base64 encoded image data.
+
+                - `detail: Optional[str]`
+
+                  What level of detail to use when processing and understanding the image (low, high, or auto to let the model decide)
+
+                - `media_type: Optional[str]`
+
+                  The media type for the image.
+
+                - `type: Optional[Literal["letta"]]`
+
+                  The source type for the image.
+
+                  - `"letta"`
+
+            - `type: Optional[Literal["image"]]`
+
+              The type of the message.
+
+              - `"image"`
+
+        - `str`
+
+      - `date: datetime`
+
+      - `is_err: Optional[bool]`
+
+      - `message_type: Optional[Literal["user_message"]]`
+
+        The type of the message.
+
+        - `"user_message"`
+
+      - `name: Optional[str]`
+
+      - `otid: Optional[str]`
+
+        The offline threading id (OTID). Set by the client to deduplicate requests. Used for idempotency in background streaming mode — each message in a request must have a unique OTID. Retries of the same request should reuse the same OTIDs.
+
+      - `run_id: Optional[str]`
+
+      - `sender_id: Optional[str]`
+
+      - `seq_id: Optional[int]`
+
+      - `step_id: Optional[str]`
+
+    - `class ReasoningMessage: …`
+
+      Representation of an agent's internal reasoning.
+
+      Args:
+      id (str): The ID of the message
+      date (datetime): The date the message was created in ISO format
+      name (Optional[str]): The name of the sender of the message
+      source (Literal["reasoner_model", "non_reasoner_model"]): Whether the reasoning
+      content was generated natively by a reasoner model or derived via prompting
+      reasoning (str): The internal reasoning of the agent
+      signature (Optional[str]): The model-generated signature of the reasoning step
+
+      - `id: str`
+
+      - `date: datetime`
+
+      - `reasoning: str`
+
+      - `is_err: Optional[bool]`
+
+      - `message_type: Optional[Literal["reasoning_message"]]`
+
+        The type of the message.
+
+        - `"reasoning_message"`
+
+      - `name: Optional[str]`
+
+      - `otid: Optional[str]`
+
+        The offline threading id (OTID). Set by the client to deduplicate requests. Used for idempotency in background streaming mode — each message in a request must have a unique OTID. Retries of the same request should reuse the same OTIDs.
+
+      - `run_id: Optional[str]`
+
+      - `sender_id: Optional[str]`
+
+      - `seq_id: Optional[int]`
+
+      - `signature: Optional[str]`
+
+      - `source: Optional[Literal["reasoner_model", "non_reasoner_model"]]`
+
+        - `"reasoner_model"`
+
+        - `"non_reasoner_model"`
+
+      - `step_id: Optional[str]`
+
+    - `class HiddenReasoningMessage: …`
+
+      Representation of an agent's internal reasoning where reasoning content
+      has been hidden from the response.
+
+      Args:
+      id (str): The ID of the message
+      date (datetime): The date the message was created in ISO format
+      name (Optional[str]): The name of the sender of the message
+      state (Literal["redacted", "omitted"]): Whether the reasoning
+      content was redacted by the provider or simply omitted by the API
+      hidden_reasoning (Optional[str]): The internal reasoning of the agent
+
+      - `id: str`
+
+      - `date: datetime`
+
+      - `state: Literal["redacted", "omitted"]`
+
+        - `"redacted"`
+
+        - `"omitted"`
+
+      - `hidden_reasoning: Optional[str]`
+
+      - `is_err: Optional[bool]`
+
+      - `message_type: Optional[Literal["hidden_reasoning_message"]]`
+
+        The type of the message.
+
+        - `"hidden_reasoning_message"`
+
+      - `name: Optional[str]`
+
+      - `otid: Optional[str]`
+
+        The offline threading id (OTID). Set by the client to deduplicate requests. Used for idempotency in background streaming mode — each message in a request must have a unique OTID. Retries of the same request should reuse the same OTIDs.
+
+      - `run_id: Optional[str]`
+
+      - `sender_id: Optional[str]`
+
+      - `seq_id: Optional[int]`
+
+      - `step_id: Optional[str]`
+
+    - `class ToolCallMessage: …`
+
+      A message representing a request to call a tool (generated by the LLM to trigger tool execution).
+
+      Args:
+      id (str): The ID of the message
+      date (datetime): The date the message was created in ISO format
+      name (Optional[str]): The name of the sender of the message
+      tool_call (Union[ToolCall, ToolCallDelta]): The tool call
+
+      - `id: str`
+
+      - `date: datetime`
+
+      - `tool_call: ToolCall`
+
+        - `class ToolCall: …`
+
+          - `arguments: str`
+
+          - `name: str`
+
+          - `tool_call_id: str`
+
+        - `class ToolCallDelta: …`
+
+          - `arguments: Optional[str]`
+
+          - `name: Optional[str]`
+
+          - `tool_call_id: Optional[str]`
+
+      - `is_err: Optional[bool]`
+
+      - `message_type: Optional[Literal["tool_call_message"]]`
+
+        The type of the message.
+
+        - `"tool_call_message"`
+
+      - `name: Optional[str]`
+
+      - `otid: Optional[str]`
+
+        The offline threading id (OTID). Set by the client to deduplicate requests. Used for idempotency in background streaming mode — each message in a request must have a unique OTID. Retries of the same request should reuse the same OTIDs.
+
+      - `run_id: Optional[str]`
+
+      - `sender_id: Optional[str]`
+
+      - `seq_id: Optional[int]`
+
+      - `step_id: Optional[str]`
+
+      - `tool_calls: Optional[ToolCalls]`
+
+        - `List[ToolCall]`
+
+          - `arguments: str`
+
+          - `name: str`
+
+          - `tool_call_id: str`
+
+        - `class ToolCallDelta: …`
+
+    - `class ToolReturnMessage: …`
+
+      A message representing the return value of a tool call (generated by Letta executing the requested tool).
+
+      Args:
+      id (str): The ID of the message
+      date (datetime): The date the message was created in ISO format
+      name (Optional[str]): The name of the sender of the message
+      tool_return (str): The return value of the tool (deprecated, use tool_returns)
+      status (Literal["success", "error"]): The status of the tool call (deprecated, use tool_returns)
+      tool_call_id (str): A unique identifier for the tool call that generated this message (deprecated, use tool_returns)
+      stdout (Optional[List(str)]): Captured stdout (e.g. prints, logs) from the tool invocation (deprecated, use tool_returns)
+      stderr (Optional[List(str)]): Captured stderr from the tool invocation (deprecated, use tool_returns)
+      tool_returns (Optional[List[ToolReturn]]): List of tool returns for multi-tool support
+
+      - `id: str`
+
+      - `date: datetime`
+
+      - `status: Literal["success", "error"]`
+
+        - `"success"`
+
+        - `"error"`
+
+      - `tool_call_id: str`
+
+      - `tool_return: str`
+
+      - `is_err: Optional[bool]`
+
+      - `message_type: Optional[Literal["tool_return_message"]]`
+
+        The type of the message.
+
+        - `"tool_return_message"`
+
+      - `name: Optional[str]`
+
+      - `otid: Optional[str]`
+
+        The offline threading id (OTID). Set by the client to deduplicate requests. Used for idempotency in background streaming mode — each message in a request must have a unique OTID. Retries of the same request should reuse the same OTIDs.
+
+      - `run_id: Optional[str]`
+
+      - `sender_id: Optional[str]`
+
+      - `seq_id: Optional[int]`
+
+      - `stderr: Optional[List[str]]`
+
+      - `stdout: Optional[List[str]]`
+
+      - `step_id: Optional[str]`
+
+      - `tool_returns: Optional[List[ToolReturn]]`
+
+        - `status: Literal["success", "error"]`
+
+          - `"success"`
+
+          - `"error"`
+
+        - `tool_call_id: str`
+
+        - `tool_return: Union[List[ToolReturnUnionMember0], str]`
+
+          The tool return value - either a string or list of content parts (text/image)
+
+          - `List[ToolReturnUnionMember0]`
+
+            - `class TextContent: …`
+
+            - `class ImageContent: …`
+
+          - `str`
+
+        - `stderr: Optional[List[str]]`
+
+        - `stdout: Optional[List[str]]`
+
+        - `type: Optional[Literal["tool"]]`
+
+          The message type to be created.
+
+          - `"tool"`
+
+    - `class AssistantMessage: …`
+
+      A message sent by the LLM in response to user input. Used in the LLM context.
+
+      Args:
+      id (str): The ID of the message
+      date (datetime): The date the message was created in ISO format
+      name (Optional[str]): The name of the sender of the message
+      content (Union[str, List[LettaAssistantMessageContentUnion]]): The message content sent by the agent (can be a string or an array of content parts)
+
+      - `id: str`
+
+      - `content: Union[List[LettaAssistantMessageContentUnion], str]`
+
+        The message content sent by the agent (can be a string or an array of content parts)
+
+        - `List[LettaAssistantMessageContentUnion]`
+
+          - `text: str`
+
+            The text content of the message.
+
+          - `signature: Optional[str]`
+
+            Stores a unique identifier for any reasoning associated with this text content.
+
+          - `type: Optional[Literal["text"]]`
+
+            The type of the message.
+
+            - `"text"`
+
+        - `str`
+
+      - `date: datetime`
+
+      - `is_err: Optional[bool]`
+
+      - `message_type: Optional[Literal["assistant_message"]]`
+
+        The type of the message.
+
+        - `"assistant_message"`
+
+      - `name: Optional[str]`
+
+      - `otid: Optional[str]`
+
+        The offline threading id (OTID). Set by the client to deduplicate requests. Used for idempotency in background streaming mode — each message in a request must have a unique OTID. Retries of the same request should reuse the same OTIDs.
+
+      - `run_id: Optional[str]`
+
+      - `sender_id: Optional[str]`
+
+      - `seq_id: Optional[int]`
+
+      - `step_id: Optional[str]`
+
+    - `class ApprovalRequestMessage: …`
+
+      A message representing a request for approval to call a tool (generated by the LLM to trigger tool execution).
+
+      Args:
+      id (str): The ID of the message
+      date (datetime): The date the message was created in ISO format
+      name (Optional[str]): The name of the sender of the message
+      tool_call (ToolCall): The tool call
+
+      - `id: str`
+
+      - `date: datetime`
+
+      - `tool_call: ToolCall`
+
+        The tool call that has been requested by the llm to run
+
+        - `class ToolCall: …`
+
+        - `class ToolCallDelta: …`
+
+      - `is_err: Optional[bool]`
+
+      - `message_type: Optional[Literal["approval_request_message"]]`
+
+        The type of the message.
+
+        - `"approval_request_message"`
+
+      - `name: Optional[str]`
+
+      - `otid: Optional[str]`
+
+        The offline threading id (OTID). Set by the client to deduplicate requests. Used for idempotency in background streaming mode — each message in a request must have a unique OTID. Retries of the same request should reuse the same OTIDs.
+
+      - `run_id: Optional[str]`
+
+      - `sender_id: Optional[str]`
+
+      - `seq_id: Optional[int]`
+
+      - `step_id: Optional[str]`
+
+      - `tool_calls: Optional[ToolCalls]`
+
+        The tool calls that have been requested by the llm to run, which are pending approval
+
+        - `List[ToolCall]`
+
+          - `arguments: str`
+
+          - `name: str`
+
+          - `tool_call_id: str`
+
+        - `class ToolCallDelta: …`
+
+    - `class ApprovalResponseMessage: …`
+
+      A message representing a response form the user indicating whether a tool has been approved to run.
+
+      Args:
+      id (str): The ID of the message
+      date (datetime): The date the message was created in ISO format
+      name (Optional[str]): The name of the sender of the message
+      approve: (bool) Whether the tool has been approved
+      approval_request_id: The ID of the approval request
+      reason: (Optional[str]) An optional explanation for the provided approval status
+
+      - `id: str`
+
+      - `date: datetime`
+
+      - `approval_request_id: Optional[str]`
+
+        The message ID of the approval request
+
+      - `approvals: Optional[List[Approval]]`
+
+        The list of approval responses
+
+        - `class ApprovalReturn: …`
+
+          - `approve: bool`
+
+            Whether the tool has been approved
+
+          - `tool_call_id: str`
+
+            The ID of the tool call that corresponds to this approval
+
+          - `reason: Optional[str]`
+
+            An optional explanation for the provided approval status
+
+          - `type: Optional[Literal["approval"]]`
+
+            The message type to be created.
+
+            - `"approval"`
+
+        - `class ToolReturn: …`
+
+          - `status: Literal["success", "error"]`
+
+          - `tool_call_id: str`
+
+          - `tool_return: Union[List[ToolReturnUnionMember0], str]`
+
+            The tool return value - either a string or list of content parts (text/image)
+
+          - `stderr: Optional[List[str]]`
+
+          - `stdout: Optional[List[str]]`
+
+          - `type: Optional[Literal["tool"]]`
+
+            The message type to be created.
+
+      - `approve: Optional[bool]`
+
+        Whether the tool has been approved
+
+      - `is_err: Optional[bool]`
+
+      - `message_type: Optional[Literal["approval_response_message"]]`
+
+        The type of the message.
+
+        - `"approval_response_message"`
+
+      - `name: Optional[str]`
+
+      - `otid: Optional[str]`
+
+        The offline threading id (OTID). Set by the client to deduplicate requests. Used for idempotency in background streaming mode — each message in a request must have a unique OTID. Retries of the same request should reuse the same OTIDs.
+
+      - `reason: Optional[str]`
+
+        An optional explanation for the provided approval status
+
+      - `run_id: Optional[str]`
+
+      - `sender_id: Optional[str]`
+
+      - `seq_id: Optional[int]`
+
+      - `step_id: Optional[str]`
+
+    - `class SummaryMessage: …`
+
+      A message representing a summary of the conversation. Sent to the LLM as a user or system message depending on the provider.
+
+      - `id: str`
+
+      - `date: datetime`
+
+      - `summary: str`
+
+      - `compaction_stats: Optional[CompactionStats]`
+
+        Statistics about a memory compaction operation.
+
+        - `context_window: int`
+
+          The model's context window size
+
+        - `messages_count_after: int`
+
+          Number of messages after compaction
+
+        - `messages_count_before: int`
+
+          Number of messages before compaction
+
+        - `trigger: str`
+
+          What triggered the compaction (e.g., 'context_window_exceeded', 'post_step_context_check')
+
+        - `context_tokens_after: Optional[int]`
+
+          Token count after compaction (message tokens only, does not include tool definitions)
+
+        - `context_tokens_before: Optional[int]`
+
+          Token count before compaction (from LLM usage stats, includes full context sent to LLM)
+
+      - `is_err: Optional[bool]`
+
+      - `message_type: Optional[Literal["summary_message"]]`
+
+        - `"summary_message"`
+
+      - `name: Optional[str]`
+
+      - `otid: Optional[str]`
+
+        The offline threading id (OTID). Set by the client to deduplicate requests. Used for idempotency in background streaming mode — each message in a request must have a unique OTID. Retries of the same request should reuse the same OTIDs.
+
+      - `run_id: Optional[str]`
+
+      - `sender_id: Optional[str]`
+
+      - `seq_id: Optional[int]`
+
+      - `step_id: Optional[str]`
+
+    - `class EventMessage: …`
+
+      A message for notifying the developer that an event that has occured (e.g. a compaction). Events are NOT part of the context window.
+
+      - `id: str`
+
+      - `date: datetime`
+
+      - `event_data: Dict[str, object]`
+
+      - `event_type: Literal["compaction"]`
+
+        - `"compaction"`
+
+      - `is_err: Optional[bool]`
+
+      - `message_type: Optional[Literal["event_message"]]`
+
+        - `"event_message"`
+
+      - `name: Optional[str]`
+
+      - `otid: Optional[str]`
+
+        The offline threading id (OTID). Set by the client to deduplicate requests. Used for idempotency in background streaming mode — each message in a request must have a unique OTID. Retries of the same request should reuse the same OTIDs.
+
+      - `run_id: Optional[str]`
+
+      - `sender_id: Optional[str]`
+
+      - `seq_id: Optional[int]`
+
+      - `step_id: Optional[str]`
+
+  - `stop_reason: StopReason`
+
+    The stop reason from Letta indicating why agent loop stopped execution.
+
+    - `stop_reason: StopReasonType`
+
+      The reason why execution stopped.
+
+      - `"end_turn"`
+
+      - `"error"`
+
+      - `"llm_api_error"`
+
+      - `"invalid_llm_response"`
+
+      - `"invalid_tool_call"`
+
+      - `"max_steps"`
+
+      - `"max_tokens_exceeded"`
+
+      - `"no_tool_call"`
+
+      - `"tool_rule"`
+
+      - `"cancelled"`
+
+      - `"insufficient_credits"`
+
+      - `"requires_approval"`
+
+      - `"context_window_overflow_in_system_prompt"`
+
+    - `message_type: Optional[Literal["stop_reason"]]`
+
+      The type of the message.
+
+      - `"stop_reason"`
+
+  - `usage: Usage`
+
+    The usage statistics of the agent.
+
+    - `cache_write_tokens: Optional[int]`
+
+      The number of input tokens written to cache (Anthropic only). None if not reported by provider.
+
+    - `cached_input_tokens: Optional[int]`
+
+      The number of input tokens served from cache. None if not reported by provider.
+
+    - `completion_tokens: Optional[int]`
+
+      The number of tokens generated by the agent.
+
+    - `context_tokens: Optional[int]`
+
+      Estimate of tokens currently in the context window.
+
+    - `message_type: Optional[Literal["usage_statistics"]]`
+
+      - `"usage_statistics"`
+
+    - `prompt_tokens: Optional[int]`
+
+      The number of tokens in the prompt.
+
+    - `reasoning_tokens: Optional[int]`
+
+      The number of reasoning/thinking tokens generated. None if not reported by provider.
+
+    - `run_ids: Optional[List[str]]`
+
+      The background task run IDs associated with the agent interaction
+
+    - `step_count: Optional[int]`
+
+      The number of steps taken by the agent.
+
+    - `total_tokens: Optional[int]`
+
+      The total number of tokens processed by the agent.
+
+  - `logprobs: Optional[Logprobs]`
+
+    Log probabilities of the output tokens from the last LLM call. Only present if return_logprobs was enabled.
+
+    - `content: Optional[List[LogprobsContent]]`
+
+      - `token: str`
+
+      - `logprob: float`
+
+      - `top_logprobs: List[LogprobsContentTopLogprob]`
+
+        - `token: str`
+
+        - `logprob: float`
+
+        - `bytes: Optional[List[int]]`
+
+      - `bytes: Optional[List[int]]`
+
+    - `refusal: Optional[List[LogprobsRefusal]]`
+
+      - `token: str`
+
+      - `logprob: float`
+
+      - `top_logprobs: List[LogprobsRefusalTopLogprob]`
+
+        - `token: str`
+
+        - `logprob: float`
+
+        - `bytes: Optional[List[int]]`
+
+      - `bytes: Optional[List[int]]`
+
+  - `turns: Optional[List[Turn]]`
+
+    Token data for all LLM generations in multi-turn agent interaction. Includes token IDs and logprobs for each assistant turn, plus tool result content. Only present if return_token_ids was enabled. Used for RL training with loss masking.
+
+    - `role: Literal["assistant", "tool"]`
+
+      Role of this turn: 'assistant' for LLM generations (trainable), 'tool' for tool results (non-trainable).
+
+      - `"assistant"`
+
+      - `"tool"`
+
+    - `content: Optional[str]`
+
+      Text content. For tool turns, client tokenizes this with loss_mask=0.
+
+    - `output_ids: Optional[List[int]]`
+
+      Token IDs from SGLang native endpoint. Only present for assistant turns.
+
+    - `output_token_logprobs: Optional[List[List[object]]]`
+
+      Logprobs from SGLang: [[logprob, token_id, top_logprob_or_null], ...]. Only present for assistant turns.
+
+    - `tool_name: Optional[str]`
+
+      Name of the tool called. Only present for tool turns.
+
+### Example
+
+```python
+import os
+from letta_client import Letta
+
+client = Letta(
+    api_key=os.environ.get("LETTA_API_KEY"),  # This is the default and can be omitted
+)
+for message in client.conversations.messages.create(
+    conversation_id="default",
+):
+  print(message)
+```
+
+#### Response
+
+```json
+{
+  "messages": [
+    {
+      "id": "id",
+      "content": "content",
+      "date": "2019-12-27T18:11:19.117Z",
+      "is_err": true,
+      "message_type": "system_message",
+      "name": "name",
+      "otid": "otid",
+      "run_id": "run_id",
+      "sender_id": "sender_id",
+      "seq_id": 0,
+      "step_id": "step_id"
+    }
+  ],
+  "stop_reason": {
+    "stop_reason": "end_turn",
+    "message_type": "stop_reason"
+  },
+  "usage": {
+    "cache_write_tokens": 0,
+    "cached_input_tokens": 0,
+    "completion_tokens": 0,
+    "context_tokens": 0,
+    "message_type": "usage_statistics",
+    "prompt_tokens": 0,
+    "reasoning_tokens": 0,
+    "run_ids": [
+      "string"
+    ],
+    "step_count": 0,
+    "total_tokens": 0
+  },
+  "logprobs": {
+    "content": [
+      {
+        "token": "token",
+        "logprob": 0,
+        "top_logprobs": [
+          {
+            "token": "token",
+            "logprob": 0,
+            "bytes": [
+              0
+            ]
+          }
+        ],
+        "bytes": [
+          0
+        ]
+      }
+    ],
+    "refusal": [
+      {
+        "token": "token",
+        "logprob": 0,
+        "top_logprobs": [
+          {
+            "token": "token",
+            "logprob": 0,
+            "bytes": [
+              0
+            ]
+          }
+        ],
+        "bytes": [
+          0
+        ]
+      }
+    ]
+  },
+  "turns": [
+    {
+      "role": "assistant",
+      "content": "content",
+      "output_ids": [
+        0
+      ],
+      "output_token_logprobs": [
+        [
+          {}
+        ]
+      ],
+      "tool_name": "tool_name"
+    }
+  ]
+}
+```
