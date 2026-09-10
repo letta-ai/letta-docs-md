@@ -5,13 +5,13 @@ description: Use the Letta app on macOS, Windows, or Linux
 
 The Letta app is your personal command center for your stateful agents. Everything about an agent is visible in one place: you can chat with it, and view and edit its memory, schedules, channels, and skills.
 
-Your agents aren’t tied to your desktop, either. The same agent can run on your local machine or on other computers — a [cloud sandbox](/platform/computers/cloud-sandboxes/index.md), a workstation, or a [remote VM](/platform/computers/byom/index.md) — keeping its memory and context wherever it runs.
+Your agents aren't tied to your desktop, either. The same agent can run on your local machine or on other computers â€” a [cloud sandbox](/platform/computers/cloud-sandboxes/index.md), a workstation, or a [remote VM](/platform/computers/byom/index.md) â€” keeping its memory and context wherever it runs.
 
 ![Chatting with an agent in the Letta app](/images/desktop/chat-agent.png)
 
 ## Getting started
 
-[  macOS Apple Silicon ](https://download.letta.com/mac/dmg/arm64)[  Windows x64 ](https://download.letta.com/windows/nsis/x64)[  Windows ARM64 ](https://download.letta.com/windows/nsis/arm64)[  Linux AppImage, x64 ](https://download.letta.com/linux/appImage/x64)[  Linux AppImage, ARM64](https://download.letta.com/linux/appImage/arm64)
+[  macOS Apple Silicon ](https://download.letta.com/mac/dmg/arm64)[  macOS Intel ](https://download.letta.com/mac/dmg/x64)[  Windows x64 ](https://download.letta.com/windows/nsis/x64)[  Windows ARM64 ](https://download.letta.com/windows/nsis/arm64)[  Linux AppImage, x64 ](https://download.letta.com/linux/appImage/x64)[  Linux AppImage, ARM64](https://download.letta.com/linux/appImage/arm64)
 
 Once installed, follow the [quickstart](/quickstart/index.md) to connect model providers and send your first message.
 
@@ -39,7 +39,7 @@ Use the **Channels** page to connect your agent to [external messaging channels]
 
 ![Configuring Slack and Discord channels in the Letta app](/images/desktop/channel-config.png)
 
-Every message your agent sends and receives through a channel is visible in the app: channel conversations appear in the sidebar alongside your direct chats, so you can follow along as your agent responds on other platforms — including multi-user threads.
+Every message your agent sends and receives through a channel is visible in the app: channel conversations appear in the sidebar alongside your direct chats, so you can follow along as your agent responds on other platforms â€” including multi-user threads.
 
 ![A Discord thread with multiple users in the Letta app](/images/desktop/discord-multi-user.png)
 
@@ -55,7 +55,7 @@ Selecting a schedule shows its status, run history, and details. You can also tr
 
 ## Memory
 
-Use the **Memory** page to explore and edit your agent’s [memory](/configuration/memory/index.md). The graph view shows how your agent’s memory files reference each other, and selecting a node lets you view, edit, and save its contents directly.
+Use the **Memory** page to explore and edit your agent's [memory](/configuration/memory/index.md). The graph view shows how your agent's memory files reference each other, and selecting a node lets you view, edit, and save its contents directly.
 
 ![Editing an agent's persona memory in the graph view](/images/desktop/memory-editing.png)
 
