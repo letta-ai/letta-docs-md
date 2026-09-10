@@ -93,6 +93,11 @@ The following secrets are set on your agent and available for use:
 
 Cloud-agent secrets are stored with the agent on the Letta server and are available across devices. Local-agent secrets are stored in your OS credential manager on that machine.
 
+> [!WARNING]
+> **Letta Code 0.31.10 or later is required for cloud-agent secrets.** The Letta API no longer returns secret values from the ordinary agent retrieval endpoint (`GET /v1/agents/:id`), even when requested with `include=agent.secrets`. Secret values are only served by the dedicated endpoint `GET /v1/agents/:id/secrets`, which Letta Code 0.31.10+ uses.
+>
+> On older Letta Code versions, cloud-agent secrets **fail silently**: the CLI hydrates an empty secrets cache, `$SECRET_NAME` references expand to nothing, and commands that depend on them fail with unrelated errors. Local-agent secrets are unaffected (they read from your OS credential manager, not the server). Update Letta Code to 0.31.10 or later to restore cloud secrets.
+
 ### Input redaction
 
 When you run `/secret set KEY value`, the value is redacted from the command history. Other users reviewing the conversation will see `/secret set KEY ***`.
