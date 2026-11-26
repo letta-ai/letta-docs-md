@@ -20,16 +20,17 @@ Your agent can also schedule tasks itself. Simply ask it in chat.
 When you schedule a task (`letta cron add`), Letta Code stores it based on **where you are working**:
 
 - **From a Cloud sandbox**: The schedule is stored in Letta Cloud and runs in the managed [cloud sandbox](/platform/computers/cloud-sandboxes/index.md).
-- **From any other computer** (laptop, VM, remote server): Creates a local schedule that runs only while a Letta Code session is active on that computer.
+- **From a computer connected with `letta server`**: The schedule is stored in Letta Cloud and runs on that computer.
+- **From an interactive CLI or Desktop session, `--backend local`, or a server without schedule support**: Creates a local schedule that runs only while a Letta Code session is active on that computer.
 
 ### Choosing an execution target
 
-From a Cloud sandbox, use `--computer <deviceId>` to target a specific connected computer (find IDs with `letta computers list`). If the machine is offline when the schedule fires, it falls back to the Cloud sandbox.
+Cloud schedules accept `--computer <deviceId>` to target a specific connected computer (find IDs with `letta computers list`). If the computer is offline when the schedule fires, that run fails with `TARGET_DEVICE_UNAVAILABLE`; it does not fall back to the Cloud sandbox.
 
 Terminal window
 
 ```
-# Target a specific connected server (from a Cloud sandbox)
+# Target a specific connected server
 letta cron add \
   --agent agent-123 \
   --name "server-check" \
@@ -64,14 +65,13 @@ letta cron add \
 
 ## Cloud vs. local schedules
 
-|                       | Cloud schedules (Cloud sandbox)                            | Local schedules (other computers)            |
-| :-------------------- | :--------------------------------------------------------- | :------------------------------------------- |
-| **Where it’s stored** | Letta Cloud                                                | Local machine (`~/.letta/crons.json`)        |
-| **When it fires**     | Always (server-side timer)                                 | Only while a CLI or server process is open   |
-| **Timezone**          | Recurring `--cron` runs in **UTC**                         | Evaluated in your **local machine timezone** |
-| **Offline behavior**  | Runs on targeted machine; falls back to sandbox if offline | Pauses until you restart Letta Code          |
+|                       | Cloud schedules                             | Local schedules                             |
+| :-------------------- | :------------------------------------------ | :------------------------------------------ |
+| **Where it’s stored** | Letta Cloud                                 | Local machine (`~/.letta/crons.json`)       |
+| **When it fires**     | Always (server-side timer)                  | Only while a CLI or Desktop session is open |
+| **Offline behavior**  | Run fails if the target computer is offline | Pauses until you restart Letta Code         |
 
-Passing `--computer` from any other computer returns an error. If creating a cloud schedule fails, Letta Code never silently falls back to local storage.
+Recurring `--cron` and `--every` expressions are evaluated in **UTC**. Passing `--computer` for a local schedule returns an error. If creating a cloud schedule fails, Letta Code never silently falls back to local storage.
 
 ## Common CLI commands
 
@@ -104,17 +104,17 @@ For the full command table and options, see the [CLI reference](/platform/cli/re
 
 - **My task never ran**
 
-  - Run `letta cron list --agent <id>` and check the task’s `runner` field. A `local` task only fires while a Letta Code session is connected on the computer that owns it.
-  - For a `cloud` task, check its run history with `letta cron runs --id <id>`.
+  - Check its run history with `letta cron runs --id <id>`. A local task only fires while a Letta Code session is open on the computer that owns it.
+  - A cloud task targeting a computer fails with `TARGET_DEVICE_UNAVAILABLE` if that computer was offline at fire time.
 
 - **My one-time local task disappeared without running**
 
-  - If the listener was down for long enough, the task may have been marked as missed (tasks overdue by >5 minutes).
+  - If Letta Code was closed for long enough, the task may have been marked as missed (tasks overdue by >5 minutes).
 
-- **My recurring cloud schedule fires at the wrong time**
+- **My recurring schedule fires at the wrong time**
 
-  - Recurring `--cron` expressions on cloud schedules are currently evaluated in UTC, not your local timezone.
+  - Recurring `--cron` and `--every` expressions are evaluated in UTC, not your local timezone.
 
 - **`--computer` says my machine is not connected**
 
-  - The computer must appear in `letta computers list` as a connected machine. Run `letta server` on it to connect it to your Letta account. `--computer` only works from a Cloud sandbox.
+  - The computer must appear in `letta computers list` as a connected machine. Run `letta server` on it to connect it to your Letta account. `--computer` only works for cloud schedules.

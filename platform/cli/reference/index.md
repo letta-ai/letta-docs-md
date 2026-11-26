@@ -142,7 +142,7 @@ Configure memory when creating new agents.
 
 ## Scheduling
 
-Use `letta cron` to register one-time or recurring prompts for an agent. Schedules created in a managed [cloud sandbox](/platform/computers/cloud-sandboxes/index.md) are cloud schedules. Schedules created anywhere else are local to the current computer. See [Scheduling](/configuration/schedules/index.md) for the full guide.
+Use `letta cron` to register one-time or recurring prompts for an agent. Schedules created in a managed [cloud sandbox](/platform/computers/cloud-sandboxes/index.md) or on a computer connected with `letta server` are cloud schedules. Schedules created from an interactive CLI or Desktop session, or with `--backend local`, are local to the current computer. See [Scheduling](/configuration/schedules/index.md) for the full guide.
 
 | Command                                                                                          | Description                                                       |
 | ------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------- |
@@ -167,13 +167,13 @@ Required fields for `letta cron add`:
 
 Optional flags for `letta cron add`:
 
-- `--computer <deviceId>`: run the cloud schedule on a specific connected computer (deviceId from `letta computers list`), with sandbox fallback if offline. Only available from a managed cloud sandbox
+- `--computer <deviceId>`: run the cloud schedule on a specific connected computer (deviceId from `letta computers list`). If it is offline at fire time, that run fails. Only available for cloud schedules
 - `--conversation default`: send every fire to the agent’s default conversation
 - `--conversation <id>`: send every fire to one conversation
 - `--conversation self`: capture `LETTA_CONVERSATION_ID` from the active conversation (requires an active conversation)
 - `--conversation new`: start a new conversation for every fire (default when omitted)
 
-Recurring tasks remain active until explicitly deleted. `--every 1d` fires daily at midnight, so use `--cron` for a fixed time of day. Recurring `--cron` expressions on cloud schedules are currently evaluated in UTC.
+Recurring tasks remain active until explicitly deleted. Recurring `--cron` and `--every` expressions are evaluated in UTC, so `--every 1d` fires daily at midnight UTC; use `--cron` for a fixed time of day.
 
 ## Subcommands (JSON-only)
 
